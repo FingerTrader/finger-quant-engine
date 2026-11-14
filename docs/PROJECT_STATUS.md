@@ -4,10 +4,10 @@
 
 ## Current position
 
-- Phase: **P1 — Universal Strategy Foundation, COMPLETED**. The P1 golden/generic-engine gate passed. **P2-01 COMPLETED; P2-02 VERIFIED**; P2–P6 remain incomplete and no later phase gate has passed.
+- Phase: **P1 — Universal Strategy Foundation, COMPLETED**. The P1 golden/generic-engine gate passed. **P2-01–P2-02 COMPLETED; P2-03 READY**; P2–P6 remain incomplete and no later phase gate has passed.
 - Completed: GOV-01/GOV-02/GOV-03 and P1-01 through P1-11; local evidence and closure records synchronized.
-- Latest implementation: **P2-01 — Stateful Workflow & Lifecycle**, COMPLETED. Evidence `52f6e9ea4a7bc2e4a687796eaf4af2752aee7c11`; fqe.workflow/1 typed rule instances/State/Delay, whole-event rollback and boundary lifecycle.195 Rust +23 external tests/11 process cases and workflow example/full checks PASS. P1-11 evidence remains `949a286df391c5bc23eebd5b2e11dfb19268d390`.
-- Next eligible implementation: **P2-02 — Scheduler & Market Alignment**, VERIFIED; evidence commit/closure pending. Multi-symbol/timeframe ordering, watermarks and explicit closed-bar/late/gap/duplicate policies. User authorizes continuing downstream work without routine confirmation; publishing is not requested.
+- Latest implementation: **P2-02 — Scheduler & Market Alignment**, COMPLETED. Evidence `daeeb181d99236094daa3272fd4efa3855ddca06`; strict fqe.schedule/1, deterministic multi-stream inclusive-watermark merge, bounded ingress and atomic as-of publication.205 Rust +23 external tests/11 process cases and full checks PASS. P2-01 evidence `52f6e9ea4a7bc2e4a687796eaf4af2752aee7c11`.
+- Next eligible implementation: **P2-03 — Time Windows, Timers & Instance Scheduling**, READY. Event-time/count windows, deterministic expiry/timers, bounded/fair isolated instance scheduling. User authorizes continuing downstream work without routine confirmation; publishing is not requested.
 - P1-02 acceptance met: evaluated numeric policy/limits, strict type/unit/scale checks, unsupported-shape rejection, full binding matrix and tests. Evidence `a653c105fba5ea6ada15395abc22cc8f82cc4472` and local closure recorded below; publishing not requested.
 - Actual root: `/Users/george/Desktop/finger-quant-engine`; main tracking origin/main; remote `https://github.com/FingerTrader/finger-quant-engine.git`.
 - Rust source baseline / latest pre-governance commit: `342d8aa76b48d32fa9c9110609b371eac52b8d86` (foundation). Previous commit: `cbcebad`.
@@ -33,8 +33,9 @@
 | P1-10 | COMPLETED | Independent caller/contract/seven requests;175 Rust +23 external tests/full checks PASS; evidence `5c7a7f6cdd1b0fe59bda7d740444da4f5299dcc3`, local closure |
 | P1-11 | COMPLETED | [P1 acceptance](P1_ACCEPTANCE.md);181 Rust +23 external tests/11 process cases/full checks PASS; evidence `949a286df391c5bc23eebd5b2e11dfb19268d390`, local closure |
 | P2-01 | COMPLETED | Typed workflow modules/State/Delay, atomic provider/rule rollback and lifecycle;195 Rust/23 external/11 process cases PASS; evidence `52f6e9ea4a7bc2e4a687796eaf4af2752aee7c11`; local closure |
-| P2-02 | VERIFIED | fqe.schedule/1 and atomic watermark/as-of multi-market merge;205 Rust/23 external/11 process cases PASS; evidence commit/closure pending |
-| P2-03, P2-04, P2-05, P2-06 | NOT_STARTED | Prior P2 dependencies/gate first |
+| P2-02 | COMPLETED | Bounded fixed-UTC multi-market scheduler/watermarks/atomic as-of publication;205 Rust/23 external/11 process cases PASS; evidence `daeeb181d99236094daa3272fd4efa3855ddca06`; local closure |
+| P2-03 | READY | P2-02 closed; event-time/count windows, timers and bounded fair instance scheduling next |
+| P2-04, P2-05, P2-06 | NOT_STARTED | Prior P2 dependencies/gate first |
 | P3-01, P3-02, P3-03, P3-04, P3-05, P3-06, P3-07 | NOT_STARTED | P2 gate first |
 | P4-01, P4-02, P4-03, P4-04, P4-05 | NOT_STARTED | P3 gate first |
 | P5-01, P5-02, P5-03, P5-04, P5-05 | NOT_STARTED | P4 gate first; Python → Java → Go |
@@ -42,7 +43,7 @@
 | P6-01, P6-02, P6-03, P6-04, P6-05, P6-06 | NOT_STARTED | P5 gate first |
 | P6-03.01 | NOT_STARTED | Java-indicator/Go-predicate graph after P6-02; prerequisite of parent P6-03 |
 
-Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 12 COMPLETED, 1 VERIFIED, 29 NOT_STARTED. P2-02 is first eligible; none is BLOCKED. P1 gate passed; later phase gates remain open. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
+Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 13 COMPLETED, 1 READY, 28 NOT_STARTED. P2-03 is first eligible; none is BLOCKED. P1 gate passed; later phase gates remain open. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
 
 ## Delivered baseline and limitations
 
@@ -279,3 +280,5 @@ IMPLEMENTED → VERIFIED after executable acceptance. `fqe-ir::schedule` loads a
 Full offline `python3 scripts/check_p1_gate.py` PASS:205 Rust tests,23 external caller tests,11 actual process cases, unchanged protected provider/fixture source pins, fmt/check/test/strict all-target clippy/build/docs/diff. Documentation checker PASS:39 Markdown files/484 local links/42 task projections. Same verified macOS ARM64/Rust1.99.0/Python3.14.6. Shared existing trigger codec/identifier validation visibility only; legacy/compiled event/workflow semantics and earlier goldens unchanged. No new dependency/manifest/lockfile/toolchain, installer, network advisory scan or private upload; existing approved caches only.
 
 Limits/remaining acceptance: fixed UTC epoch grid only, explicit truthful source promises, bounded queues (backpressure can require upstream throttling), sequential same-time phases, trusted callback whose own effects must be transactional. No exchange calendars/aggregation/resampling/timestamp-batch join, graph multi-domain wire syntax, timers/fair instance scheduling, complete checkpoint or production isolation/throughput claim. P2-03 owns windows/timers/instance scheduling; P2-04 must capture ingress watermarks/pending queue/committed alignment and strategy/provider state together; P2-05/P2-06 remain open. No Desktop/Flutter/worker/trading/accounting delivery credited. Record evidence commit then synchronized closure; continue P2-03 without routine pause. Publishing not requested.
+
+Final intended-path/staged/protected-source review PASS. Local evidence `daeeb181d99236094daa3272fd4efa3855ddca06` is committed. This three-document closure records P2-02 COMPLETED/P2-03 READY; docs check39 Markdown/486 links/42 task projections and diff check PASS. Remote main last read-confirmed `0ac5d7b163e77bddb5f69689a1455e3560aad872`;28 local commits including closure remain unpushed. No push requested/performed; continue P2-03 automatically.

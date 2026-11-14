@@ -1,27 +1,29 @@
 # Next Session
 
-Recover [status](PROJECT_STATUS.md), [plan](DELIVERY_PLAN.md), [ADRs](ARCHITECTURE_DECISIONS.md), [workflow](WORKFLOW.md) and current contracts; verify main/remote/dirty work and actual commits before edits. Work on main, no worktree. User explicitly requests continuous downstream execution without per-task stops. Proceed after each verified closure unless genuinely blocked. Publishing is not requested.
+Recover [status](PROJECT_STATUS.md), [plan](DELIVERY_PLAN.md), [ADRs](ARCHITECTURE_DECISIONS.md), [workflow](WORKFLOW.md), README and current contracts. Verify main/remote/dirty work/actual commits before edits; use main, no worktree. User explicitly requests continuous downstream execution without per-task stops. Proceed after verified closure unless genuinely blocked. Publishing is not requested.
 
 ## Current evidence
 
-P1-01–P1-11 and P2-01 COMPLETED; P1 phase gate passed. P2-02 VERIFIED; no P2 phase gate passed. Latest implementation evidence `52f6e9ea4a7bc2e4a687796eaf4af2752aee7c11`; resolve current HEAD and latest status commit from Git. Main26 commits ahead after this closure, remote last read-confirmed `0ac5d7b163e77bddb5f69689a1455e3560aad872`; recheck live before publishing. No push authorization.
+P1-01–P1-11, P2-01 and P2-02 COMPLETED. P1 gate passed; P2-03 READY, P2 phase gate still open. Latest implementation evidence `daeeb181d99236094daa3272fd4efa3855ddca06`; previous P2-01 `52f6e9ea4a7bc2e4a687796eaf4af2752aee7c11`. Resolve HEAD/latest status commit from Git. Main28 commits ahead after closure; remote last read-confirmed `0ac5d7b163e77bddb5f69689a1455e3560aad872`. Recheck live before publishing; no push authorization.
 
-P2-01 adds [workflow execution](WORKFLOW_EXECUTION.md)/ADR-022 and `fqe-ir/src/workflow.rs`, `fqe-runtime/src/workflow.rs`, private EventRuntime outer transaction. Strict fqe.workflow/1 composes single-trigger event plan with typed parameterized rule instances, host-owned cells/mode/one-event Delay, old-state guards/effects, deterministic equal-priority conflict rejection, whole-event provider/crossing/rule/cursor commit. Boundary finish/stop/abort releases owned provider state; fresh terminal restart needs new run ID. No complete checkpoint: inspection is typed/versioned and explicitly restorable=false; checkpoint returns unsupported. One control region/equal priority and flat module DAG are intentional bounds, not full workflow-format support.
+P2-01 [workflow](WORKFLOW_EXECUTION.md)/ADR-022: fqe.workflow/1 parameterized typed stateful scalar rules, isolated mode/cells/one-event Delay, old-state guards/effects, equal-priority control/write conflict rejection, whole-event provider/crossing/rule/cursor commit, boundary stop/abort/finish and fresh restart. State inspection is explicitly non-restorable; checkpoint unsupported. Flat instances/single control region are explicit limits.
 
-Full offline P1 gate PASS:195 Rust tests (181 preserved +7 workflow IR +7 runtime),23 external caller tests,11 actual process cases, source pins, fmt/check/test/strict clippy/build/docs/diff. Workflow example PASS. [Hand-authored X-002 table](../crates/fqe-runtime/tests/fixtures/p2/x002.expected.tsv) validates separate parameters, read-old/write-next, Delay/warmup and exact signal origins; custom memory provider proves late numeric error rolls back provider history/crossings/rules/delays/cursor and permits corrected same-sequence retry. No dependency/manifest/lockfile/toolchain or prior golden/provider-source changes.
+P2-02 [market scheduler](MARKET_SCHEDULER.md)/ADR-023: strict fqe.schedule/1 immutable fixed-UTC definitions, 1..64 exact source/domain streams, queue1..4096, explicit gap reject/report, per-stream source ordering, inclusive watermark promises, deterministic timestamp/instrument/family/duration/source-sequence merge, global logical sequence with original provenance, atomic dispatch and current/published-only alignment. Queued same-time later-phase/future records are hidden. No exchange calendar, resampling, implicit gap fill or timestamp-batch join. Callback-owned effects must be transactional; existing WorkflowRuntime::step is the final fallible consumer action. Definition/source metadata is not authenticated dataset IO.
 
-## Next eligible: P2-02 — Scheduler and Market Alignment
+Full offline P1 gate PASS:205 Rust tests (181 original +14 workflow +10 scheduler),23 external tests,11 actual process cases, protected source pins, fmt/check/test/strict clippy/build/docs/diff. Documentation check39 Markdown/486 links/42 task projections. Independent [merge hand table](../crates/fqe-runtime/tests/fixtures/p2/alignment.expected.tsv), interleaving/watermark/future/gap/order/backpressure/rollback/full-width tests and actual workflow consumption validate P2-02. P2-01 workflow example also passed. No dependency/manifest/lockfile/toolchain/earlier golden/provider-source changes.
 
-Read [event contract](EVENT_CONTRACT.md), [compiled events](EVENT_EXECUTION.md), [state](STATE_CONTRACT.md), [runtime](RUNTIME.md), [P1/P2 design](P1_STRATEGY_DESIGN.md), workflow contract and P2-02 plan row. Mark IN_PROGRESS with concrete versioned scope/acceptance before code.
+## Next eligible: P2-03 — Time Windows, Timers and Instance Scheduling
 
-- Deterministic multi-symbol/multi-timeframe scheduler, bounded buffered ingress and explicit per-stream/global watermark/tie-break contract. Closed/available bars only; no future leakage, partial higher timeframe consumption or silently synthesized market data.
-- Explicit duplicate/out-of-order/late/gap policy, supported calendar domain and ordering/source identities. Preserve strict P1 single-domain validation instead of silently changing old artifacts.
-- Verify interleaved streams and equal-time ordering independent of arrival order, watermark boundaries, incomplete higher timeframe, gaps/late/duplicate/out-of-order inputs and failure rollback. Provide executable integration/consumption evidence, not a documentation-only scheduler.
-- P2-03 owns event-time windows/timers/fair bounded multi-instance scheduling; P2-04 owns complete provider/module/crossing/cursor snapshots and split-run X-002; P2-05 replay/debug traces; P2-06 complete G-006 temporal gate. Financial/backtest/simulation/Desk/Flutter/worker/SDK work remains later tasks.
+Read [P1/P2 design](P1_STRATEGY_DESIGN.md), [market scheduler](MARKET_SCHEDULER.md), [workflow](WORKFLOW_EXECUTION.md), [events](EVENT_CONTRACT.md), [state](STATE_CONTRACT.md), [runtime](RUNTIME.md), [extensibility](EXTENSIBILITY_CONTRACT.md) and P2-03 plan row. Mark IN_PROGRESS with explicit versioned scope/acceptance before code.
 
-## Protected evidence and commands
+- Event-time windows/timers, bounded queues and multi-instance scheduling. No wall-clock replay dependency. Explicit count/calendar domains, inclusive/exclusive expiry and same-time market/timer ordering. Count windows count qualifying closed bars, not unrelated ticks/streams/missing bars.
+- Independent instances sharing an immutable model must preserve isolated state/provider histories, deterministic fair dispatch, bounded pending work and cancellation behavior. Verify overload/backpressure without silent drop, timer ties, expiry boundaries and absent bars.
+- G-006 target: cross at k; latch ready RSI true in (k,k+3]; emit once at k+3 including first true at expiry; ignore re-cross while armed and do not re-arm on expiry. P2-03 tests generic temporal primitives/boundaries; full MACD/RSI model, all snapshot splits and gate remain P2-06 after P2-04/P2-05.
+- P2-04 must checkpoint scheduler ingress/watermarks/pending queue/alignment, providers/crossings/modules/cursors, output identity and temporal state compatibly. Current copied state/cells are not recovery. P2-05 owns replay/debug traces. Financial/backtest/simulation/Desk/Flutter/SDK/worker/plugin delivery remains later tasks.
 
-Preserve existing P1 fixture/canonical/expected files and source pins (`indicators.rs`, `builtins.rs`, IR example providers, runtime gate providers). New generic rule/provider IDs must not appear in production dispatch. Reuse reviewed cached dependencies and pinned local toolchain, no installation needed.
+## Commands and protected evidence
+
+Reuse approved cached dependencies and pinned toolchain; no installation needed. Preserve all earlier canonical/golden fixtures and protected indicators/builtins/example/gate provider source pins. New financial/provider IDs must never enter generic production dispatch.
 
 ```sh
 export CARGO_HOME="$PWD/.local-toolchain/cargo"
@@ -29,15 +31,10 @@ export RUSTUP_HOME="$PWD/.local-toolchain/rustup"
 export PATH="$CARGO_HOME/bin:$PATH"
 export RUSTUP_AUTO_INSTALL=0
 PYTHONDONTWRITEBYTECODE=1 python3 scripts/check_p1_gate.py
+cargo test --locked --offline -p fqe-runtime --test schedule_execution
 cargo run --locked --offline -p fqe-runtime --example workflow
 python3 scripts/check_docs.py
 git diff --check
 ```
 
-Record actual code/checks/errors/dirty state before interruption. Evidence commit while VERIFIED, then synchronized status/plan/handoff closure recording that SHA. Only an authorized normal push plus matching remote SHA establishes publishing. Continue directly to next eligible task after closure.
-
-Active P2-02 checkpoint: scoped fqe.schedule/1 fixed-UTC streams/watermarks/atomic as-of merge selected; implementing new IR/runtime scheduler modules and tests. Existing P2-01 is committed and complete. Preserve inclusive watermark promises and distinguish source sequence from globally assigned publication sequence.
-
-P2-02 implementation checkpoint: new `fqe-ir/src/schedule.rs`, `fqe-runtime/src/schedule.rs`, strict schedule fixture/canonical tests and eight scheduler runtime tests. Focused tests/clippy PASS (2 IR+8 runtime); docs/MARKET_SCHEDULER.md and ADR-023 drafted. Required full workspace/P1 gate/docs/diff still pending. Identifier validation exposure and event trigger codec visibility reuse existing behavior. No dependency/lockfile changes.
-
-Verification checkpoint: P2-02 IMPLEMENTED → VERIFIED; full gate PASS205 Rust/23 external/11 process cases,39 Markdown/484 links/42 projections. Evidence commit and three-document closure pending; then continue P2-03 windows/timers/fair instance scheduling automatically.
+Record real code/check/error/dirty state before interruption. Evidence commit while VERIFIED, then synchronized status/plan/handoff closure recording SHA. Continue next eligible task automatically. Only an authorized normal push and matching remote SHA establishes publishing.
