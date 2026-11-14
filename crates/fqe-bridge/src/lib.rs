@@ -5,6 +5,7 @@ mod discovery;
 pub mod ffi;
 pub mod framing;
 pub mod managed;
+pub mod research;
 use fqe_core::finance::parse_decimal;
 use fqe_ir::{
     catalog,
@@ -23,14 +24,16 @@ use fqe_runtime::{
     simulator::{SimulationConfig, SimulationLimits},
 };
 use std::sync::{Arc, atomic::AtomicBool};
-pub const MAX_REQUEST: usize = 262144;
+pub const MAX_REQUEST: usize = 4 * 1024 * 1024;
 /// Whole response envelope, including native report, is bounded by 4 MiB.
-pub const MAX_RESPONSE: usize = 4 * 1024 * 1024;
+pub const MAX_RESPONSE: usize = 16 * 1024 * 1024;
 pub const CAPABILITIES: &[&str] = &[
     "desktop.exact-json/1",
     "catalog.reference/1",
     "catalog.describe/1",
     "authoring.event/1",
+    "research.graph/1",
+    "research.grid/1",
     "model.validate/1",
     "model.inspect/1",
     "backtest.validate/1",
@@ -131,6 +134,10 @@ pub fn bridge_id() -> String {
         include_bytes!("codec.rs").as_slice(),
         include_bytes!("discovery.rs").as_slice(),
         include_bytes!("authoring.rs").as_slice(),
+        include_bytes!("research/mod.rs").as_slice(),
+        include_bytes!("research/graph.rs").as_slice(),
+        include_bytes!("research/orders.rs").as_slice(),
+        include_bytes!("research/optimization.rs").as_slice(),
         include_bytes!("managed.rs").as_slice(),
         include_bytes!("bin/peer.rs").as_slice(),
         include_bytes!("../Cargo.toml").as_slice(),
@@ -155,7 +162,7 @@ pub fn response(id: Option<&str>, outcome: Result<Value>) -> Vec<u8> {
         ("ok", Value::Bool(ok)),
         ("body", body),
     ]);
-    match json::encode(&v, MAX_RESPONSE) {
+    match codec::encode(&v, MAX_RESPONSE) {
         Ok(bytes) => bytes,
         Err(_) => json::encode(
             &object([
@@ -240,6 +247,36 @@ pub fn execute(request: &Request, cancel: &AtomicBool) -> Result<Value> {
                     ("descriptors", Value::Array(descriptors)),
                 ]))
             }
+        }
+        "research.describe" => {
+            fields(p, &[])?;
+            Ok(research::capabilities())
+        }
+        "backtest.validate" if p["kind"] == "research_optimization" => {
+            research::optimization::validate(p)
+        }
+        "backtest.validate" if p["kind"] == "research" => Ok(research::prepare(p)?.inspect()),
+        "backtest.run" if p["kind"] == "research_optimization" => {
+            let result = research::optimization::run(p, cancel)?;
+            Ok(object([
+                ("manifest_id", string(result.manifest_id)),
+                ("result_id", string(result.result_id)),
+                (
+                    "report",
+                    serde_json::from_slice(&result.bytes).map_err(|_| fail("native_report"))?,
+                ),
+            ]))
+        }
+        "backtest.run" if p["kind"] == "research" => {
+            let result = research::prepare(p)?.run(cancel)?;
+            Ok(object([
+                ("manifest_id", string(result.manifest_id)),
+                ("result_id", string(result.result_id)),
+                (
+                    "report",
+                    serde_json::from_slice(&result.bytes).map_err(|_| fail("native_report"))?,
+                ),
+            ]))
         }
         "backtest.validate" => {
             // Prepare validates immutable history, settings and policies without

@@ -94,3 +94,54 @@ pub fn decode(bytes: &[u8]) -> Result<Value, Failure> {
     decoder.end().map_err(|_| crate::fail("request_json"))?;
     Ok(value)
 }
+
+/// Extended-profile wire writer. Legacy financial report bounds are unchanged.
+pub(crate) fn encode(value: &Value, limit: usize) -> crate::Result<Vec<u8>> {
+    use std::io::Write;
+    if limit == 0 || limit > crate::MAX_RESPONSE {
+        return Err(crate::fail("response_quota"));
+    }
+    let mut pending = vec![(value, 0usize)];
+    let mut count = 0;
+    while let Some((v, depth)) = pending.pop() {
+        count += 1;
+        if depth > 40
+            || count > 2_000_000
+            || matches!(v, Value::Number(n) if !n.is_u64() && !n.is_i64())
+        {
+            return Err(crate::fail("response_value_quota"));
+        }
+        match v {
+            Value::Array(a) => pending.extend(a.iter().map(|v| (v, depth + 1))),
+            Value::Object(m) => pending.extend(m.values().map(|v| (v, depth + 1))),
+            _ => {}
+        }
+    }
+    struct Writer {
+        bytes: Vec<u8>,
+        limit: usize,
+    }
+    impl Write for Writer {
+        fn write(&mut self, bytes: &[u8]) -> std::io::Result<usize> {
+            if self
+                .bytes
+                .len()
+                .checked_add(bytes.len())
+                .is_none_or(|n| n > self.limit)
+            {
+                return Err(std::io::Error::other("wire quota"));
+            }
+            self.bytes.extend_from_slice(bytes);
+            Ok(bytes.len())
+        }
+        fn flush(&mut self) -> std::io::Result<()> {
+            Ok(())
+        }
+    }
+    let mut writer = Writer {
+        bytes: vec![],
+        limit,
+    };
+    serde_json::to_writer(&mut writer, value).map_err(|_| crate::fail("response_quota"))?;
+    Ok(writer.bytes)
+}

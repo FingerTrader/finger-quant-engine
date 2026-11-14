@@ -1,3 +1,11 @@
+# Current verified implementation checkpoint — 2026-11-15
+
+Read [EXTENDED_RESEARCH.md](EXTENDED_RESEARCH.md) first. Native research graph/grid implemented; 27 independent release-peer scenarios and full P3 gate PASS (360 Rust/23 external, fmt/check/clippy/docs/diff). Desk paired 5 actual-native tests and 38 UI/model tests PASS; final desktop UI and GitHub receipt pending in active owner-authorized task. Final release helper SHA256 d2d5b5f5be33d3395164292de5c4b5500942a113dbb6488a900cd118f9fe395c. Changes stay on main; no new dependencies. Do not rerun an unbounded implementation or silently mark later generic P4 tasks complete. Preserve unrelated dirty Desk work. Next: finish actual newest-app journey, update evidence, commit intended paths in both repos, normal push and confirm remote SHAs.
+
+# Active owner-approved extension (2026-11-15)
+
+George authorized FQE edits and GitHub publication in the current Desk session. The old no-publish/no-shared-file coordination notes below are historical and superseded for this scope. Work on main, no worktree/agents. Read EXTENDED_RESEARCH.md and actual Git first. P4-03.03 is still incomplete pending current native UI acceptance; do not mark later planned children complete from the new scoped profile. Implement/verify paired native extended research and Desk adapter, preserving existing cash-long accounting behavior and economic fixtures; the additive HistorySpec timeframe pin is explicitly reviewed in EXTENDED_RESEARCH.md. No new dependencies. Final required checks: locked/offline Rust fmt/check/test/clippy, full P3 gate, docs/diff; paired Desk tests/build, then normal pushes with remote SHA confirmation. Preserve unrelated Desk dirty files.
+
 # Next Session
 
 ## Active owner-approved unified Desk implementation

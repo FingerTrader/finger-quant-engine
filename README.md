@@ -48,6 +48,7 @@ This repository contains the initial engineering foundation, version `0.1.0`. It
 | Versioned desktop stdio boundary, Dart client stub and native Sandbox feasibility | Implemented experimental P4-01; [boundary](docs/DESKTOP_BOUNDARY.md); actual Desk backtest/run configuration integration active P4-03; native acceptance incomplete |
 | Application-owned native jobs, bounded lifecycle/output cursors and SDK-only service | Implemented experimental P4-02; [controls](docs/ENGINE_CONTROLS.md); full task closure in PROJECT_STATUS |
 | Consumer immutable draft/run history | Implemented experimental active P4-03; final native acceptance incomplete |
+| Optional native extended Desk graph, shared-cash restricted shorts, multi-stream and bounded training-only grid | Implemented experimental; [contract and acceptance](docs/EXTENDED_RESEARCH.md); separate from legacy profiles and full P4 closure |
 | Plugins, Trading SDK adapter | Planned |
 
 **Implemented** means executable code is present and tested. **Experimental** means the API or schema can change and has no compatibility guarantee. **Planned** means design intent only. These labels can overlap: an experimental component may have implemented code.

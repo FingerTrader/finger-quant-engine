@@ -24,7 +24,7 @@
     "crates/fqe-core/tests/financial_contract.rs": "sha256:4ee44a884e00215089654196a46a5d7b2c455ea4ea3b373398b28ee93ddd415c",
     "crates/fqe-ir/src/compiler.rs": "sha256:300dbd974f2e2eecea71c855ca66b442d603772504784edcdaf36052f99ff87d",
     "crates/fqe-ir/src/financial_exchange.rs": "sha256:ffd5ecd1601ed2e0989009482c2cc73ee951765edd90f9451b4bba264da97561",
-    "crates/fqe-ir/src/history.rs": "sha256:d3999ffb65725daa31b4641c3ba0df147224c09b566cb2a0d087999749256abf",
+    "crates/fqe-ir/src/history.rs": "sha256:dc6e385588bbe4bdb070da713a32cd520ffdea4ab84ec8eb6b9e952fbbed4af5",
     "crates/fqe-ir/src/history_csv.rs": "sha256:3104fadf0da77e924199810e0f7beadec3e53178ac45aec35d74a8b807e4d9ae",
     "crates/fqe-ir/src/workflow.rs": "sha256:c3b365ed0e2256d64726ac60eeeae465cf6ab27f97050715a4010547b83e8719",
     "crates/fqe-ir/tests/fixtures/history/cash-long-comparison.json": "sha256:6e2cf4729f9c57c0aae0c315058722e51cfd1c1ec6ef0a4f35d6c4660d71b216",

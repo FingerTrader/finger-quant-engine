@@ -116,3 +116,8 @@ Goal: third-party indicators/predicates/rules compose across languages through g
 For each completed task record in PROJECT_STATUS: artifact paths, acceptance outcome, test command/count/platform/date, code/evidence commit, unresolved limitations and next task. Large evidence packs may live in dedicated reports linked there; they do not replace the unique progress ledger. Stage-gate reports must reference individual task evidence. A missing external runtime or OS test is a real blocker, not permission to mark a gate complete.
 
 The old phase numbering is retired; its intent is mapped in [Roadmap](ROADMAP.md). New scope must preserve these boundaries and be approved as a scoped task; dates, marketplace operation and a remote trading deployment are not implied by the plan.
+
+
+## Owner-approved extended research checkpoint — 2026-11-15
+
+The separate optional [extended research profile](EXTENDED_RESEARCH.md) is implemented and native-tested under George's explicit authorization to modify FQE and publish both repositories. It supports the current fixed Desk graph and bounded training-only optimization. It does not close the broader generic authoring/modules/exchange/scalability child contracts: their ledger states above remain authoritative. P4-03.03 remains IN_PROGRESS until its complete current native journey and all closure conditions are evidenced. Additive HistorySpec timeframe labels update one reviewed source pin and engine identity; no accounting algorithm or economic golden is rewritten.

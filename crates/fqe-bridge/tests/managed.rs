@@ -329,3 +329,24 @@ fn model_inspection_includes_generic_workflow_modules_and_parameters() {
     );
     assert!(result["descriptors"].as_array().unwrap().len() >= 4);
 }
+
+#[test]
+fn extended_graph_uses_the_same_managed_lifecycle_and_exact_result_bytes() {
+    let m = manager();
+    let p: Value = serde_json::from_str(include_str!("fixtures/research-input.json")).unwrap();
+    let job = start(&m, "research.managed", p.clone());
+    let h = job["handle"].as_str().unwrap();
+    assert_eq!(wait(&m, h)["phase"], "completed");
+    let result = call(&m, "run.result", json!({"handle":h})).unwrap();
+    let direct = fqe_bridge::research::prepare(&p)
+        .unwrap()
+        .run(&std::sync::atomic::AtomicBool::new(false))
+        .unwrap();
+    assert_eq!(serde_json::to_vec(&result["report"]).unwrap(), direct.bytes);
+    assert_eq!(result["result_id"], direct.result_id);
+    assert_eq!(call(&m, "run.result", json!({"handle":h})).unwrap(), result);
+    assert_eq!(
+        call(&m, "run.release", json!({"handle":h})).unwrap()["released"],
+        true
+    );
+}

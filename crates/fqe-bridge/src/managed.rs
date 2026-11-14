@@ -425,6 +425,24 @@ impl ManagedRuns {
                 }
                 let outcome =
                     std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| -> Result<Stored> {
+                        if input["kind"] == "research" || input["kind"] == "research_optimization" {
+                            let result = if input["kind"] == "research" {
+                                crate::research::prepare(&input)?.run(&flag)?
+                            } else {
+                                crate::research::optimization::run(&input, &flag)?
+                            };
+                            return Ok(Stored {
+                                phase: if result.cancelled {
+                                    Phase::Cancelled
+                                } else {
+                                    Phase::Completed
+                                },
+                                bytes: Arc::from(result.bytes),
+                                result_id: result.result_id,
+                                manifest_id: result.manifest_id,
+                                processed: result.processed.to_string(),
+                            });
+                        }
                         let prepared = prepare(&input)?;
                         let result = prepared.run_with_cancel(&flag)?;
                         let phase = match result.terminal() {
