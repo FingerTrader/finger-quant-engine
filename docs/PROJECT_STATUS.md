@@ -10,7 +10,7 @@
 - Previous implementation: **P2-04 — Snapshot / Restore**, COMPLETED; evidence `4dffdfe235eba1f698a34b3e0df6c2198a066ba3`, complete bounded reconstruction/atomic persistence;229 Rust/23 external/11 process cases PASS.
 - Previous implementation: **P2-05 — Replay & Debug Trace**, COMPLETED; evidence `8c2b39f83c03fbcb0794c18a5fef4d92e998a5ee`;238 Rust/23 external/11 process cases PASS.
 - Latest implementation: **P2-06 — Temporal Strategy Gate**, COMPLETED; evidence `d272c4d78445f984686d9025e7cb29c0de9fc544`;244 Rust/23 external/11 process/55 independent rows/full P2 gate PASS.
-- Next eligible implementation: **P3-04 — Margin, Leverage & Broker Profiles**, VERIFIED. History/ledger/explicit order simulation closed; independently validated margin/leverage/maintenance/liquidation next. User authorizes continuing downstream work without routine confirmation; publishing is not requested.
+- Next eligible implementation: **P3-05 — Backtest Orchestration & Portfolio Reports**, READY. Financial history/ledger/orders/margin closed; full pinned local runner and authoritative reports next. User authorizes continuing downstream work without routine confirmation; publishing is not requested.
 - P1-02 acceptance met: evaluated numeric policy/limits, strict type/unit/scale checks, unsupported-shape rejection, full binding matrix and tests. Evidence `a653c105fba5ea6ada15395abc22cc8f82cc4472` and local closure recorded below; publishing not requested.
 - Actual root: `/Users/george/Desktop/finger-quant-engine`; main tracking origin/main; remote `https://github.com/FingerTrader/finger-quant-engine.git`.
 - Rust source baseline / latest pre-governance commit: `342d8aa76b48d32fa9c9110609b371eac52b8d86` (foundation). Previous commit: `cbcebad`.
@@ -44,15 +44,16 @@
 | P3-01 | COMPLETED | Exact financial/history/input profile;257 Rust/23 external/11 process/full P2 gate PASS; evidence `f7d87ed730a74664cb6dc4182fbc6cac62c007e6`; local closure |
 | P3-02 | COMPLETED | Bounded authoritative balanced ledger/holds/valuation/replay and independent5-case16-row comparisons;267 Rust/full gate PASS; evidence `954d08462eab2195fbb4d4ed27a60367df49ae4f` |
 | P3-03 | COMPLETED | Explicit orders/next-open prior-volume fills/costs/caps/lifecycle/replay;280 Rust/full gate PASS; evidence `e9d49881081c76e6b7afdf2a879e74d47ec36524` |
-| P3-04 | VERIFIED | Explicit zero-interest borrowed-cash margin-long profile, debt journal, after-fee leverage/holds, maintenance-close/next-open liquidation and gap insolvency |
-| P3-05, P3-06, P3-07 | NOT_STARTED | Prior P3 dependencies/gate first |
+| P3-04 | COMPLETED | Debt/margin/maintenance/liquidation/gap/insolvency profile;291 Rust/full gate and4-case18-row oracle PASS; evidence `cb23e74b1ae94c80b115ff50430bda7caad74db8` |
+| P3-05 | READY | P3-04 closed; full runner/report provenance and metrics next |
+| P3-06, P3-07 | NOT_STARTED | Prior P3 dependencies/gate first |
 | P4-01, P4-02, P4-03, P4-04, P4-05 | NOT_STARTED | P3 gate first |
 | P5-01, P5-02, P5-03, P5-04, P5-05 | NOT_STARTED | P4 gate first; Python → Java → Go |
 | P5-05.01 | NOT_STARTED | Real unlisted-language onboarding after P5-04; prerequisite of parent P5-05 |
 | P6-01, P6-02, P6-03, P6-04, P6-05, P6-06 | NOT_STARTED | P5 gate first |
 | P6-03.01 | NOT_STARTED | Java-indicator/Go-predicate graph after P6-02; prerequisite of parent P6-03 |
 
-Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 20 COMPLETED, 1 VERIFIED, 21 NOT_STARTED. P3-04 is first eligible; none is BLOCKED. P1/P2 gates passed; P3–P6 gates remain open. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
+Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 21 COMPLETED, 1 READY, 20 NOT_STARTED. P3-05 is first eligible; none is BLOCKED. P1/P2 gates passed; P3–P6 gates remain open. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
 
 ## Delivered baseline and limitations
 
@@ -409,3 +410,5 @@ Full `PYTHONDONTWRITEBYTECODE=1 python3 scripts/check_p2_gate.py` PASS2026-11-14
 [Margin profiles](MARGIN_PROFILES.md)/ADR-030 own principal-only zero-interest borrowed-cash long profile, balanced debt/money postings,1..5x initial/after-fee/pending-cap leverage, free-cash repayment, strict-below known-close maintenance, subsequent-open previous-volume partial liquidation/system slot and failed/insolvent/stopped distinctions. All independent phase balances/debt/cost/fees/equity/maintenance match. Tested equality, limits/mismatch/steps, cancel/failed-replace, debt-gated journal replay, fee-triggered candidate rejection without fees, gap residual200 debt/negative equity, recovery-sticky partial exits, zero-volume stall, zero-price failed open inventory, error-state preservation through Finish, reserved system slot/prefix, late leveraged-bar quota rollback/retry, every-command splits/tampered rules/debt/status. Original cash-long economic tests remain PASS.
 
 Native DTOs/risk receipts still do not supply a portable full-financial crash-file checkpoint/report. No interest/short margin/FX/portfolio/broker-realism/live guarantee or actual Desk completion. No dependency/manifest/lock/toolchain/protected indicator/provider/old P1/P2 golden changes, installers, scanners/private uploads or Desk writes/execution. Final intended/protected diff review/evidence commit/closure pending; continue P3-05 automatically.
+
+P3-04 intended/staged/protected-source review PASS; evidence `cb23e74b1ae94c80b115ff50430bda7caad74db8` committed. This closure marks P3-04 COMPLETED/P3-05 READY. Remote main last confirmed0ac5d7b163e77bddb5f69689a1455e3560aad872;44 local commits including closure. No publication requested; continue automatically.
