@@ -1,4 +1,5 @@
 //! Explicit cash-long next-open/prior-closed-volume simulator. No live routing or intrabar fills.
+use crate::margin::{MARGIN_MODEL, MarginRules, MarginStatus};
 use crate::{events::EventObservation, ledger::*};
 use fqe_core::{
     bars::ClosedBar,
@@ -59,6 +60,7 @@ pub struct SignalSource {
 }
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct SimulationConfig {
+    pub margin: Option<MarginRules>,
     pub limits: SimulationLimits,
     pub account: AccountConfig,
     pub timeframe_ns: u64,
@@ -125,6 +127,7 @@ pub enum OrderStatus {
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Rejection {
+    MarginLimit,
     InsufficientCash,
     InsufficientPosition,
     CashCap,
@@ -133,6 +136,7 @@ pub enum Rejection {
 }
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct SimOrder {
+    pub liquidation: bool,
     pub number: u64,
     pub intent: OrderIntent,
     pub submitted_after: u64,
@@ -176,6 +180,14 @@ pub enum SimulationCommand {
 }
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum SimulationEvent {
+    Margin {
+        status: MarginStatus,
+        source_bar: u64,
+        mark: Decimal,
+        equity: Decimal,
+        exposure: Decimal,
+        required: Decimal,
+    },
     Order(SimOrder),
     Fill(SimFill),
     Finished,
@@ -188,6 +200,7 @@ pub struct SimulationOpening {
 }
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct SimulationReceipt {
+    pub margin: Option<MarginStatus>,
     pub sequence: u64,
     pub opening: Option<SimulationOpening>,
     pub command: SimulationCommand,
@@ -196,6 +209,7 @@ pub struct SimulationReceipt {
 }
 #[derive(Clone, Debug)]
 pub struct SimulationBroker {
+    margin: Option<MarginStatus>,
     config: SimulationConfig,
     ledger: VirtualLedger,
     orders: Vec<SimOrder>,
@@ -207,6 +221,16 @@ pub struct SimulationBroker {
 }
 impl SimulationBroker {
     pub fn new(config: SimulationConfig) -> Result<Self> {
+        match (&config.margin, config.account.profile) {
+            (None, LedgerProfile::CashLong) => {}
+            (Some(rules), LedgerProfile::MarginLong) => rules.validate()?,
+            _ => {
+                return Err(err(
+                    "simulation_config",
+                    "account and margin profile are incompatible",
+                ));
+            }
+        }
         if config.limits.orders == 0
             || config.limits.orders > MAX_ORDERS
             || config.limits.commands < 2
@@ -216,8 +240,7 @@ impl SimulationBroker {
         {
             return Err(err("simulation_limit", "invalid configured capacities"));
         }
-        if config.account.profile != LedgerProfile::CashLong
-            || config.timeframe_ns == 0
+        if config.timeframe_ns == 0
             || config.participation_bps > 10000
             || config.fee_bps > 10000
             || config.slippage_bps >= 10000
@@ -241,6 +264,7 @@ impl SimulationBroker {
         }
         let ledger = VirtualLedger::new(config.account.clone())?;
         Ok(Self {
+            margin: config.margin.as_ref().map(|_| MarginStatus::Healthy),
             config,
             ledger,
             orders: vec![],
@@ -253,6 +277,13 @@ impl SimulationBroker {
     }
     pub fn config(&self) -> &SimulationConfig {
         &self.config
+    }
+    pub fn model(&self) -> &'static str {
+        if self.config.margin.is_some() {
+            MARGIN_MODEL
+        } else {
+            MODEL
+        }
     }
     pub fn ledger(&self) -> &VirtualLedger {
         &self.ledger
@@ -268,6 +299,9 @@ impl SimulationBroker {
     }
     pub fn finished(&self) -> bool {
         self.finished
+    }
+    pub fn margin_status(&self) -> Option<MarginStatus> {
+        self.margin
     }
     pub fn order(&self, id: &str) -> Option<&SimOrder> {
         self.orders.iter().find(|o| o.intent.id == id)
@@ -320,7 +354,11 @@ impl SimulationBroker {
         index: usize,
         order: &str,
     ) -> Result<OrderIntent> {
-        if self.finished || observation.warmup || !observation.matched {
+        if self.finished
+            || self.margin.is_some_and(|s| s != MarginStatus::Healthy)
+            || observation.warmup
+            || !observation.matched
+        {
             return Err(err(
                 "simulation_signal",
                 "terminal, warmup or unmatched observation",
@@ -400,6 +438,9 @@ impl SimulationBroker {
     }
     fn validate_intent(&self, intent: &OrderIntent) -> Result<()> {
         id(&intent.id)?;
+        if self.config.margin.is_some() && intent.id.starts_with("__fqe.") {
+            return Err(err("simulation_id", "reserved system order prefix"));
+        }
         self.time()?;
         let instrument = &self.config.account.instrument;
         instrument.quantity(intent.quantity, false)?;
@@ -445,6 +486,145 @@ impl SimulationBroker {
             ));
         }
         self.signal_key(intent)?;
+        Ok(())
+    }
+    fn repay_free_cash(&mut self, time: u64) -> Result<()> {
+        if self.config.margin.is_some() {
+            let view = self.ledger.view();
+            let n = view
+                .available_cash
+                .coefficient()
+                .min(view.debt.coefficient());
+            if n > 0 {
+                self.journal(
+                    0,
+                    "repay",
+                    time,
+                    LedgerAction::Repay {
+                        amount: decimal(n, self.ms())?,
+                    },
+                )?;
+            }
+        }
+        Ok(())
+    }
+    fn margin_admissible(
+        &self,
+        mark: Decimal,
+        new_cap: Option<Decimal>,
+        completed: Option<usize>,
+    ) -> Result<bool> {
+        let Some(rules) = &self.config.margin else {
+            return Ok(true);
+        };
+        let value = self.ledger.value_at(mark)?;
+        if value.equity.coefficient() <= 0 {
+            return Ok(false);
+        }
+        let mut exposure = value.market_value.coefficient();
+        for (index, order) in self.orders.iter().enumerate() {
+            if Some(index) != completed
+                && order.live()
+                && order.intent.side == TradeSide::Buy
+                && let Some(hold) = self.ledger.reservations().get(&Self::hold(order))
+            {
+                exposure = exposure
+                    .checked_add(hold.cash.coefficient())
+                    .ok_or_else(|| err("simulation_overflow", "pending exposure"))?;
+            }
+        }
+        exposure = exposure
+            .checked_add(new_cap.map(|v| v.coefficient()).unwrap_or(0))
+            .ok_or_else(|| err("simulation_overflow", "new exposure"))?;
+        let limit = rules.exposure_limit(
+            value.equity,
+            self.config.account.instrument.declaration().money_step,
+        )?;
+        Ok(exposure <= limit.coefficient())
+    }
+    fn check_margin_close(
+        &mut self,
+        bar: &ClosedBar,
+        events: &mut Vec<SimulationEvent>,
+    ) -> Result<()> {
+        let Some(rules) = self.config.margin.clone() else {
+            return Ok(());
+        };
+        let b = bar.input();
+        let mark = price(&b.close)?;
+        let value = self.ledger.value_at(mark)?;
+        let step = self.config.account.instrument.declaration().money_step;
+        let required = rules.maintenance(value.market_value, step)?;
+        if self.margin == Some(MarginStatus::Healthy)
+            && (value.equity.coefficient() < required.coefficient()
+                || value.equity.coefficient() < 0)
+        {
+            for index in 0..self.orders.len() {
+                if self.orders[index].live() {
+                    self.terminate(index, OrderStatus::Cancelled, None, b.close_ns, events)?;
+                }
+            }
+            let quantity = self.ledger.view().quantity;
+            if quantity.coefficient() > 0 {
+                // One reserved system order lies outside the user order cap; it cannot be replaced/cancelled.
+                let order = SimOrder {
+                    liquidation: true,
+                    number: self.orders.len() as u64 + 1,
+                    intent: OrderIntent {
+                        id: "__fqe.liquidation".into(),
+                        side: TradeSide::Sell,
+                        kind: OrderKind::Market,
+                        quantity,
+                        cash_cap: None,
+                        origin: IntentOrigin::Manual,
+                    },
+                    submitted_after: b.sequence,
+                    filled_quantity: decimal(0, self.qs())?,
+                    status: OrderStatus::Accepted,
+                    rejection: None,
+                };
+                self.journal(
+                    order.number,
+                    "liquidation_hold",
+                    b.close_ns,
+                    LedgerAction::Reserve {
+                        reservation: Self::hold(&order),
+                        amount: Reservation {
+                            cash: decimal(0, self.ms())?,
+                            quantity,
+                        },
+                    },
+                )?;
+                events.push(SimulationEvent::Order(order.clone()));
+                self.orders.push(order);
+                self.margin = Some(MarginStatus::Liquidating);
+            } else {
+                self.margin = Some(MarginStatus::Insolvent);
+            }
+        } else if self.margin == Some(MarginStatus::Liquidating) {
+            if self.ledger.view().quantity.coefficient() == 0 {
+                self.margin = Some(if self.ledger.view().debt.coefficient() == 0 {
+                    MarginStatus::Liquidated
+                } else {
+                    MarginStatus::Insolvent
+                });
+            } else if self.orders.iter().any(|o| o.liquidation && !o.live()) {
+                self.margin = Some(if value.equity.coefficient() < 0 {
+                    MarginStatus::Insolvent
+                } else {
+                    MarginStatus::LiquidationFailed
+                });
+            }
+        }
+        let value = self.ledger.value_at(mark)?;
+        events.push(SimulationEvent::Margin {
+            status: self.margin.expect("configured"),
+            source_bar: b.sequence,
+            mark,
+            equity: value.equity,
+            exposure: value.market_value,
+            required: rules.maintenance(value.market_value, step)?,
+        });
         Ok(())
     }
     fn quote(&self, raw: Decimal, side: TradeSide, kind: &OrderKind) -> Result<Decimal> {
@@ -519,6 +699,7 @@ impl SimulationBroker {
             return Err(err("simulation_duplicate", "signal already consumed"));
         }
         let mut order = SimOrder {
+            liquidation: false,
             number: self.orders.len() as u64 + 1,
             intent,
             submitted_after: self.last.as_ref().expect("frontier").input().sequence,
@@ -527,41 +708,65 @@ impl SimulationBroker {
             rejection: None,
         };
         let view = self.ledger.view();
-        let rejection = match order.intent.side {
-            TradeSide::Buy => {
-                let cap = order.intent.cash_cap.expect("validated");
-                let reference = match order.intent.kind {
-                    OrderKind::Market => {
-                        price(&self.last.as_ref().expect("frontier").input().close)?
+        let known_mark = price(&self.last.as_ref().expect("frontier").input().close)?;
+        let rejection = if order.intent.side == TradeSide::Buy
+            && !self.margin_admissible(known_mark, order.intent.cash_cap, None)?
+        {
+            Some(Rejection::MarginLimit)
+        } else {
+            match order.intent.side {
+                TradeSide::Buy => {
+                    let cap = order.intent.cash_cap.expect("validated");
+                    let reference = match order.intent.kind {
+                        OrderKind::Market => {
+                            price(&self.last.as_ref().expect("frontier").input().close)?
+                        }
+                        OrderKind::Limit(p) => p,
+                    };
+                    let quote = self.quote(reference, order.intent.side, &order.intent.kind);
+                    match quote.and_then(|p| self.cost(p, order.intent.quantity)) {
+                        Err(_) => Some(Rejection::PriceOrModelRange),
+                        Ok((gross, fee))
+                            if gross.coefficient() + fee.coefficient() > cap.coefficient() =>
+                        {
+                            Some(Rejection::CashCap)
+                        }
+                        Ok(_)
+                            if self.config.margin.is_none()
+                                && cap.coefficient() > view.available_cash.coefficient() =>
+                        {
+                            Some(Rejection::InsufficientCash)
+                        }
+                        _ => None,
                     }
-                    OrderKind::Limit(p) => p,
-                };
-                let quote = self.quote(reference, order.intent.side, &order.intent.kind);
-                match quote.and_then(|p| self.cost(p, order.intent.quantity)) {
-                    Err(_) => Some(Rejection::PriceOrModelRange),
-                    Ok((gross, fee))
-                        if gross.coefficient() + fee.coefficient() > cap.coefficient() =>
-                    {
-                        Some(Rejection::CashCap)
-                    }
-                    Ok(_) if cap.coefficient() > view.available_cash.coefficient() => {
-                        Some(Rejection::InsufficientCash)
-                    }
-                    _ => None,
                 }
+                TradeSide::Sell
+                    if order.intent.quantity.coefficient()
+                        > view.available_long_quantity.coefficient() =>
+                {
+                    Some(Rejection::InsufficientPosition)
+                }
+                _ => None,
             }
-            TradeSide::Sell
-                if order.intent.quantity.coefficient()
-                    > view.available_long_quantity.coefficient() =>
-            {
-                Some(Rejection::InsufficientPosition)
-            }
-            _ => None,
         };
         if let Some(reason) = rejection {
             order.status = OrderStatus::Rejected;
             order.rejection = Some(reason);
         } else {
+            if self.config.margin.is_some() && order.intent.side == TradeSide::Buy {
+                let cap = order.intent.cash_cap.expect("validated");
+                let needed = cap.coefficient() - view.available_cash.coefficient();
+                if needed > 0 {
+                    self.journal(
+                        order.number,
+                        "borrow",
+                        self.time()?,
+                        LedgerAction::Borrow {
+                            amount: decimal(needed, self.ms())?,
+                        },
+                    )?;
+                }
+            }
             let amount = Reservation {
                 cash: order.intent.cash_cap.unwrap_or(decimal(0, self.ms())?),
                 quantity: if order.intent.side == TradeSide::Sell {
@@ -611,6 +816,7 @@ impl SimulationBroker {
         order.status = status;
         order.rejection = reason;
         events.push(SimulationEvent::Order(order.clone()));
+        self.repay_free_cash(time)?;
         Ok(())
     }
     fn bar(&mut self, bar: ClosedBar, events: &mut Vec<SimulationEvent>) -> Result<()> {
@@ -723,6 +929,12 @@ impl SimulationBroker {
                 fee,
                 release: Some(release),
             };
+            let before_margin_buy =
+                if self.config.margin.is_some() && order.intent.side == TradeSide::Buy {
+                    Some(self.ledger.clone())
+                } else {
+                    None
+                };
             let ledger_sequence = match self.journal(order.number, "fill", b.open_ns, action) {
                 Ok(n) => n,
                 Err(e) if matches!(e.code, "ledger_funds" | "ledger_units") => {
@@ -737,8 +949,26 @@ impl SimulationBroker {
                 }
                 Err(e) => return Err(e),
             };
-            liquidity -= n;
             let filled = order.filled_quantity.coefficient() + n;
+            if let Some(previous) = before_margin_buy {
+                let completed = if filled == order.intent.quantity.coefficient() {
+                    Some(index)
+                } else {
+                    None
+                };
+                if !matches!(self.margin_admissible(raw_open, None, completed), Ok(true)) {
+                    self.ledger = previous;
+                    self.terminate(
+                        index,
+                        OrderStatus::Rejected,
+                        Some(Rejection::MarginLimit),
+                        b.open_ns,
+                        events,
+                    )?;
+                    continue;
+                }
+            }
+            liquidity -= n;
             self.orders[index].filled_quantity = decimal(filled, self.qs())?;
             let fill = SimFill {
                 number: self.fills.len() as u64 + 1,
@@ -773,6 +1003,8 @@ impl SimulationBroker {
                 events.push(SimulationEvent::Order(self.orders[index].clone()));
             }
         }
+        self.repay_free_cash(b.close_ns)?;
+        self.check_margin_close(&bar, events)?;
         self.last = Some(bar);
         Ok(())
     }
@@ -780,6 +1012,17 @@ impl SimulationBroker {
     pub fn apply(&mut self, command: SimulationCommand) -> Result<&SimulationReceipt> {
         if self.finished {
             return Err(err("simulation_finished", "simulation is terminal"));
+        }
+        if self.margin.is_some_and(|s| s != MarginStatus::Healthy)
+            && matches!(
+                &command,
+                SimulationCommand::Submit(_) | SimulationCommand::Replace { .. }
+            )
+        {
+            return Err(err(
+                "simulation_margin",
+                "new risk is disabled after margin breach",
+            ));
         }
         if self.receipts.len() >= self.config.limits.commands
             || (!matches!(&command, SimulationCommand::Finish)
@@ -798,7 +1041,7 @@ impl SimulationBroker {
                 let index = next
                     .orders
                     .iter()
-                    .position(|o| o.intent.id == *order && o.live())
+                    .position(|o| o.intent.id == *order && o.live() && !o.liquidation)
                     .ok_or_else(|| err("simulation_order", "order is absent or terminal"))?;
                 next.terminate(
                     index,
@@ -815,7 +1058,7 @@ impl SimulationBroker {
                 let index = next
                     .orders
                     .iter()
-                    .position(|o| o.intent.id == *order && o.live())
+                    .position(|o| o.intent.id == *order && o.live() && !o.liquidation)
                     .ok_or_else(|| err("simulation_order", "replace needs live order"))?;
                 next.terminate(
                     index,
@@ -839,12 +1082,19 @@ impl SimulationBroker {
                     }
                 }
                 next.finished = true;
+                if matches!(
+                    next.margin,
+                    Some(MarginStatus::Healthy | MarginStatus::Liquidating)
+                ) && next.ledger.view().quantity.coefficient() > 0
+                {
+                    next.margin = Some(MarginStatus::Stopped);
+                }
                 events.push(SimulationEvent::Finished);
             }
         }
         let opening = if next.receipts.is_empty() {
             Some(SimulationOpening {
-                model: MODEL.into(),
+                model: next.model().into(),
                 config: next.config.clone(),
                 engine_id: crate::source_identity::engine_id(),
             })
@@ -852,6 +1102,7 @@ impl SimulationBroker {
             None
         };
         next.receipts.push(SimulationReceipt {
+            margin: next.margin,
             sequence: next.receipts.len() as u64 + 1,
             opening,
             command,

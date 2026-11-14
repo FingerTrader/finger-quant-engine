@@ -50,12 +50,14 @@ fn id(value: &str) -> Result<()> {
 pub enum LedgerProfile {
     CashLong,
     ProceedsRestrictedShort,
+    MarginLong,
 }
 impl LedgerProfile {
     pub fn version(self) -> &'static str {
         match self {
             Self::CashLong => "fqe.gross-basis-cash-long/1",
             Self::ProceedsRestrictedShort => "fqe.gross-basis-restricted-short/1",
+            Self::MarginLong => "fqe.gross-basis-margin-long/1",
         }
     }
 }
@@ -89,6 +91,12 @@ pub struct ReservationRelease {
 }
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum LedgerAction {
+    Borrow {
+        amount: Decimal,
+    },
+    Repay {
+        amount: Decimal,
+    },
     Funding {
         direction: FundingDirection,
         amount: Decimal,
@@ -116,6 +124,7 @@ pub struct LedgerTransaction {
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum MoneyAccount {
+    LoanDebt,
     Cash,
     InventoryCost,
     ExternalCapital,
@@ -134,6 +143,7 @@ pub struct QuantityPostings {
 }
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct AccountView {
+    pub debt: Decimal,
     pub cash: Decimal,
     pub reserved_cash: Decimal,
     pub restricted_short_proceeds: Decimal,
@@ -178,6 +188,7 @@ pub struct LedgerOpening {
 }
 #[derive(Clone, Debug)]
 struct State {
+    debt: i128,
     cash: i128,
     quantity: i128,
     cost: i128,
@@ -209,6 +220,7 @@ impl VirtualLedger {
             return Err(error("ledger_funds", "initial cash must be nonnegative"));
         }
         let state = State {
+            debt: 0,
             cash,
             quantity: 0,
             cost: 0,
@@ -301,7 +313,9 @@ impl VirtualLedger {
             || (s.quantity == 0 && s.cost != 0)
             || (s.quantity > 0 && s.cost < 0)
             || (s.quantity < 0 && s.cost > 0)
-            || (self.config.profile == LedgerProfile::CashLong && s.quantity < 0)
+            || (self.config.profile != LedgerProfile::ProceedsRestrictedShort && s.quantity < 0)
+            || s.debt < 0
+            || (self.config.profile != LedgerProfile::MarginLong && s.debt != 0)
         {
             return Err(error(
                 "ledger_funds",
@@ -311,13 +325,16 @@ impl VirtualLedger {
         self.config
             .instrument
             .quantity_lots(decimal(s.quantity.abs(), self.qs())?, true)?;
-        if add(s.cash, s.cost)? != add(add(s.capital, s.realized)?, neg(s.fees)?)? {
+        if add(add(s.cash, s.cost)?, neg(s.debt)?)?
+            != add(add(s.capital, s.realized)?, neg(s.fees)?)?
+        {
             return Err(error(
                 "ledger_conservation",
-                "cash+cost != external capital+realized gross-fees",
+                "cash+cost-debt != external capital+realized gross-fees",
             ));
         }
         Ok(AccountView {
+            debt: self.money(s.debt)?,
             cash: self.money(s.cash)?,
             reserved_cash: self.money(rc)?,
             restricted_short_proceeds: self.money(restricted)?,
@@ -335,7 +352,9 @@ impl VirtualLedger {
     /// Mark is a caller-supplied positive price. This computes views and never changes journal state.
     pub fn value_at(&self, mark: Decimal) -> Result<Valuation> {
         self.config.instrument.price(mark)?;
-        if mark.coefficient() <= 0 {
+        if mark.coefficient() < 0
+            || (mark.coefficient() == 0 && self.config.profile != LedgerProfile::MarginLong)
+        {
             return Err(error("ledger_mark", "positive mark required"));
         }
         let q = self.state.quantity;
@@ -351,7 +370,7 @@ impl VirtualLedger {
             FinancialRounding::HalfAwayFromZero,
         )?
         .coefficient();
-        let equity = add(self.state.cash, market)?;
+        let equity = add(add(self.state.cash, market)?, neg(self.state.debt)?)?;
         let unrealized = add(market, neg(self.state.cost)?)?;
         let total = add(equity, neg(self.state.capital)?)?;
         if total != add(add(self.state.realized, unrealized)?, neg(self.state.fees)?)? {
@@ -388,6 +407,30 @@ impl VirtualLedger {
         let mut movement = None;
         let mut trade = None;
         match &transaction.action {
+            LedgerAction::Borrow { amount } | LedgerAction::Repay { amount } => {
+                if self.config.profile != LedgerProfile::MarginLong {
+                    return Err(error(
+                        "ledger_profile",
+                        "financing requires margin-long profile",
+                    ));
+                }
+                let n = self.config.instrument.money(*amount)?.coefficient();
+                if n <= 0 {
+                    return Err(error("ledger_financing", "positive principal required"));
+                }
+                let borrowing = matches!(&transaction.action, LedgerAction::Borrow { .. });
+                if !borrowing && n > candidate.debt {
+                    return Err(error(
+                        "ledger_financing",
+                        "repayment exceeds outstanding debt",
+                    ));
+                }
+                let flow = if borrowing { n } else { neg(n)? };
+                candidate.cash = add(candidate.cash, flow)?;
+                candidate.debt = add(candidate.debt, flow)?;
+                postings.push(self.posting(MoneyAccount::Cash, flow)?);
+                postings.push(self.posting(MoneyAccount::LoanDebt, neg(flow)?)?);
+            }
             LedgerAction::Funding { direction, amount } => {
                 let n = self.config.instrument.money(*amount)?.coefficient();
                 if n <= 0 {

@@ -18,6 +18,7 @@ fn config() -> SimulationConfig {
     ))
     .unwrap();
     SimulationConfig {
+        margin: None,
         limits: SimulationLimits::default(),
         account: AccountConfig {
             account: "simulation".into(),

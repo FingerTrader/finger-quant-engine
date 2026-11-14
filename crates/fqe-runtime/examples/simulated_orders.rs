@@ -27,6 +27,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         0,
     )?;
     let config = SimulationConfig {
+        margin: None,
         limits: SimulationLimits::default(),
         account: AccountConfig {
             account: "example".into(),

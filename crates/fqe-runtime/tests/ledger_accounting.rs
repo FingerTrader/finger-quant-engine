@@ -55,6 +55,7 @@ fn reconcile(ledger: &VirtualLedger) {
     let mut profit = 0;
     let mut fees = 0;
     let mut quantity = 0;
+    let mut debt = 0;
     for entry in ledger.journal() {
         assert_eq!(
             entry
@@ -66,6 +67,7 @@ fn reconcile(ledger: &VirtualLedger) {
         );
         for p in &entry.money {
             match p.account {
+                MoneyAccount::LoanDebt => debt -= p.delta.coefficient(),
                 MoneyAccount::Cash => cash += p.delta.coefficient(),
                 MoneyAccount::InventoryCost => cost += p.delta.coefficient(),
                 MoneyAccount::ExternalCapital => capital -= p.delta.coefficient(),
@@ -90,7 +92,8 @@ fn reconcile(ledger: &VirtualLedger) {
             v.quantity.coefficient()
         )
     );
-    assert_eq!(cash + cost, capital + profit - fees);
+    assert_eq!(cash + cost - debt, capital + profit - fees);
+    assert_eq!(debt, v.debt.coefficient());
 }
 #[test]
 fn independent_fraction_pack_matches_each_long_short_partial_and_rounding_transaction() {

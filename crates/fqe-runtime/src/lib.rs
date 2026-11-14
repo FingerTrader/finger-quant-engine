@@ -183,3 +183,6 @@ pub mod ledger;
 
 /// Deterministic local simulated orders and fills; no live routing.
 pub mod simulator;
+
+/// Explicit margin profile arithmetic and risk lifecycle.
+pub mod margin;
