@@ -2,6 +2,8 @@
 
 use std::fmt;
 
+pub mod parameters;
+
 use fqe_core::{InstrumentId, MarketTick, PriceTicks, Signal, SignalKind};
 
 pub const IR_VERSION: u32 = 1;

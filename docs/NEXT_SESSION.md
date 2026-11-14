@@ -1,54 +1,42 @@
 # Next Session — Repository Recovery
 
-Updated 2026-11-14 (Asia/Tokyo). This handoff is derived from [Project status](PROJECT_STATUS.md), the only progress authority. No prior chat is needed.
+Updated 2026-11-14 (Asia/Tokyo). Derived from [Project status](PROJECT_STATUS.md), the unique progress authority.
 
 ## Resume sequence
 
-1. Read PROJECT_STATUS, this file, [DELIVERY_PLAN](DELIVERY_PLAN.md), [ARCHITECTURE_DECISIONS](ARCHITECTURE_DECISIONS.md), then [Extensibility](EXTENSIBILITY_CONTRACT.md), [P1 design](P1_STRATEGY_DESIGN.md), [Strategy contract](STRATEGY_CONTRACT.md), [Desk integration](DESK_INTEGRATION_PLAN.md) and [Baseline audit](BASELINE_AUDIT.md). Also read README, AGENTS and [Workflow](WORKFLOW.md).
-2. Verify cwd is the actual desktop checkout `/Users/george/Desktop/finger-quant-engine`; inspect Git status, branch/remotes and recent commits. Work on main; no second project/worktree/branch. Compare baseline `342d8aa76b48d32fa9c9110609b371eac52b8d86` and recorded governance evidence with actual history. `git log -1 --format=%H -- docs/PROJECT_STATUS.md` identifies latest status commit without a self-referential hash.
-3. Governance/audit evidence is committed as `f07fe8ccd4c12b46783b67ff0a2421172d05d5dc` and its normal GitHub main push was confirmed by remote SHA. Check current closure commit/remote status as well; if code/tests/history disagree with records, repair status/handoff from facts first. Never infer future push success from this historical receipt.
-4. P1-01 is COMPLETED and P1-02 is READY. For an implementation request, set P1-02 IN_PROGRESS in status and plan before scoped changes. A review/documentation request does not start that implementation. Do not repeat the completed audit as a new feature task unless facts have changed.
+1. Read PROJECT_STATUS, this file, [Delivery plan](DELIVERY_PLAN.md), [ADRs](ARCHITECTURE_DECISIONS.md), [Type/parameter contract](TYPE_PARAMETER_CONTRACT.md), [P1 design](P1_STRATEGY_DESIGN.md), [Strategy](STRATEGY_CONTRACT.md), [Extensibility](EXTENSIBILITY_CONTRACT.md), [Desk integration](DESK_INTEGRATION_PLAN.md), README, AGENTS and [Workflow](WORKFLOW.md).
+2. Verify actual cwd `/Users/george/Desktop/finger-quant-engine`, main/upstream/remotes, dirty files and recent commits. No other worktree/branch. Git/code/executed tests override stale records. `git log -1 --format=%H -- docs/PROJECT_STATUS.md` resolves the latest status commit without self-reference.
+3. Historical source baseline is `342d8aa76b48d32fa9c9110609b371eac52b8d86`; governance evidence is `f07fe8ccd4c12b46783b67ff0a2421172d05d5dc`; its confirmed push is historical only. GOV-02/GOV-03 are completed local planning refinements; their evidence and previous remote receipt are in PROJECT_STATUS. Do not infer a new push from them.
+4. P1-02 is VERIFIED, with local evidence commit/closure pending. Do not start P1-03 before closure. Recover dirty files and actual last commands if interrupted; never repeat a completed implementation as a fresh task.
 
-## Current documentation refinement and product target
+## Current P1-02 result and delivery
 
-GOV-03 is COMPLETED: this owner-requested documentation slice defines open language/indicator/rule goals, canonical descriptors/provider semantics, adapter onboarding and native Desk acceptance. The plan now has 42 stage tasks (40 original parents plus P5-05.01 and P6-03.01); parent gates explicitly depend on these children. Early proofs are X-001 in P1, stateful X-002 in P2, generic discovery in P4, actual reference languages and fourth adapter in P5, external Java-indicator/Go-predicate graph and installed Desk in P6. Required checks and full intended diff review passed: 17 Rust tests, CLI demo, 25-document/188-link/42-task checker, seven negative cases, original-task/dependency preservation and independent X-005 specification arithmetic. Evidence `5e9f770c01e513598478f4cbdd42a9a5278fb804` is committed; this follow-up records local closure (resolve its commit using the status-log command). Initial Git index write required a filesystem permission override and the scoped commit succeeded. Remote main was checked at `0ac5d7b163e77bddb5f69689a1455e3560aad872`; GOV-02/GOV-03 remain local and are not published. No extension capability is implemented or credited by this planning slice. Existing GOV-02 local commits remain preserved; publishing is not requested.
+Implemented checked i128 decimal (scale 0–18; explicit Exact/TowardZero/HalfEven rounding; checked result/intermediate overflow), validated scalar/unit descriptors and readiness, immutable parameter schemas/bindings. Source: fqe-core/src/numeric.rs and types.rs; fqe-ir/src/parameters.rs. Public tests: fqe-core/tests/value_contract.rs and fqe-ir/tests/parameter_contract.rs. Offline executable example: fqe-ir/examples/parameters.rs. TYPE_PARAMETER_CONTRACT and ADR-013 record the bounded choice and remaining gates.
 
-GOV-02 is COMPLETED: owner-requested fixes for six review findings plus the actual Desk consumer assessment. Files: P1/event contracts, workflow/plan, charter/ADR-011, Desk integration and navigation/status/handoff. All four Rust checks (17 behavioral tests), CLI demo, 24-document/162-link/40-task checker, three negative controls, stage-dependency preservation and diff preservation passed. Independent G-007 rational values and G-006 boundary specification checks passed. Final diff reviewed; evidence `49282a0daf3d08145d2cfb5ab2f42a2184e2a900` committed, with a follow-up local closure record. Resolve its containing commit using the status-log command. These local commits are unpushed. No GitHub push was requested; no Desk source, Rust source, manifests or lockfile is to change in this documentation task.
+All four required Rust checks passed, including strict all-target Clippy and 36 behavioral tests (17 original + 19 new), zero failed/ignored. An earlier Clippy style finding was corrected before the complete final suite passed. CLI demo remains three events/two signals; parameter example demonstrates default 2/override 5/rejected 0. Document checker and whitespace/preservation checks passed; exact counts are in PROJECT_STATUS. Full intended diff reviewed. Evidence commit/closure pending; no GitHub publication requested. Legacy positive PriceTicks/IR_VERSION=1/evaluator/CLI behavior, manifests/lockfile/toolchain/license remain preserved. No new dependency/tool install, external source edit or Desk run.
 
-The owner confirmed the first product scope: **Desk backtesting and local simulation**, with live trading separately accepted later. The existing `/Users/george/Desktop/finger_desk` is a required integration target, with an already implemented legacy Dart/Python path and substantial dirty work. Its read-only dated inventory, migration/compatibility rules and actual native journey are in DESK_INTEGRATION_PLAN. Preserve that work; Desk's own P0–P6 numbering is independent of FQE's. No native Desk run or integration has been verified here.
+P1 remains incomplete. The 42-task plan has 40 original parents and two extension acceptance children. No indicator, compiler, loader, scheduler, ledger, worker/provider bridge, plugin loader or FQE/Desk integration is delivered by these primitive APIs. The scalar requests for unsupported shapes/types are rejected, not advertised as implementations. Working precision/tolerances and financial rounding remain P1-06/P3-01 work.
 
-Six corrections specify: gates exclude themselves; publishing needs session authorization; required/default/absence/null/type binding matrix; stateful history advances independently of Boolean short-circuit; k+3 RSI/expiry/re-cross ordering; minimum closed-bar ownership in P1-08. These are planned semantics to implement under existing tasks, not new runtime capabilities.
+## Next task after closure: P1-03 — Versioned Definition & Model Loading
 
-## Work completed in governance session
-
-Inspected all five crates/manifests, lockfile, README, all 12 existing docs, tests and Git history. Reconfirmed 17 behavioral tests, formatting/check/strict Clippy and CLI baseline. Added charter, authority, ADR register, six-stage plan, P1 target design, status, handoff and workflow, plus audit evidence and a standard-library document checker. Updated old roadmap/navigation/transport wording and agent recovery entry points. No Rust source, dependencies, draft schema or license changed. P1 remains incomplete.
-
-The earlier GOV-01/P1-01 stop was completed with a confirmed GitHub evidence commit. Its closure record uses that existing evidence hash; resolve its containing commit from Git. GOV-02 and the current GOV-03 refinement above each have their own state and must not inherit that historical push receipt. P1-02 remains READY; implementation has not begun. Exact current committed/delivery state is in PROJECT_STATUS and Git.
-
-## Next task: P1-02 — Universal Types & Parameter Schema
-
-Deliver an evaluated numeric/type contract and a small executable validated domain/parameter layer, not the rest of the engine. Start from actual `fqe-core` positive-u64 types and `fqe-ir` price comparison; preserve existing experimental behavior until an explicit contract revision and tests justify change.
+Deliver an evaluated bounded external-format/model-loading slice that consumes the P1-02 APIs. Do not expand directly into compiler execution, workers or accounting.
 
 Acceptance:
 
-- Compare viable numeric representations for price/ratio/indicator and future money; record precision/range/rounding/overflow and signed/zero-price decisions. Do not mark the final financial ledger implementation complete.
-- Define a versioned implemented type subset with explicit units/domain and Missing/Warmup/Error semantics, suitable for language-neutral descriptor ports/parameters. Evaluate scalar/multi-output/window needs without implementing all shapes; identify/reject unsupported required shapes, types and conversions rather than silently accepting them. Keep the generic provider implementation in P1-04 and external workers/loaders in P5/P6.
-- Implement the P1 design binding matrix: reject required+default schemas, preserve optional unbound distinctly from runtime readiness, reject explicit null/readiness inputs and implicit type/unit conversions, validate defaults/ranges/enums and duplicate/unknown keys. Instance bindings are immutable for a run. Wire-format duplicates are independently tested in P1-03.
-- Add meaningful boundary, overflow, invalid-schema/binding and regression tests. Four Rust checks and docs checker pass; contracts, plan, status, handoff and evidence commit updated.
+- Evaluate the external encoding and bounded parse/canonical identity approach; record an evidenced ADR before declaring a codec selected. No Protobuf generator/dependency is implicitly authorized.
+- Define immutable portable definition/version/content identity versus instance/bindings/runtime state. Represent graph/module/descriptor/requirements declarations with validated identities and bounds; registry semantics/graph compilation remain P1-04/P1-07 work.
+- Preserve full-width decimal coefficient/scale, exact u64 and unit identity without float conversion. Repeat P1-02's required/default/absence/null/type/unit/range/enum behavior through the actual decoder. Detect duplicate keys before map conversion loses them.
+- Reject missing/unsupported versions, types, shapes and required capabilities, malformed/truncated/oversized/deep input and duplicate IDs with stable diagnostics; do not execute rejected definitions.
+- Define the existing Desk visual/hosted schema compatibility dispositions from the dated DESK_INTEGRATION_PLAN inventory; do not reinterpret old dual-SMA models or rewrite Desk records.
+- Test actual valid/invalid external fixtures and round-trip/canonical identity, independent expected values and input limits. Run required checks, update contracts/plan/status/handoff and record evidence commit. No new language/plugin/financial support claim.
 
-## Expected edit scope
+Expected edit scope: scoped fqe-ir definition/loading modules and fixtures/tests; fqe-protocol only as the evaluated mapping requires; fqe-core only for demonstrated necessary support. Update relevant type/strategy/P1/architecture contracts and governance progress. Cargo manifests/lockfile only after a justified dependency review; default to the existing toolchain and reviewed capabilities.
 
-- `crates/fqe-core/src/lib.rs` (or scoped new modules) for validated type/numeric primitives.
-- `crates/fqe-ir/src/lib.rs` (or scoped new modules) for parameter schema/binding and tests.
-- `docs/P1_STRATEGY_DESIGN.md`, `docs/STRATEGY_CONTRACT.md` and, only if affected, event/state contracts.
-- `docs/ARCHITECTURE_DECISIONS.md` for an evidenced numeric decision; `docs/DELIVERY_PLAN.md`, `docs/PROJECT_STATUS.md`, `docs/NEXT_SESSION.md` for progress and recovery.
-- Cargo manifests/Cargo.lock **only if a justified dependency change is reviewed**. Prefer existing standard-library capabilities for this slice; do not assume a new numeric library is authorized without review.
-
-Protected/out of scope: LICENSE and existing history; `.local-toolchain/`, ignored private datasets/runs/secrets; unrelated dirty work; Flutter/Trading SDK/external repositories; worker/plugin/simulator/accounting implementations; schema code generation or broad CLI/runtime redesign. Do not install tools because default PATH lacks Rust. No force push, reset or extra worktree/branch. Minimal consumers may be adapted only if the current type change requires it, with evidence.
+Protected/out of scope: LICENSE/history, private datasets/runs/secrets, .local-toolchain installation, unrelated dirty work, Flutter/Trading SDK/external repositories, registry/compiler/evaluator redesign, workers/plugins/simulator/accounting and implicit code generation. Keep all computation local and offline. No reset/force-push/extra branch/worktree. Publishing requires session authorization.
 
 ## Commands
 
-Activate the already installed pin (no installer):
+Activate the existing pin, with no installer:
 
 ```sh
 export CARGO_HOME="$PWD/.local-toolchain/cargo"
@@ -60,12 +48,18 @@ cargo fmt --check
 cargo check --workspace --locked --offline
 cargo test --workspace --locked --offline
 cargo clippy --workspace --all-targets --locked --offline -- -D warnings
+cargo run --locked --offline -p fqe-cli -- demo
+cargo run --locked --offline -p fqe-ir --example parameters
 python3 scripts/check_docs.py
 git diff --check
 ```
 
-Run task-specific numeric/schema tests too. Baseline evidence was 17 tests and CLI demo events=3/signals=2; new meaningful tests will change the count. Record current results rather than copying that number. Before/after push compare `git rev-parse HEAD` and `git ls-remote origin refs/heads/main`. Follow WORKFLOW closure sequence.
+Run new loader-specific checks too; record actual new counts, not a copied baseline. At closure follow WORKFLOW; inspect remote main before publishing and preserve remote changes. A local completion receipt is not a push receipt.
 
-## Unresolved risks
+## Product target and unresolved risks
 
-Numeric and external format decisions are unvalidated; new packages/generators require supply-chain checks. Current `.proto` and IR_VERSION=1 are experimental. Data leakage, multi-timeframe order, state restoration, independent ledger correctness, FFI/IPC and actual worker/plugin isolation have future gates. No other OS or real Desktop has been verified. If interrupted, preserve actual dirty files, last result/error, pending checks, unpushed SHA and recovery step here and in status; never mark unverified work COMPLETED.
+First product scope is Desk historical backtesting/local simulation; live trading is separately accepted later. The engine is to be delivered in the existing Flutter Desk package with supported runtimes so customers install Desk once, without an extra engine/interpreter setup. P4 actual native integration, P5 reference languages/fourth-adapter proof and P6 external Java-indicator/Go-predicate graph/final signed installed bundle remain future acceptance. Engine conformance and customer-bundle/platform support are separate matrices.
+
+The existing `/Users/george/Desktop/finger_desk` has a dated dirty-tree inventory and existing Dart/Python financial/hosted paths in DESK_INTEGRATION_PLAN; protect that work and use a freshly pinned paired candidate before integration. Desk owns presentation/drafts and FQE owns computation/financial truth per run; preserve historical records and explicit backend identity. Its P0–P6 labels are independent of FQE stages. No native FQE/Desk run has been verified.
+
+Model codecs/identity, indicator precision, event alignment/leakage, state restore, independent financial correctness, worker/plugin isolation and actual OS/customer-channel support remain open. Before interruption record real dirty/staged/unpushed state, last result/error and exact pending recovery in status/handoff; never label unverified work COMPLETED.

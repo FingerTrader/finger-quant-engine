@@ -19,6 +19,7 @@ This repository contains the initial engineering foundation, version `0.1.0`. It
 | Area | Status in this repository |
 | --- | --- |
 | Cargo Workspace and validated core types | Implemented |
+| Checked decimal values, scalar/unit descriptors and immutable parameter bindings | Implemented, experimental P1-02 subset; [contract](docs/TYPE_PARAMETER_CONTRACT.md) |
 | Typed IR: a single-instrument price comparison producing signals | Implemented, experimental API |
 | Synchronous, deterministic in-memory event runtime and run state | Implemented, experimental API |
 | Offline CLI demonstration and behavioral tests | Implemented |
@@ -97,6 +98,7 @@ Commit `Cargo.lock` alongside dependency changes. The current lockfile contains 
 
 - [Architecture](docs/ARCHITECTURE.md)
 - [Strategy contract](docs/STRATEGY_CONTRACT.md)
+- [Type/parameter subset and numeric decision](docs/TYPE_PARAMETER_CONTRACT.md)
 - [Event contract](docs/EVENT_CONTRACT.md)
 - [State contract](docs/STATE_CONTRACT.md)
 - [Runtime](docs/RUNTIME.md)

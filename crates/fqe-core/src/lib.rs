@@ -2,6 +2,9 @@
 
 use std::fmt;
 
+pub mod numeric;
+pub mod types;
+
 /// A case-sensitive, bounded identifier shared by market inputs and strategies.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct InstrumentId(String);

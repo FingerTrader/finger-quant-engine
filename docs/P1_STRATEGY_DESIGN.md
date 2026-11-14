@@ -1,6 +1,6 @@
 # P1 Universal Strategy Design
 
-Status: implementation target for P1/P2, **not an implemented file format**. Accepted architectural constraints come from [ADRs](ARCHITECTURE_DECISIONS.md); representation/codec/numeric choices stay open until their owning tasks validate them. [Current Strategy contract](STRATEGY_CONTRACT.md) remains the accurate description of the experimental price-only model. [Delivery plan](DELIVERY_PLAN.md) assigns every target below to an executable task.
+Status: implementation target for P1/P2, **not an implemented file format**. The experimental [P1-02 type/parameter subset](TYPE_PARAMETER_CONTRACT.md) now has executable Rust APIs/tests; all remaining universal graph/model/runtime features below retain their planned status. Accepted architectural constraints come from [ADRs](ARCHITECTURE_DECISIONS.md); representation/codec/numeric choices stay open until their owning tasks validate them. [Current Strategy contract](STRATEGY_CONTRACT.md) remains the accurate description of the experimental price-only model. [Delivery plan](DELIVERY_PLAN.md) assigns every target below to an executable task.
 
 ## Definition, version and instance
 
