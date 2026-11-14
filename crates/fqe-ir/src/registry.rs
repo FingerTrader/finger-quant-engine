@@ -677,14 +677,12 @@ impl Registry {
             registry_id: self.content_id,
         })
     }
-    /// Creates a fresh owned state; never usable through repeated pure AST calls.
-    pub fn instantiate(
+    /// Bind and validate without creating or advancing state.
+    pub fn prepare_incremental(
         &self,
         r: &EntryRequirement,
         values: impl IntoIterator<Item = (String, ParameterInput)>,
-        run: impl Into<String>,
-        instance: impl Into<String>,
-    ) -> Result<IncrementalInstance> {
+    ) -> Result<PreparedIncremental> {
         let e = self.registration(r)?;
         let Implementation::Incremental(provider) = &e.implementation else {
             return Err(error("registry_profile", "$", "pure entries use prepare"));
@@ -710,28 +708,31 @@ impl Registry {
                 "parameter payload budget exceeded",
             ));
         }
-        let run = run.into();
-        let instance = instance.into();
-        identifier(&run, "$.call.run")?;
-        identifier(&instance, "$.call.instance")?;
         provider_result(catch_unwind(AssertUnwindSafe(|| {
             provider.validate_parameters(&parameters)
         })))?;
-        let state = provider_result(catch_unwind(AssertUnwindSafe(|| {
-            provider.create(&parameters)
-        })))?;
-        Ok(IncrementalInstance {
+        Ok(PreparedIncremental {
             descriptor: Arc::clone(&e.descriptor),
             provider: Arc::clone(provider),
             parameters,
             parameter_bytes,
-            state,
-            run,
-            instance,
-            last_sequence: None,
-            accepted_steps: 0,
             registry_id: self.content_id,
         })
+    }
+    /// Creates a fresh owned state; never usable through repeated pure AST calls.
+    pub fn instantiate(
+        &self,
+        r: &EntryRequirement,
+        values: impl IntoIterator<Item = (String, ParameterInput)>,
+        run: impl Into<String>,
+        instance: impl Into<String>,
+    ) -> Result<IncrementalInstance> {
+        let run = run.into();
+        let instance = instance.into();
+        identifier(&run, "$.call.run")?;
+        identifier(&instance, "$.call.instance")?;
+        self.prepare_incremental(r, values)?
+            .instantiate(run, instance)
     }
     /// Local signature/parameter preparation only; no cycle/topology compilation.
     pub fn prepare_node(
@@ -1166,6 +1167,51 @@ impl IncrementalInstance {
             registry_id: self.registry_id,
             model_pin: None,
             outputs,
+        })
+    }
+}
+
+/// Immutable pinned factory/parameters. Preparation executes only relationship validation.
+pub struct PreparedIncremental {
+    descriptor: Arc<Descriptor>,
+    provider: Arc<dyn IncrementalProvider>,
+    parameters: BoundParameters,
+    parameter_bytes: usize,
+    registry_id: ContentId,
+}
+impl PreparedIncremental {
+    pub fn descriptor(&self) -> &Descriptor {
+        &self.descriptor
+    }
+    pub fn parameters(&self) -> &BoundParameters {
+        &self.parameters
+    }
+    pub fn registry_id(&self) -> ContentId {
+        self.registry_id
+    }
+    pub fn instantiate(
+        &self,
+        run: impl Into<String>,
+        instance: impl Into<String>,
+    ) -> Result<IncrementalInstance> {
+        let run = run.into();
+        let instance = instance.into();
+        identifier(&run, "$.call.run")?;
+        identifier(&instance, "$.call.instance")?;
+        let state = provider_result(catch_unwind(AssertUnwindSafe(|| {
+            self.provider.create(&self.parameters)
+        })))?;
+        Ok(IncrementalInstance {
+            descriptor: Arc::clone(&self.descriptor),
+            provider: Arc::clone(&self.provider),
+            parameters: self.parameters.clone(),
+            parameter_bytes: self.parameter_bytes,
+            state,
+            run,
+            instance,
+            last_sequence: None,
+            accepted_steps: 0,
+            registry_id: self.registry_id,
         })
     }
 }

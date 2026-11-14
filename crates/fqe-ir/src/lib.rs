@@ -3,7 +3,9 @@
 use std::fmt;
 
 pub mod builtins;
+pub mod compiler;
 pub mod expressions;
+pub mod graph;
 pub mod indicators;
 pub mod loading;
 pub mod model;

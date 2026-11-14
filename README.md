@@ -24,6 +24,7 @@ This repository contains the initial engineering foundation, version `0.1.0`. It
 | Frozen callable descriptors, typed scalar provider invocation and independent unknown-name example | Implemented, experimental P1-04 subset; [contract](docs/PROVIDER_REGISTRY.md) |
 | Typed arithmetic/Boolean expressions and transactional crossing subscriptions | Implemented, experimental P1-05 subset; [contract](docs/EXPRESSION_CONTRACT.md) |
 | Registered SMA/EMA/MACD/RSI and instance-owned incremental scalar providers | Implemented, experimental P1-06 library slice; [contract](docs/INDICATOR_CONTRACT.md); no event scheduler |
+| Descriptor-driven graph compiler, typed inputs and bounded pure rule modules | Implemented, experimental P1-07; [contract](docs/GRAPH_COMPILER.md); pure expression projection, deferred indicator state |
 | Typed IR: a single-instrument price comparison producing signals | Implemented, experimental API |
 | Synchronous, deterministic in-memory event runtime and run state | Implemented, experimental API |
 | Offline CLI demonstration and behavioral tests | Implemented |

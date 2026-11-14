@@ -1,0 +1,665 @@
+{
+  "format": "fqe.graph",
+  "schema_version": 1,
+  "ir_version": 2,
+  "id": "x001.modules",
+  "version": "1",
+  "parameters": {
+    "version": 1,
+    "entries": [
+      {
+        "key": "threshold",
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "u64"
+        },
+        "required": false,
+        "default": {
+          "type": {
+            "version": 1,
+            "shape": "scalar",
+            "kind": "u64"
+          },
+          "value": "150"
+        },
+        "constraints": {},
+        "description": "Exact threshold"
+      }
+    ]
+  },
+  "requirements": [
+    "model.typed-graph/1",
+    "model.pure-modules/1",
+    "values/1",
+    "parameters/1"
+  ],
+  "entries": [
+    {
+      "key": {
+        "id": "fqe.constant.u64",
+        "version": "1"
+      },
+      "descriptor_version": 1,
+      "role": "provider",
+      "artifact": "sha256:101df288c16907a6d6953df729c40d082b31ee1fb374e513319b8a5f1f4c13d1"
+    },
+    {
+      "key": {
+        "id": "fqe.bool.not",
+        "version": "1"
+      },
+      "descriptor_version": 1,
+      "role": "provider",
+      "artifact": "sha256:101df288c16907a6d6953df729c40d082b31ee1fb374e513319b8a5f1f4c13d1"
+    },
+    {
+      "key": {
+        "id": "independent.checked_pair",
+        "version": "1"
+      },
+      "descriptor_version": 1,
+      "role": "provider",
+      "artifact": "sha256:c17c31b99564b24886511bb674eb5084b57ad166a20006c795b5ece58cd2d3bf"
+    },
+    {
+      "key": {
+        "id": "independent.above",
+        "version": "1"
+      },
+      "descriptor_version": 1,
+      "role": "provider",
+      "artifact": "sha256:c17c31b99564b24886511bb674eb5084b57ad166a20006c795b5ece58cd2d3bf"
+    }
+  ],
+  "graph": {
+    "inputs": [],
+    "nodes": [
+      {
+        "id": "left",
+        "arguments": {
+          "value": {
+            "literal": {
+              "type": {
+                "version": 1,
+                "shape": "scalar",
+                "kind": "u64"
+              },
+              "value": "125"
+            }
+          }
+        },
+        "inputs": [],
+        "outputs": [
+          {
+            "name": "result",
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "u64"
+            }
+          }
+        ],
+        "target": {
+          "kind": "provider",
+          "key": {
+            "id": "fqe.constant.u64",
+            "version": "1"
+          }
+        }
+      },
+      {
+        "id": "right",
+        "arguments": {
+          "value": {
+            "literal": {
+              "type": {
+                "version": 1,
+                "shape": "scalar",
+                "kind": "u64"
+              },
+              "value": "75"
+            }
+          }
+        },
+        "inputs": [],
+        "outputs": [
+          {
+            "name": "result",
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "u64"
+            }
+          }
+        ],
+        "target": {
+          "kind": "provider",
+          "key": {
+            "id": "fqe.constant.u64",
+            "version": "1"
+          }
+        }
+      },
+      {
+        "id": "first",
+        "target": {
+          "kind": "module",
+          "key": {
+            "id": "independent.wrapper",
+            "version": "1"
+          }
+        },
+        "arguments": {
+          "threshold": {
+            "parameter": "threshold"
+          }
+        },
+        "inputs": [
+          {
+            "name": "left",
+            "source": {
+              "node": "left",
+              "port": "result"
+            }
+          },
+          {
+            "name": "right",
+            "source": {
+              "node": "right",
+              "port": "result"
+            }
+          }
+        ],
+        "outputs": [
+          {
+            "name": "accepted",
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "bool"
+            }
+          },
+          {
+            "name": "difference",
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "u64"
+            }
+          },
+          {
+            "name": "sum",
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "u64"
+            }
+          }
+        ]
+      },
+      {
+        "id": "second",
+        "target": {
+          "kind": "module",
+          "key": {
+            "id": "independent.rule",
+            "version": "1"
+          }
+        },
+        "arguments": {
+          "threshold": {
+            "literal": {
+              "type": {
+                "version": 1,
+                "shape": "scalar",
+                "kind": "u64"
+              },
+              "value": "250"
+            }
+          }
+        },
+        "inputs": [
+          {
+            "name": "left",
+            "source": {
+              "node": "left",
+              "port": "result"
+            }
+          },
+          {
+            "name": "right",
+            "source": {
+              "node": "right",
+              "port": "result"
+            }
+          }
+        ],
+        "outputs": [
+          {
+            "name": "accepted",
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "bool"
+            }
+          },
+          {
+            "name": "difference",
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "u64"
+            }
+          },
+          {
+            "name": "sum",
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "u64"
+            }
+          }
+        ]
+      },
+      {
+        "id": "invert",
+        "target": {
+          "kind": "provider",
+          "key": {
+            "id": "fqe.bool.not",
+            "version": "1"
+          }
+        },
+        "arguments": {},
+        "inputs": [
+          {
+            "name": "value",
+            "source": {
+              "node": "first",
+              "port": "accepted"
+            }
+          }
+        ],
+        "outputs": [
+          {
+            "name": "result",
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "bool"
+            }
+          }
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "name": "first",
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "bool"
+        },
+        "source": {
+          "node": "first",
+          "port": "accepted"
+        }
+      },
+      {
+        "name": "second",
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "bool"
+        },
+        "source": {
+          "node": "second",
+          "port": "accepted"
+        }
+      },
+      {
+        "name": "inverted",
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "bool"
+        },
+        "source": {
+          "node": "invert",
+          "port": "result"
+        }
+      }
+    ]
+  },
+  "metadata": {
+    "label": "X-001 reviewed pure provider composition"
+  },
+  "modules": [
+    {
+      "schema_version": 1,
+      "key": {
+        "id": "independent.rule",
+        "version": "1"
+      },
+      "parameters": {
+        "version": 1,
+        "entries": [
+          {
+            "key": "threshold",
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "u64"
+            },
+            "required": true,
+            "constraints": {
+              "upper": {
+                "value": {
+                  "type": {
+                    "version": 1,
+                    "shape": "scalar",
+                    "kind": "u64"
+                  },
+                  "value": "999"
+                },
+                "inclusive": true
+              }
+            },
+            "description": "Bounded reusable-rule threshold"
+          }
+        ]
+      },
+      "graph": {
+        "inputs": [
+          {
+            "name": "left",
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "u64"
+            }
+          },
+          {
+            "name": "right",
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "u64"
+            }
+          }
+        ],
+        "nodes": [
+          {
+            "id": "pair",
+            "target": {
+              "kind": "provider",
+              "key": {
+                "id": "independent.checked_pair",
+                "version": "1"
+              }
+            },
+            "arguments": {},
+            "inputs": [
+              {
+                "name": "left",
+                "source": {
+                  "input": "left"
+                }
+              },
+              {
+                "name": "right",
+                "source": {
+                  "input": "right"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "sum",
+                "type": {
+                  "version": 1,
+                  "shape": "scalar",
+                  "kind": "u64"
+                }
+              },
+              {
+                "name": "difference",
+                "type": {
+                  "version": 1,
+                  "shape": "scalar",
+                  "kind": "u64"
+                }
+              }
+            ]
+          },
+          {
+            "id": "predicate",
+            "target": {
+              "kind": "provider",
+              "key": {
+                "id": "independent.above",
+                "version": "1"
+              }
+            },
+            "arguments": {
+              "threshold": {
+                "parameter": "threshold"
+              }
+            },
+            "inputs": [
+              {
+                "name": "value",
+                "source": {
+                  "node": "pair",
+                  "port": "difference"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "result",
+                "type": {
+                  "version": 1,
+                  "shape": "scalar",
+                  "kind": "bool"
+                }
+              }
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "name": "accepted",
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "bool"
+            },
+            "source": {
+              "node": "predicate",
+              "port": "result"
+            }
+          },
+          {
+            "name": "difference",
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "u64"
+            },
+            "source": {
+              "node": "pair",
+              "port": "difference"
+            }
+          },
+          {
+            "name": "sum",
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "u64"
+            },
+            "source": {
+              "node": "pair",
+              "port": "sum"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "schema_version": 1,
+      "key": {
+        "id": "independent.wrapper",
+        "version": "1"
+      },
+      "parameters": {
+        "version": 1,
+        "entries": [
+          {
+            "key": "threshold",
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "u64"
+            },
+            "required": true,
+            "constraints": {
+              "upper": {
+                "value": {
+                  "type": {
+                    "version": 1,
+                    "shape": "scalar",
+                    "kind": "u64"
+                  },
+                  "value": "999"
+                },
+                "inclusive": true
+              }
+            },
+            "description": "Bounded reusable-rule threshold"
+          }
+        ]
+      },
+      "graph": {
+        "inputs": [
+          {
+            "name": "left",
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "u64"
+            }
+          },
+          {
+            "name": "right",
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "u64"
+            }
+          }
+        ],
+        "nodes": [
+          {
+            "id": "nested",
+            "target": {
+              "kind": "module",
+              "key": {
+                "id": "independent.rule",
+                "version": "1"
+              }
+            },
+            "arguments": {
+              "threshold": {
+                "parameter": "threshold"
+              }
+            },
+            "inputs": [
+              {
+                "name": "left",
+                "source": {
+                  "input": "left"
+                }
+              },
+              {
+                "name": "right",
+                "source": {
+                  "input": "right"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "accepted",
+                "type": {
+                  "version": 1,
+                  "shape": "scalar",
+                  "kind": "bool"
+                }
+              },
+              {
+                "name": "difference",
+                "type": {
+                  "version": 1,
+                  "shape": "scalar",
+                  "kind": "u64"
+                }
+              },
+              {
+                "name": "sum",
+                "type": {
+                  "version": 1,
+                  "shape": "scalar",
+                  "kind": "u64"
+                }
+              }
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "name": "accepted",
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "bool"
+            },
+            "source": {
+              "node": "nested",
+              "port": "accepted"
+            }
+          },
+          {
+            "name": "difference",
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "u64"
+            },
+            "source": {
+              "node": "nested",
+              "port": "difference"
+            }
+          },
+          {
+            "name": "sum",
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "u64"
+            },
+            "source": {
+              "node": "nested",
+              "port": "sum"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "workflow": {},
+  "state": [],
+  "dependencies": []
+}

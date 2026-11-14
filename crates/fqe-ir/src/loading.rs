@@ -16,7 +16,7 @@ use fqe_core::{
 use serde::de::{self, DeserializeSeed, MapAccess, SeqAccess, Visitor};
 use serde_json::{Map, Value, json};
 use sha2::{Digest, Sha256};
-use std::{fmt, io::Read, path::Path};
+use std::{collections::BTreeMap, fmt, io::Read, path::Path};
 
 pub const MAX_DEPTH: usize = 32;
 pub const MAX_COLLECTION: usize = 1024;
@@ -104,7 +104,7 @@ impl<'de> Visitor<'de> for Seed<'_> {
         Ok(Value::Object(out))
     }
 }
-fn decode(bytes: &[u8]) -> Result<Value> {
+pub(crate) fn decode(bytes: &[u8]) -> Result<Value> {
     if bytes.len() > MAX_MODEL_BYTES {
         return Err(err("resource_limit", "$", "input exceeds 262144 bytes"));
     }
@@ -139,12 +139,12 @@ fn parse_error(e: &serde_json::Error) -> ModelError {
         ),
     )
 }
-struct Obj {
-    fields: Map<String, Value>,
+pub(crate) struct Obj {
+    pub(crate) fields: Map<String, Value>,
     path: String,
 }
 impl Obj {
-    fn new(v: Value, path: &str) -> Result<Self> {
+    pub(crate) fn new(v: Value, path: &str) -> Result<Self> {
         match v {
             Value::Object(fields) => Ok(Self {
                 fields,
@@ -153,7 +153,7 @@ impl Obj {
             _ => Err(err("type", path, "expected object")),
         }
     }
-    fn take(&mut self, k: &str) -> Result<Value> {
+    pub(crate) fn take(&mut self, k: &str) -> Result<Value> {
         self.fields.remove(k).ok_or_else(|| {
             err(
                 "missing_field",
@@ -162,10 +162,10 @@ impl Obj {
             )
         })
     }
-    fn optional(&mut self, k: &str) -> Option<Value> {
+    pub(crate) fn optional(&mut self, k: &str) -> Option<Value> {
         self.fields.remove(k)
     }
-    fn end(self) -> Result<()> {
+    pub(crate) fn end(self) -> Result<()> {
         if self.fields.is_empty() {
             Ok(())
         } else {
@@ -173,13 +173,13 @@ impl Obj {
         }
     }
 }
-fn text(v: Value, p: &str) -> Result<String> {
+pub(crate) fn text(v: Value, p: &str) -> Result<String> {
     match v {
         Value::String(s) => Ok(s),
         _ => Err(err("type", p, "expected string")),
     }
 }
-fn uint(v: Value, p: &str) -> Result<u32> {
+pub(crate) fn uint(v: Value, p: &str) -> Result<u32> {
     v.as_u64()
         .and_then(|n| n.try_into().ok())
         .ok_or_else(|| err("type", p, "expected unsigned u32 JSON integer"))
@@ -194,7 +194,7 @@ fn array(v: Value, p: &str) -> Result<Vec<Value>> {
         _ => Err(err("type", p, "expected array")),
     }
 }
-fn mapped<T>(v: Value, p: &str, f: impl Fn(Value, &str) -> Result<T>) -> Result<Vec<T>> {
+pub(crate) fn mapped<T>(v: Value, p: &str, f: impl Fn(Value, &str) -> Result<T>) -> Result<Vec<T>> {
     array(v, p)?
         .into_iter()
         .enumerate()
@@ -204,7 +204,7 @@ fn mapped<T>(v: Value, p: &str, f: impl Fn(Value, &str) -> Result<T>) -> Result<
 fn convert<T, E>(v: std::result::Result<T, E>, p: &str) -> Result<T> {
     v.map_err(|_| err("validation", p, "value/schema validation failed"))
 }
-fn descriptor(v: Value, p: &str) -> Result<TypeDescriptor> {
+pub(crate) fn descriptor(v: Value, p: &str) -> Result<TypeDescriptor> {
     let mut o = Obj::new(v, p)?;
     let version = uint(o.take("version")?, p)?;
     if text(o.take("shape")?, p)? != "scalar" {
@@ -263,7 +263,7 @@ fn integer<T: std::str::FromStr + ToString>(v: Value, p: &str) -> Result<T> {
     }
     Ok(n)
 }
-fn typed(v: Value, p: &str) -> Result<TypedValue> {
+pub(crate) fn typed(v: Value, p: &str) -> Result<TypedValue> {
     let mut o = Obj::new(v, p)?;
     let t = descriptor(o.take("type")?, p)?;
     let v = o.take("value")?;
@@ -302,7 +302,7 @@ fn constraints(v: Value, p: &str) -> Result<Constraints> {
         choices,
     })
 }
-fn parameter(v: Value, p: &str) -> Result<ParameterSpec> {
+pub(crate) fn parameter(v: Value, p: &str) -> Result<ParameterSpec> {
     let mut o = Obj::new(v, p)?;
     let key = text(o.take("key")?, p)?;
     let t = descriptor(o.take("type")?, p)?;
@@ -316,7 +316,7 @@ fn parameter(v: Value, p: &str) -> Result<ParameterSpec> {
         p,
     )
 }
-fn key(v: Value, p: &str) -> Result<EntryKey> {
+pub(crate) fn key(v: Value, p: &str) -> Result<EntryKey> {
     let mut o = Obj::new(v, p)?;
     let k = EntryKey {
         id: text(o.take("id")?, p)?,
@@ -325,7 +325,7 @@ fn key(v: Value, p: &str) -> Result<EntryKey> {
     o.end()?;
     Ok(k)
 }
-fn entry(v: Value, p: &str) -> Result<EntryRequirement> {
+pub(crate) fn entry(v: Value, p: &str) -> Result<EntryRequirement> {
     let mut o = Obj::new(v, p)?;
     let key = key(o.take("key")?, p)?;
     let descriptor_version = uint(o.take("descriptor_version")?, p)?;
@@ -351,14 +351,14 @@ fn input(v: Value, p: &str) -> Result<Input> {
     o.end()?;
     Ok(Input { name, source })
 }
-fn port(v: Value, p: &str) -> Result<Port> {
+pub(crate) fn port(v: Value, p: &str) -> Result<Port> {
     let mut o = Obj::new(v, p)?;
     let name = text(o.take("name")?, p)?;
     let value_type = descriptor(o.take("type")?, p)?;
     o.end()?;
     Ok(Port { name, value_type })
 }
-fn argument(v: Value, p: &str) -> Result<Argument> {
+pub(crate) fn argument(v: Value, p: &str) -> Result<Argument> {
     let mut o = Obj::new(v, p)?;
     let a = if let Some(v) = o.optional("parameter") {
         Argument::Parameter(text(v, p)?)
@@ -466,7 +466,7 @@ pub(crate) fn type_json(t: &TypeDescriptor) -> Value {
     o["kind"] = json!(kind);
     o
 }
-fn typed_json(v: &TypedValue) -> Value {
+pub(crate) fn typed_json(v: &TypedValue) -> Value {
     let value = match v.value() {
         ScalarValue::Bool(b) => json!(b),
         ScalarValue::Text(s) => json!(s),
@@ -561,13 +561,28 @@ fn digest(bytes: &[u8]) -> ContentId {
 #[derive(Clone, Debug)]
 pub struct LoadedModel {
     definition: ModelDefinition,
+    node_sources: BTreeMap<String, String>,
     canonical: Vec<u8>,
     source_id: ContentId,
     content_id: ContentId,
 }
 impl LoadedModel {
     pub fn from_bytes(bytes: &[u8]) -> Result<Self> {
-        let definition = definition(decode(bytes)?)?;
+        let value = decode(bytes)?;
+        let node_sources = value
+            .get("graph")
+            .and_then(|g| g.get("nodes"))
+            .and_then(Value::as_array)
+            .into_iter()
+            .flatten()
+            .enumerate()
+            .filter_map(|(i, n)| {
+                n.get("id")
+                    .and_then(Value::as_str)
+                    .map(|id| (id.to_string(), format!("$.graph.nodes[{i}]")))
+            })
+            .collect();
+        let definition = definition(value)?;
         let canonical = canonical(&definition)?;
         if canonical.len() > MAX_MODEL_BYTES {
             return Err(err("resource_limit", "$", "canonical model too large"));
@@ -578,6 +593,7 @@ impl LoadedModel {
         let content_id = ContentId::from_bytes(h.finalize().into());
         Ok(Self {
             definition,
+            node_sources,
             canonical,
             source_id: digest(bytes),
             content_id,
@@ -595,6 +611,10 @@ impl LoadedModel {
         Self::from_reader(
             std::fs::File::open(path).map_err(|_| err("io", "$", "model open failed"))?,
         )
+    }
+    /// Original JSON node location, excluded from canonical bytes/content identity.
+    pub fn node_source(&self, id: &str) -> Option<&str> {
+        self.node_sources.get(id).map(String::as_str)
     }
     pub fn definition(&self) -> &ModelDefinition {
         &self.definition

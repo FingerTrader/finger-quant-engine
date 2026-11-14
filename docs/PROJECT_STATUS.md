@@ -6,8 +6,8 @@
 
 - Phase: **P1 — Universal Strategy Foundation, incomplete**. P2–P6 NOT_STARTED. No functional phase gate has passed.
 - Completed: GOV-01/GOV-02/GOV-03 and P1-01 through P1-06; local evidence and closure records synchronized.
-- Latest implementation: **P1-06 — Indicator Function Slice**, COMPLETED. Shared registered SMA/EMA/MACD/RSI, bounded decimal policy, owned incremental instances and independent fixtures delivered; 96 workspace tests/all required checks passed. Evidence `e772bf0a44f35a5b457cbe10c02eb8cc16689003`.
-- Next eligible implementation: **P1-07 — Strategy Compiler & Typed Graph**, READY. Generic loaded-model compilation/module expansion follows the completed indicator slice. User authorized continuing downstream work without routine confirmation; publishing is not requested.
+- Latest implementation: **P1-07 — Strategy Compiler & Typed Graph**, VERIFIED. Loaded scalar/typed graphs, bounded pure modules, deterministic pinned plans/source maps, pure AST projection and deferred indicator preparation delivered; 119 tests/full checks/all examples PASS. Evidence commit pending.
+- Active closure: P1-07 VERIFIED; P1-08 becomes READY after evidence closure. User authorized continuing downstream work without routine confirmation; publishing is not requested.
 - P1-02 acceptance met: evaluated numeric policy/limits, strict type/unit/scale checks, unsupported-shape rejection, full binding matrix and tests. Evidence `a653c105fba5ea6ada15395abc22cc8f82cc4472` and local closure recorded below; publishing not requested.
 - Actual root: `/Users/george/Desktop/finger-quant-engine`; main tracking origin/main; remote `https://github.com/FingerTrader/finger-quant-engine.git`.
 - Rust source baseline / latest pre-governance commit: `342d8aa76b48d32fa9c9110609b371eac52b8d86` (foundation). Previous commit: `cbcebad`.
@@ -27,7 +27,7 @@
 | P1-04 | COMPLETED | Pure registry/invocation/model-node preparation, two independent X-001 compositions, 69 tests/full checks; evidence `d0382d365815d233e4f28773995e2ef688f2a656`, local closure |
 | P1-05 | COMPLETED | Typed expressions/calls and transactional crossings; 86 tests/full checks/all examples PASS; evidence `424aacb9faf5d081b72bf0a82f26ef396de16c78`, local closure |
 | P1-06 | COMPLETED | Registered indicators/owned staged state/ADR-017; 96 tests/full checks/all examples PASS; evidence `e772bf0a44f35a5b457cbe10c02eb8cc16689003`, local closure |
-| P1-07 | READY | P1-06 closed; generic compiler/typed graphs/bounded reusable modules/source diagnostics, see NEXT_SESSION |
+| P1-07 | VERIFIED | Generic compiler/pure modules/source maps/deferred incremental handles/ADR-018; 119 tests/full checks/all examples PASS; evidence commit pending |
 | P1-08, P1-09, P1-10, P1-11 | NOT_STARTED | Dependencies in DELIVERY_PLAN |
 | P2-01, P2-02, P2-03, P2-04, P2-05, P2-06 | NOT_STARTED | P1 gate first |
 | P3-01, P3-02, P3-03, P3-04, P3-05, P3-06, P3-07 | NOT_STARTED | P2 gate first |
@@ -37,7 +37,7 @@
 | P6-01, P6-02, P6-03, P6-04, P6-05, P6-06 | NOT_STARTED | P5 gate first |
 | P6-03.01 | NOT_STARTED | Java-indicator/Go-predicate graph after P6-02; prerequisite of parent P6-03 |
 
-Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 6 COMPLETED, 1 READY, 35 NOT_STARTED. P1-07 is next; none is IN_PROGRESS or BLOCKED. No functional phase gate has passed. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
+Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 6 COMPLETED, 1 VERIFIED, 35 NOT_STARTED. P1-07 awaits evidence closure; none is BLOCKED. No functional phase gate has passed. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
 
 ## Delivered baseline and limitations
 
@@ -45,7 +45,7 @@ Five Rust crates preserve the initial foundation: validated domain values, exper
 
 An experimental P1-02 decimal/type/parameter layer exists in fqe-core/fqe-ir. P1-03 adds the separately versioned IR2 bounded JSON importer, immutable model declarations, exact numeric values, canonical/source identity and content-pinned prepared bindings. [Model loading](MODEL_LOADING.md) owns supported/unsupported semantics; [dependency review](P1_03_DEPENDENCY_REVIEW.md) records three direct libraries and all 21 resolved registry packages. Offline builds require previously cached toolchain and locked dependencies.
 
-The separate P1-05 in-memory typed expression/crossing layer is implemented. No complete universal graph evaluator/indicator/compiler, generalized state scheduler/snapshot, backtester/virtual ledger/optimizer, Desktop boundary, SDK adapter, language worker or plugin runtime exists. Signals are observations, not orders/fills/performance. The `.proto` remains a draft, not a codec or transport. [Audit](BASELINE_AUDIT.md) records the dated pre-P1-02 foundation rather than current feature totals.
+The separate P1-05 expression/crossing layer and P1-06 registered indicators are implemented. P1-07 adds typed provider/module compilation, pure AST mapping and deferred incremental handles. A compiled market-event graph evaluator, generalized state scheduler/snapshot, backtester/virtual ledger/optimizer, Desktop boundary, SDK adapter, language worker and plugin runtime remain unimplemented. Signals are observations, not orders/fills/performance. The `.proto` remains a draft, not a codec or transport. [Audit](BASELINE_AUDIT.md) records the dated pre-P1-02 foundation rather than current feature totals.
 
 ## Historical baseline verification evidence
 
@@ -173,3 +173,16 @@ Final P1-05 closure document check PASS: 30 Markdown files, 286 local links/anch
 - Document checker PASS: 32 Markdown files and 42 stage tasks; dependency/status projections and local links checked. Whitespace/full intended diff/protected paths review PASS. Initial test helper's Result/Option compile mismatch was corrected; final checks above ran after all code changes. No other test failure, tool installation, package/manifest/lockfile change, new advisory query/scanner/private upload, Desk edit or external repository execution. Existing reviewed pinned dependencies used offline; no new dependencies.
 
 Local implementation evidence committed as `e772bf0a44f35a5b457cbe10c02eb8cc16689003`. This follow-up synchronizes COMPLETED closure and P1-07 READY; resolve the closure SHA through the status-log command above. Fourteen local commits including this closure remain unpushed. Remote main read-confirmed `0ac5d7b163e77bddb5f69689a1455e3560aad872`; no push requested/attempted. P1-07 graph/modules and P1-08 event scheduling remain unimplemented, with P1-09–P1-11/Desk/backtest/simulation gates still open.
+
+## P1-07 compiler verification
+
+2026-11-14, macOS ARM64, pinned rustc/Cargo 1.99.0:
+
+- Added [graph importer/compiler contract](GRAPH_COMPILER.md), graph.rs/compiler.rs, ADR-018, 23 public compiler tests, pure example/driver and two real nested/reused module artifacts. Exact `fqe.model/1` syntax/canonical identities remain preserved; `fqe.graph/1` explicitly adds typed graph inputs and inline pure modules. Existing importer only gains noncanonical original node positions and shared crate-private parsing helpers.
+- Shared registry now separates PreparedIncremental parameter/relationship validation from factory state creation. Compiler never invokes pure providers, creates state or steps history. Unknown-name function/predicate and real indicator descriptors compile without per-ID branches; strict pure modules reject incremental dependencies including unused nodes. Optional pure plan projection maps into P1-05 with bounded AST expansion and rejects incremental entries.
+- Required fmt/check/locked offline workspace tests/strict all-target Clippy all PASS. **119 behavioral tests = 96 prior + 23 compiler**, zero failed/ignored/doc tests. CLI demo plus parameters/load_model/providers/expressions/indicators/compile examples all PASS. Two legacy compositions compile to five provider leaves each; two nested/reused module variants to seven each. Pure expression execution yields sum first=true/inverted=false/second=false; difference first=false/inverted=true/second=false, from independently known 200/50 and thresholds150/250.
+- Tests cover independent canonical import, stable identities/topology under reordered declarations, model/binding/registry/module identity changes, exact defaults/range/enum/unbound/relationship binding, bad refs/versions/artifacts/ports/types/units/scales, direct/indirect graph cycles/module recursion, original definition/nested call-site diagnostics, slash-safe path vectors, typed graph inputs/passthroughs, 1024-visit exact boundary, expanded node/alias-edge/depth limits and bounded exponential pure AST projection. Independent factory counters verify zero create/step during compile and fresh later instances. Source locations change with syntax order but are excluded from canonical identity.
+- Independent Python stdlib json/hashlib generator imports no engine; tracked graph canonical content ID `sha256:e249358f3bd44864456663cd3084f6e5ba4b2e4d7c7b500e0041340872234227`, raw canonical SHA `64a0fc4d525e3bd84a2d0763e9e039fd660277d52c8e20501ccf3a7686388054`. Canonical graph fixture is 6385 bytes. Tests do not regenerate fixtures. Initial unused helper warning was removed before final strict checks; no final warning/error remains.
+- Document checker PASS: 33 Markdown files/42 stage tasks; local links and status/dependency projections checked. Full intended diff, whitespace and protected-path review PASS. No dependency/manifests/lockfile/toolchain/LICENSE change, new advisory query/scanner/private upload or external Desk/SDK repository action. Existing approved pinned dependencies used offline. Core/runtime/CLI/protocol/model declarations/pure built-ins/indicator/expression implementations and independent provider source remain unchanged.
+
+Local evidence commit pending; task remains VERIFIED until recorded. Remote main read-confirmed `0ac5d7b163e77bddb5f69689a1455e3560aad872`; no push requested/attempted. P1-08 must deliver actual closed-bar dispatch, once-per-event state subscriptions, expression/cross roots and atomic all-node/signal commit; pure example execution does not close that gate. P1-09–P1-11/Desk/backtest/simulation remain open.

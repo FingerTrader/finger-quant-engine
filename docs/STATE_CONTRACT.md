@@ -1,6 +1,6 @@
 # State contract
 
-Status: an in-memory run lifecycle and counters are implemented experimentally. P1-05 separately implements in-memory [transactional crossing history](EXPRESSION_CONTRACT.md), without integration into the legacy runtime. P1-06 adds separate [owned incremental indicator state](INDICATOR_CONTRACT.md) with single-node staged commits; neither slice is integrated into the legacy runtime. Durable/generalized strategy state, portfolio state and recovery are planned.
+Status: an in-memory run lifecycle and counters are implemented experimentally. P1-05 separately implements in-memory [transactional crossing history](EXPRESSION_CONTRACT.md), without integration into the legacy runtime. P1-06 adds separate [owned incremental indicator state](INDICATOR_CONTRACT.md) with single-node staged commits; neither slice is integrated into the legacy runtime. P1-07 now compiles deferred incremental handles without factory calls; actual mixed graph event transactions are P1-08. Durable/generalized strategy state, portfolio state and recovery are planned.
 
 ## Current ownership
 
