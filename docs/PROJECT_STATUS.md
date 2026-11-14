@@ -4,13 +4,13 @@
 
 ## Current position
 
-- Phase: **P1 and P2 COMPLETED**. Universal strategy and temporal/recovery gates passed. **P3-01..05 COMPLETED**; P3–P6 gates remain incomplete.
+- Phase: **P1 and P2 COMPLETED**. Universal strategy and temporal/recovery gates passed. **P3-01..06 COMPLETED**; P3–P6 gates remain incomplete.
 - Completed: GOV-01/GOV-02/GOV-03 and P1-01 through P1-11; local evidence and closure records synchronized.
 - Previous implementation: **P2-03 — Time Windows, Timers & Instance Scheduling**, COMPLETED. Evidence `f73082c86622ce40311d7e9ec91eef08402d681f`; typed bound temporal windows, deterministic timers, bounded fair isolated workflow lanes and joint provider/rule/temporal rollback.215 Rust +23 external tests/11 process cases/full checks PASS. P2-02 evidence `daeeb181d99236094daa3272fd4efa3855ddca06`.
 - Previous implementation: **P2-04 — Snapshot / Restore**, COMPLETED; evidence `4dffdfe235eba1f698a34b3e0df6c2198a066ba3`, complete bounded reconstruction/atomic persistence;229 Rust/23 external/11 process cases PASS.
 - Previous implementation: **P2-05 — Replay & Debug Trace**, COMPLETED; evidence `8c2b39f83c03fbcb0794c18a5fef4d92e998a5ee`;238 Rust/23 external/11 process cases PASS.
 - Latest implementation: **P2-06 — Temporal Strategy Gate**, COMPLETED; evidence `d272c4d78445f984686d9025e7cb29c0de9fc544`;244 Rust/23 external/11 process/55 independent rows/full P2 gate PASS.
-- Next eligible implementation: **P3-06 — Local Parameter Optimization**, VERIFIED. Full pinned backtest runner/report verified and closed; bounded reproducible search/train-validation isolation next. User authorizes continuing downstream work without routine confirmation; publishing is not requested.
+- Next eligible implementation: **P3-07 — P3 Accounting & Reproducibility Gate**, READY. History/ledger/order/margin/backtest/optimizer closed; complete pipeline persistence/restore and full independent financial gate next. User authorizes continuing downstream work without routine confirmation; publishing is not requested.
 - P1-02 acceptance met: evaluated numeric policy/limits, strict type/unit/scale checks, unsupported-shape rejection, full binding matrix and tests. Evidence `a653c105fba5ea6ada15395abc22cc8f82cc4472` and local closure recorded below; publishing not requested.
 - Actual root: `/Users/george/Desktop/finger-quant-engine`; main tracking origin/main; remote `https://github.com/FingerTrader/finger-quant-engine.git`.
 - Rust source baseline / latest pre-governance commit: `342d8aa76b48d32fa9c9110609b371eac52b8d86` (foundation). Previous commit: `cbcebad`.
@@ -46,15 +46,15 @@
 | P3-03 | COMPLETED | Explicit orders/next-open prior-volume fills/costs/caps/lifecycle/replay;280 Rust/full gate PASS; evidence `e9d49881081c76e6b7afdf2a879e74d47ec36524` |
 | P3-04 | COMPLETED | Debt/margin/maintenance/liquidation/gap/insolvency profile;291 Rust/full gate and4-case18-row oracle PASS; evidence `cb23e74b1ae94c80b115ff50430bda7caad74db8` |
 | P3-05 | COMPLETED | Full pinned Event/Workflow→policy→financial report runner;304 Rust/full gate/9-case metrics/actual report PASS; evidence `201e226e78b627b6c703a3a34cc6dc29af802a9a` |
-| P3-06 | VERIFIED | Bounded parameter search/trial isolation, training-only ranking, separate validation/seed/manifests; P3-05 closed |
-| P3-07 | NOT_STARTED | P3-06 and full accounting/reproducibility gate first |
+| P3-06 | COMPLETED | Isolated typed grid/train-only ranking/separate validation;317 Rust/full gate/independent grid PASS; evidence `2dac73503bbce2ce06788b123b23162941f5796d` |
+| P3-07 | READY | Full financial acceptance, complete persisted pipeline restore parity/negative models and required checks |
 | P4-01, P4-02, P4-03, P4-04, P4-05 | NOT_STARTED | P3 gate first |
 | P5-01, P5-02, P5-03, P5-04, P5-05 | NOT_STARTED | P4 gate first; Python → Java → Go |
 | P5-05.01 | NOT_STARTED | Real unlisted-language onboarding after P5-04; prerequisite of parent P5-05 |
 | P6-01, P6-02, P6-03, P6-04, P6-05, P6-06 | NOT_STARTED | P5 gate first |
 | P6-03.01 | NOT_STARTED | Java-indicator/Go-predicate graph after P6-02; prerequisite of parent P6-03 |
 
-Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 22 COMPLETED, 1 VERIFIED, 19 NOT_STARTED. P3-06 is first eligible; none is BLOCKED. P1/P2 gates passed; P3–P6 gates remain open. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
+Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 23 COMPLETED, 1 READY, 18 NOT_STARTED. P3-07 is first eligible; none is BLOCKED. P1/P2 gates passed; P3–P6 gates remain open. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
 
 ## Delivered baseline and limitations
 
@@ -441,3 +441,5 @@ P3-06 implemented candidate: optimization.rs/optimization_encoding.rs; loaded Ev
 Finite typed1..8-dimension Cartesian search<=16 trials, sequential SplitMix64/Fisher-Yates seeded order, fresh compiled Event/Workflow runtimes and financial accounts, <=4096 reserved total source bars and bounded complete canonical input/result exports are implemented. Exact completed-training net-profit descending/drawdown ascending/parameter-ID ascending ranking excludes failed/cancelled/not-run trials; only the training winner gets a fresh later validation run. Same immutable data/nonoverlap/past-only warmup, budgets, actual typed source/parameters/policies/cost/risk/seed/schedule and separate validation provenance are pinned. [Optimization](OPTIMIZATION.md)/ADR-032 own full experimental scope; no training state/positions/capital transfer, validation reselection, production performance/hostile isolation or durable search resume claim.
 
 Full locked/offline P2 gate PASS 2026-11-14T12:39:11.216598+00:00 on macOS arm64/Rust1.99.0/Python3.14.6:317 Rust/23 external/11 process cases/all required fmt/check/test/strict all-target Clippy/docs/diff, old provider/source/golden/P2 temporal gates intact.13 new optimization tests PASS actual three-trial independent values/parameter IDs/ranking, byte reruns, seeded-order/ties, same-snapshot/split/warmup, type/late-run failure isolation/no-success, cancel/not-run/budgets, generic two-dimensional parameter grid, Workflow bindings and changed-validation-data invariance. Full example public14 bars→training3×7+validation7: thresholds0/60/90 net−2.5/−3/0, winner90; separate validation−11/equity89/2 fills at13/14. Alternative0 validation−10.5 does not change training selection. Independent Fraction3-case grid/identities/ranks and actual exported aggregate canonical hashes/order/fresh-capital/out-of-sample checks PASS; ledger5/16, margin4/18 and portfolio9 oracles PASS. Different seeds may legitimately share a finite schedule; test uses independently known42 vs44 permutations. No new dependency/Cargo manifest/lock/toolchain/protected provider/old golden/Desk changes/installers/scanners/private uploads; approved cached dependencies only, no new advisory query. Keep VERIFIED until evidence commit/closure recorded, then continue P3-07 full financial reproducibility gate. Publishing not requested.
+
+P3-06 closure: evidence `2dac73503bbce2ce06788b123b23162941f5796d`; all code/tests/independent/full-gate acceptance met and plan/status/handoff synchronized. COMPLETED; next P3-07 READY. Earlier candidate states above are historical. No push requested/attempted.
