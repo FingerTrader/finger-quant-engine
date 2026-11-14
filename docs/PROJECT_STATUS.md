@@ -5,9 +5,9 @@
 ## Current position
 
 - Phase: **P1 — Universal Strategy Foundation, incomplete**. P2–P6 NOT_STARTED. No functional phase gate has passed.
-- Completed: GOV-01/GOV-02/GOV-03 and P1-01 through P1-09; local evidence and closure records synchronized.
-- Latest implementation: **P1-09 — CLI Model Execution**, COMPLETED. Evidence `9dbac2b14e85298c18131646219a178a4ef8ddea`. Loaded validate/run, bounded typed parameter/data/result codecs, exact source digests, reference catalog and shared runtime report adapter delivered. 175 tests/full checks/all examples/seven actual CLI cases PASS. Previous P1-08 evidence `cea3f92df2027743711e73a84927396417689042`.
-- Active implementation: **P1-10 — Minimal External Invocation**, VERIFIED; evidence commit and closure pending. Independent consumer, strict exact results/source validation and bounded process cleanup delivered.175 Rust +23 external tests/full checks PASS. Publishing is not requested.
+- Completed: GOV-01/GOV-02/GOV-03 and P1-01 through P1-10; local evidence and closure records synchronized.
+- Latest implementation: **P1-10 — Minimal External Invocation**, COMPLETED. Evidence `5c7a7f6cdd1b0fe59bda7d740444da4f5299dcc3`. Independent caller, strict exact results/source validation, seven requests and bounded POSIX process cleanup delivered.175 Rust +23 external tests/full checks/all examples PASS. Previous P1-09 evidence `9dbac2b14e85298c18131646219a178a4ef8ddea`.
+- Next eligible implementation: **P1-11 — Golden Suite & P1 Gate**, READY. All prior P1 tasks are closed; the complete golden/generic-engine gate still requires its own acceptance. User authorizes continuing downstream work without routine confirmation; publishing is not requested.
 - P1-02 acceptance met: evaluated numeric policy/limits, strict type/unit/scale checks, unsupported-shape rejection, full binding matrix and tests. Evidence `a653c105fba5ea6ada15395abc22cc8f82cc4472` and local closure recorded below; publishing not requested.
 - Actual root: `/Users/george/Desktop/finger-quant-engine`; main tracking origin/main; remote `https://github.com/FingerTrader/finger-quant-engine.git`.
 - Rust source baseline / latest pre-governance commit: `342d8aa76b48d32fa9c9110609b371eac52b8d86` (foundation). Previous commit: `cbcebad`.
@@ -30,8 +30,8 @@
 | P1-07 | COMPLETED | Compiler/pure modules/source maps/ADR-018; 119 tests/full checks/all examples PASS; evidence `c9a097e9a98ef91c3dd5c0f15df9639a72748260`, local closure |
 | P1-08 | COMPLETED | Compiled event runtime/strict expression codec and bars, atomic state/signals, 146 tests/full checks/all examples PASS; evidence `cea3f92df2027743711e73a84927396417689042`, local closure |
 | P1-09 | COMPLETED | Actual loaded validate/run, bounded exact file/results and library parity;175 tests/full checks/all examples/CLI acceptance PASS; evidence `9dbac2b14e85298c18131646219a178a4ef8ddea`, local closure |
-| P1-10 | VERIFIED | Independent caller/contract/seven requests;175 Rust +23 external tests/full checks PASS; evidence commit and closure pending |
-| P1-11 | NOT_STARTED | P1-10 and all other P1 tasks must be closed first |
+| P1-10 | COMPLETED | Independent caller/contract/seven requests;175 Rust +23 external tests/full checks PASS; evidence `5c7a7f6cdd1b0fe59bda7d740444da4f5299dcc3`, local closure |
+| P1-11 | READY | All P1-01–P1-10 closed; consolidate versioned valid/invalid goldens, X-001 generic loaded compositions and dated P1 gate report |
 | P2-01, P2-02, P2-03, P2-04, P2-05, P2-06 | NOT_STARTED | P1 gate first |
 | P3-01, P3-02, P3-03, P3-04, P3-05, P3-06, P3-07 | NOT_STARTED | P2 gate first |
 | P4-01, P4-02, P4-03, P4-04, P4-05 | NOT_STARTED | P3 gate first |
@@ -40,7 +40,7 @@
 | P6-01, P6-02, P6-03, P6-04, P6-05, P6-06 | NOT_STARTED | P5 gate first |
 | P6-03.01 | NOT_STARTED | Java-indicator/Go-predicate graph after P6-02; prerequisite of parent P6-03 |
 
-Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 9 COMPLETED, 1 VERIFIED, 32 NOT_STARTED. P1-10 is first eligible; none is BLOCKED. No functional phase gate has passed. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
+Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 10 COMPLETED, 1 READY, 31 NOT_STARTED. P1-11 is first eligible; none is BLOCKED. No functional phase gate has passed. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
 
 ## Delivered baseline and limitations
 
@@ -232,4 +232,4 @@ No dependency/package/manifest/Cargo.lock/toolchain/LICENSE/Rust-source changes.
 
 Residual scope: trusted local executable/files/providers, POSIX reference only,262144-byte source profile,4MiB engine result, bounded collections; no sandbox or hard real-time/production-volume guarantee. Caller can reap its direct child; OS reaps orphaned descendants, escaped groups are outside ownership. SHA identities detect changed supplied bytes, not authenticity or independent semantic compilation. Python is optional reference/test tooling, not a required engine/customer download. Desk bundling, Windows/native transport, Java/Go/Python strategy workers, snapshots/accounting/backtest/simulation and the full P1-11 gate remain separate tasks. No external repository or SDK changes.
 
-All acceptance verified; evidence commit and three-document closure remain pending. Remote main read-confirmed0ac5d7b163e77bddb5f69689a1455e3560aad872; no push requested/performed.
+Final staged diff/protected-path review PASS. Local implementation evidence committed as `5c7a7f6cdd1b0fe59bda7d740444da4f5299dcc3`; this status/plan/handoff-only closure records P1-10 COMPLETED and P1-11 READY. Twenty-two local commits including this closure remain unpushed. Remote main independently read-confirmed `0ac5d7b163e77bddb5f69689a1455e3560aad872`; no push requested/performed. P1 remains incomplete until P1-11 itself passes and closes.
