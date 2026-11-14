@@ -6,14 +6,14 @@ Updated 2026-11-14 (Asia/Tokyo). This handoff is derived from [Project status](P
 
 1. Read PROJECT_STATUS, this file, [DELIVERY_PLAN](DELIVERY_PLAN.md), [ARCHITECTURE_DECISIONS](ARCHITECTURE_DECISIONS.md), then [P1 design](P1_STRATEGY_DESIGN.md), [Strategy contract](STRATEGY_CONTRACT.md) and [Baseline audit](BASELINE_AUDIT.md). Also read README, AGENTS and [Workflow](WORKFLOW.md).
 2. Verify cwd is the actual desktop checkout `/Users/george/Desktop/finger-quant-engine`; inspect Git status, branch/remotes and recent commits. Work on main; no second project/worktree/branch. Compare baseline `342d8aa76b48d32fa9c9110609b371eac52b8d86` and recorded governance evidence with actual history. `git log -1 --format=%H -- docs/PROJECT_STATUS.md` identifies latest status commit without a self-referential hash.
-3. If governance delivery remains pending, finish checks, record evidence commit and verify normal push first. Do not trust an expected future push. If code/tests/history disagree with records, repair status/handoff from facts first.
-4. Resume P1-02 once P1-01 is COMPLETED. Set P1-02 READY/IN_PROGRESS in status and plan before scoped changes. Do not rerun the completed audit as a new feature task unless facts have changed.
+3. Governance/audit evidence is committed as `f07fe8ccd4c12b46783b67ff0a2421172d05d5dc` and its normal GitHub main push was confirmed by remote SHA. Check current closure commit/remote status as well; if code/tests/history disagree with records, repair status/handoff from facts first. Never infer future push success from this historical receipt.
+4. P1-01 is COMPLETED and P1-02 is READY. Set P1-02 IN_PROGRESS in status and plan before scoped changes. Do not repeat the completed audit as a new feature task unless facts have changed.
 
 ## Work completed in governance session
 
 Inspected all five crates/manifests, lockfile, README, all 12 existing docs, tests and Git history. Reconfirmed 17 behavioral tests, formatting/check/strict Clippy and CLI baseline. Added charter, authority, ADR register, six-stage plan, P1 target design, status, handoff and workflow, plus audit evidence and a standard-library document checker. Updated old roadmap/navigation/transport wording and agent recovery entry points. No Rust source, dependencies, draft schema or license changed. P1 remains incomplete.
 
-Current stop: document verification and governance/audit commit closure; implementation of P1-02 has not begun. Exact committed/delivery state is in PROJECT_STATUS and Git, not this narrative.
+Current stop: governance and audit are COMPLETED, with all checks and a confirmed GitHub evidence commit. The final closure record uses that existing evidence hash; resolve its containing commit from Git. P1-02 is READY; implementation has not begun. Exact current committed/delivery state is in PROJECT_STATUS and Git.
 
 ## Next task: P1-02 — Universal Types & Parameter Schema
 
