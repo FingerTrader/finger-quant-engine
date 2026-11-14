@@ -6,7 +6,7 @@ Updated 2026-11-14 (Asia/Tokyo). Derived from [Project status](PROJECT_STATUS.md
 
 Read PROJECT_STATUS, DELIVERY_PLAN, ARCHITECTURE_DECISIONS, README, [Workflow](WORKFLOW.md), [authority rules](DOCUMENT_AUTHORITY.md) and current contracts. Verify actual root, Git status/branch/remote/history and evidence commits before editing. Work on main; preserve unrelated work. Code/tests/Git override stale prose. No toolchain installation is needed: activate the existing pin below.
 
-P1-02 and P1-03 are COMPLETED; P1-04 is READY and has no implementation yet. Select P1-04 as the first eligible incomplete task. P1 remains incomplete. Evidence/status commits are different: `git log -1 --format=%H -- docs/PROJECT_STATUS.md` resolves the latest record; `git rev-parse HEAD` resolves the actual checkout.
+P1-02 and P1-03 are COMPLETED; P1-04 is VERIFIED. Recover its scoped registry/provider implementation before proceeding. P1 remains incomplete. Evidence/status commits are different: `git log -1 --format=%H -- docs/PROJECT_STATUS.md` resolves the latest record; `git rev-parse HEAD` resolves the actual checkout.
 
 ## Delivered P1-03 and verification
 
@@ -20,7 +20,7 @@ Evidence commit `b4b7707fc786c5ea5b68dd7f19fb03cb10f5b45d` contains the verified
 
 ## Next task: P1-04 — Node, Function & Provider Registries
 
-P1-03 is COMPLETED, so P1-04 is READY. Read [Extensibility](EXTENSIBILITY_CONTRACT.md), [P1 design](P1_STRATEGY_DESIGN.md), [Type/parameters](TYPE_PARAMETER_CONTRACT.md), [Model loading](MODEL_LOADING.md) and plan acceptance.
+P1-03 is COMPLETED; P1-04 is VERIFIED. Read [Extensibility](EXTENSIBILITY_CONTRACT.md), [P1 design](P1_STRATEGY_DESIGN.md), [Type/parameters](TYPE_PARAMETER_CONTRACT.md), [Model loading](MODEL_LOADING.md) and plan acceptance.
 
 - Deliver shared versioned node/function/provider descriptors, typed named ports, parameter contracts, generic in-process provider interface and deterministic registry identity. Built-ins and independently defined reviewed test providers use the same registration/invocation path.
 - Prove X-001 unknown-name function and Boolean predicate injection without a per-name core/compiler branch. Registry lookup pins namespaced ID/version/signature and artifact identity; model import currently checks declarations only. Define consistent binding to the loaded entry pins.
@@ -60,3 +60,5 @@ Desk historical backtesting/local simulation is the first delivery; live trading
 The existing `/Users/george/Desktop/finger_desk` has a dated dirty-tree inventory and Dart/Python financial/hosted paths in [Desk integration](DESK_INTEGRATION_PLAN.md). Protect them; use a fresh pinned paired candidate when integration begins. Legacy visual models need explicit conversion/new content identity; historical runs/data retain backend identity/read paths. JSON import is not proof of paired native execution or financial equivalence.
 
 Remaining gates include registry/signature/cycle validation, indicator precision, event/history semantics, state restore, independent financial correctness, worker/plugin execution/isolation and actual platform/channel packaging. Before interruption record actual dirty/staged/unpushed state, last command/errors and recovery steps; never label unverified work COMPLETED.
+
+Current P1-04 work starts from clean f187a17. See PROJECT_STATUS execution scope; registry/provider code/tests and canonical descriptor helpers exist; 13 targeted registry tests and the provider example passed. Final full suite PASS: 69 tests, all required checks and examples; evidence/closure pending. Keep this record current before interruption.

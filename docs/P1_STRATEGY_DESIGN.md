@@ -1,6 +1,6 @@
 # P1 Universal Strategy Design
 
-Status: implementation target for P1/P2 with two implemented experimental subsets: [P1-02 types/parameters](TYPE_PARAMETER_CONTRACT.md) and [P1-03 IR2 JSON model import](MODEL_LOADING.md). The latter imports bounded scalar declarations and prepares parameters; it does not compile/execute graphs. Remaining graph/module/workflow/runtime features below retain their planned status. [ADRs](ARCHITECTURE_DECISIONS.md) record accepted numeric/import choices; other choices remain evidence-gated. [Strategy contract](STRATEGY_CONTRACT.md) describes the separate legacy price-only evaluator. [Delivery plan](DELIVERY_PLAN.md) assigns targets to tasks.
+Status: implementation target for P1/P2 with implemented experimental subsets: [P1-02 types/parameters](TYPE_PARAMETER_CONTRACT.md) and [P1-03 IR2 JSON model import](MODEL_LOADING.md). P1-04 also implements a [pure scalar provider registry](PROVIDER_REGISTRY.md). P1-03 imports bounded scalar declarations and prepares parameters; it does not compile/execute graphs. Remaining graph/module/workflow/runtime features below retain their planned status. [ADRs](ARCHITECTURE_DECISIONS.md) record accepted numeric/import choices; other choices remain evidence-gated. [Strategy contract](STRATEGY_CONTRACT.md) describes the separate legacy price-only evaluator. [Delivery plan](DELIVERY_PLAN.md) assigns targets to tasks.
 
 ## Definition, version and instance
 

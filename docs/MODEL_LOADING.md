@@ -26,7 +26,7 @@ The tracked [model.json](../crates/fqe-ir/tests/fixtures/model.json) is the comp
 
 IDs and author versions are opaque case-sensitive logical identifiers, 1–128 ASCII letters/digits or `._-:/`; they never become paths, shell commands or download addresses. Parameter keys retain the narrower P1-02 alphabet. Entries are unique by `(id, version)`; descriptor versions are independent. Only `model.scalar-graph/1`, `values/1`, `parameters/1` declaration capabilities are recognized. Unknown required capability or unsupported adapter/worker/plugin role is rejected. Empty requirements are allowed for this baseline declaration format; they do not enable execution privileges. Nonempty external dependencies fail closed.
 
-Provider IDs need not be built into the loader. Artifact digest syntax and declared references are checked, but provider availability, artifact provenance, callable signatures, type compatibility, arity, cycles, recursive modules, graph compilation and execution belong to P1-04/P1-07/P1-08 and later extension tasks. No claim that a structurally valid imported graph is executable follows from loading it.
+Provider IDs need not be built into the loader. Artifact digest syntax and declared references are checked, but provider availability and exact local signature/type/arity checks are implemented by the separate [P1-04 registry](PROVIDER_REGISTRY.md) when explicitly preparing a node. Import alone does not run those checks. Artifact trust, complete graph validation/cycles/modules/compilation and event execution remain later gates. No claim that a structurally valid imported graph is executable follows from loading it.
 
 ## Exact values and binding files
 
@@ -72,4 +72,4 @@ No Desk source/data/run was changed for this task. P1-03 does not close paired D
 
 Run `cargo run --locked --offline -p fqe-ir --example load_model` to load the tracked file, print both identities, prepare period defaults/override and reject null without executing a strategy. The legacy CLI demo and parameter example remain available. [Public tests](../crates/fqe-ir/tests/loading_contract.rs) and [declaration tests](../crates/fqe-ir/tests/model_contract.rs) cover the stated import/binding/identity/resource boundaries and real invalid fixtures. Dependency decision/review: [report](P1_03_DEPENDENCY_REVIEW.md), ADR-014 in [ADRs](ARCHITECTURE_DECISIONS.md).
 
-Registries/providers, arbitrary indicators/rules, workflow/state, workers/plugins, compiler/runtime integration, CLI model execution and Flutter delivery retain their own tasks. No numeric/financial/extension or phase gate is completed by successful import alone.
+The separate P1-04 registry supplies pure scalar callable preparation/invocation. Arbitrary indicators/rules, workflow/state, workers/plugins, compiler/runtime integration, CLI model execution and Flutter delivery retain their own tasks. No numeric/financial/extension or phase gate is completed by successful import alone.

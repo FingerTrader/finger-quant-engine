@@ -440,7 +440,7 @@ fn definition(v: Value) -> Result<ModelDefinition> {
         metadata,
     })
 }
-fn type_json(t: &TypeDescriptor) -> Value {
+pub(crate) fn type_json(t: &TypeDescriptor) -> Value {
     let mut o = json!({"version":t.version(),"shape":"scalar"});
     let kind = match t.scalar() {
         ScalarType::Bool => "bool",
@@ -482,7 +482,7 @@ fn bound_json(b: &Bound) -> Value {
 fn input_json(i: &Input) -> Value {
     json!({"name":i.name,"source":{"node":i.source.node,"port":i.source.port}})
 }
-fn parameter_json(s: &ParameterSpec) -> Value {
+pub(crate) fn parameter_json(s: &ParameterSpec) -> Value {
     let mut constraints = Map::new();
     if let Some(b) = &s.constraints().lower {
         constraints.insert("lower".into(), bound_json(b));

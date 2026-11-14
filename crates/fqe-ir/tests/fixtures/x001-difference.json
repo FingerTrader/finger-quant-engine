@@ -1,0 +1,261 @@
+{
+  "format": "fqe.model",
+  "schema_version": 1,
+  "ir_version": 2,
+  "id": "x001.composition",
+  "version": "1",
+  "parameters": {
+    "version": 1,
+    "entries": [
+      {
+        "key": "threshold",
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "u64"
+        },
+        "required": false,
+        "default": {
+          "type": {
+            "version": 1,
+            "shape": "scalar",
+            "kind": "u64"
+          },
+          "value": "150"
+        },
+        "constraints": {},
+        "description": "Exact threshold"
+      }
+    ]
+  },
+  "requirements": [
+    "model.scalar-graph/1",
+    "parameters/1",
+    "values/1"
+  ],
+  "entries": [
+    {
+      "key": {
+        "id": "fqe.constant.u64",
+        "version": "1"
+      },
+      "descriptor_version": 1,
+      "role": "provider",
+      "artifact": "sha256:101df288c16907a6d6953df729c40d082b31ee1fb374e513319b8a5f1f4c13d1"
+    },
+    {
+      "key": {
+        "id": "fqe.bool.not",
+        "version": "1"
+      },
+      "descriptor_version": 1,
+      "role": "provider",
+      "artifact": "sha256:101df288c16907a6d6953df729c40d082b31ee1fb374e513319b8a5f1f4c13d1"
+    },
+    {
+      "key": {
+        "id": "independent.checked_pair",
+        "version": "1"
+      },
+      "descriptor_version": 1,
+      "role": "provider",
+      "artifact": "sha256:c17c31b99564b24886511bb674eb5084b57ad166a20006c795b5ece58cd2d3bf"
+    },
+    {
+      "key": {
+        "id": "independent.above",
+        "version": "1"
+      },
+      "descriptor_version": 1,
+      "role": "provider",
+      "artifact": "sha256:c17c31b99564b24886511bb674eb5084b57ad166a20006c795b5ece58cd2d3bf"
+    }
+  ],
+  "graph": {
+    "nodes": [
+      {
+        "id": "left",
+        "entry": {
+          "id": "fqe.constant.u64",
+          "version": "1"
+        },
+        "arguments": {
+          "value": {
+            "literal": {
+              "type": {
+                "version": 1,
+                "shape": "scalar",
+                "kind": "u64"
+              },
+              "value": "125"
+            }
+          }
+        },
+        "inputs": [],
+        "outputs": [
+          {
+            "name": "result",
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "u64"
+            }
+          }
+        ]
+      },
+      {
+        "id": "right",
+        "entry": {
+          "id": "fqe.constant.u64",
+          "version": "1"
+        },
+        "arguments": {
+          "value": {
+            "literal": {
+              "type": {
+                "version": 1,
+                "shape": "scalar",
+                "kind": "u64"
+              },
+              "value": "75"
+            }
+          }
+        },
+        "inputs": [],
+        "outputs": [
+          {
+            "name": "result",
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "u64"
+            }
+          }
+        ]
+      },
+      {
+        "id": "pair",
+        "entry": {
+          "id": "independent.checked_pair",
+          "version": "1"
+        },
+        "arguments": {},
+        "inputs": [
+          {
+            "name": "left",
+            "source": {
+              "node": "left",
+              "port": "result"
+            }
+          },
+          {
+            "name": "right",
+            "source": {
+              "node": "right",
+              "port": "result"
+            }
+          }
+        ],
+        "outputs": [
+          {
+            "name": "sum",
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "u64"
+            }
+          },
+          {
+            "name": "difference",
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "u64"
+            }
+          }
+        ]
+      },
+      {
+        "id": "predicate",
+        "entry": {
+          "id": "independent.above",
+          "version": "1"
+        },
+        "arguments": {
+          "threshold": {
+            "parameter": "threshold"
+          }
+        },
+        "inputs": [
+          {
+            "name": "value",
+            "source": {
+              "node": "pair",
+              "port": "difference"
+            }
+          }
+        ],
+        "outputs": [
+          {
+            "name": "result",
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "bool"
+            }
+          }
+        ]
+      },
+      {
+        "id": "not",
+        "entry": {
+          "id": "fqe.bool.not",
+          "version": "1"
+        },
+        "arguments": {},
+        "inputs": [
+          {
+            "name": "value",
+            "source": {
+              "node": "predicate",
+              "port": "result"
+            }
+          }
+        ],
+        "outputs": [
+          {
+            "name": "result",
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "bool"
+            }
+          }
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "name": "decision",
+        "source": {
+          "node": "predicate",
+          "port": "result"
+        }
+      },
+      {
+        "name": "inverse",
+        "source": {
+          "node": "not",
+          "port": "result"
+        }
+      }
+    ]
+  },
+  "metadata": {
+    "label": "X-001 reviewed pure provider composition"
+  },
+  "modules": [],
+  "workflow": {},
+  "state": [],
+  "dependencies": []
+}

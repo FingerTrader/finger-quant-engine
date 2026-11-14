@@ -8,7 +8,7 @@ Offline engine use does not require Flutter Desktop, a Finger Trader login, or a
 
 The primary consuming product is the existing **Desk** application (`finger_desk`). Project delivery requires FQE bundled into Desk for the first local backtest/simulation loop, while standalone engine use remains independent. Live trading has a separate acceptance scope. The [Desk integration contract](docs/DESK_INTEGRATION_PLAN.md) covers migration, native run/stop/results, packaging and final paired acceptance; this integration is planned, not implemented.
 
-Language and financial-function support are open-ended targets: Python/Java/Go and the first indicators are reference implementations. The [Extensibility contract](docs/EXTENSIBILITY_CONTRACT.md) defines adapter onboarding, callable indicator/predicate providers, rule modules and descriptor-driven Desk use. A new conforming extension within supported capabilities must not require per-name core/compiler/UI changes. These extension mechanisms remain planned and need their own execution/conformance evidence.
+Language and financial-function support are open-ended targets: Python/Java/Go and the first indicators are reference implementations. The [Extensibility contract](docs/EXTENSIBILITY_CONTRACT.md) defines adapter onboarding, callable indicator/predicate providers, rule modules and descriptor-driven Desk use. A new conforming extension within supported capabilities must not require per-name core/compiler/UI changes. The experimental pure scalar in-process [provider registry](docs/PROVIDER_REGISTRY.md) is implemented; external adapters/stateful providers and client discovery retain later execution/conformance gates.
 
 ## Project status
 
@@ -21,6 +21,7 @@ This repository contains the initial engineering foundation, version `0.1.0`. It
 | Cargo Workspace and validated core types | Implemented |
 | Checked decimal values, scalar/unit descriptors and immutable parameter bindings | Implemented, experimental P1-02 subset; [contract](docs/TYPE_PARAMETER_CONTRACT.md) |
 | Bounded JSON model import, canonical content identity and pinned parameter preparation | Implemented, experimental P1-03 subset; [contract](docs/MODEL_LOADING.md); no graph execution |
+| Frozen callable descriptors, typed scalar provider invocation and independent unknown-name example | Implemented, experimental P1-04 subset; [contract](docs/PROVIDER_REGISTRY.md) |
 | Typed IR: a single-instrument price comparison producing signals | Implemented, experimental API |
 | Synchronous, deterministic in-memory event runtime and run state | Implemented, experimental API |
 | Offline CLI demonstration and behavioral tests | Implemented |
@@ -100,6 +101,7 @@ Commit `Cargo.lock` alongside dependency changes. The lockfile contains five wor
 - [Architecture](docs/ARCHITECTURE.md)
 - [Strategy contract](docs/STRATEGY_CONTRACT.md)
 - [Type/parameter subset and numeric decision](docs/TYPE_PARAMETER_CONTRACT.md)
+- [Pure provider registry and invocation](docs/PROVIDER_REGISTRY.md)
 - [External model loading and content identity](docs/MODEL_LOADING.md)
 - [Event contract](docs/EVENT_CONTRACT.md)
 - [State contract](docs/STATE_CONTRACT.md)

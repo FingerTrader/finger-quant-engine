@@ -32,7 +32,7 @@ Arrows mean Cargo dependency. The protocol crate has no dependency on the runtim
 | Crate | Responsibility | Excluded responsibility |
 | --- | --- | --- |
 | fqe-core | Validated instrument IDs, positive integer prices, input events, signal values | UI, network, accounts, execution |
-| fqe-ir | Legacy typed price rules; validated parameters and bounded IR2 JSON model import/identity | Arbitrary language parsing or execution |
+| fqe-ir | Legacy typed price rules; validated parameters, IR2 import/identity and pure provider registry/invocation | Arbitrary language parsing or execution |
 | fqe-runtime | One-shot ordered event consumption, lifecycle, signal provenance | Accounting, async scheduling, durable jobs |
 | fqe-protocol | Draft schema source and version-number compatibility helper | Serialization, RPC, IPC server |
 | fqe-cli | Offline demonstration, help, version, process exit codes | Strategy file ingestion, backtest command, service daemon |
@@ -84,3 +84,5 @@ Future adapters must make external data access and execution authority explicit.
 See the [roadmap](ROADMAP.md) for gated implementation phases.
 
 P1-03 implements experimental IR2 model JSON import, canonical identity and content-pinned parameter preparation. [Model loading](MODEL_LOADING.md) owns those contracts; registry/signature/cycle validation and execution remain future gates. This JSON decision does not select Protobuf or Desktop/worker transport.
+
+P1-04 adds a frozen reviewed in-process [provider registry](PROVIDER_REGISTRY.md) and local model-node preparation. These calls do not implement graph scheduling, indicators or external extension isolation.

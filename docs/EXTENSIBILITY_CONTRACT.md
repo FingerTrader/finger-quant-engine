@@ -1,6 +1,6 @@
 # Open Language, Indicator and Rule Extensibility
 
-Status: **planned normative contract**, accepted direction under [ADR-012](ARCHITECTURE_DECISIONS.md#adr-012--open-language-and-computation-extensions). No adapter, provider bridge or loader is implemented by this document. [Project status](PROJECT_STATUS.md) owns progress; [Delivery plan](DELIVERY_PLAN.md) assigns executable acceptance. Existing experimental Rust IR remains unchanged.
+Status: **normative target with an implemented experimental pure scalar subset** in [Provider registry](PROVIDER_REGISTRY.md); remaining adapter/state/plugin mechanisms are planned. Accepted direction under [ADR-012](ARCHITECTURE_DECISIONS.md#adr-012--open-language-and-computation-extensions). P1-04 implements shared in-process descriptors/registration/invocation; no external adapter/provider bridge or extension loader is implemented. [Project status](PROJECT_STATUS.md) owns progress; [Delivery plan](DELIVERY_PLAN.md) assigns executable acceptance. Existing experimental Rust IR remains unchanged.
 
 ## Goal and compatibility boundary
 
@@ -29,7 +29,7 @@ Descriptors are versioned data that engine validation, external invocation and D
 - Purity/statefulness, incremental/batch capabilities, state-schema version, initialization/reset/step/snapshot/restore/dispose support and explicit unsupported lifecycle operations. Formula/seed/rounding/missing rules and determinism class are versioned semantics.
 - Resource bounds and host-service permissions, dependency closure, diagnostics/source mapping and optional display metadata: label/description/localization keys, parameter hints and output/plot labels. Display metadata grants no execution permission and contains no executable UI.
 
-P1-03 defines bounded serialization and canonical identity for descriptors. P1-04 validates and exposes descriptor lookup; P1-07 compiles generic signatures, not indicator-specific cases. P4-02 exposes discovery to clients. P6-01 resolves external artifacts. Descriptor compatibility is independent of the implementation language and package release number.
+P1-03 defines bounded model/reference serialization; P1-04 defines canonical callable descriptor/registry identities and validates/exposes in-process lookup; P1-07 compiles generic signatures, not indicator-specific cases. P4-02 exposes discovery to clients. P6-01 resolves external artifacts. Descriptor compatibility is independent of the implementation language and package release number.
 
 ## Provider invocation, state and execution
 
