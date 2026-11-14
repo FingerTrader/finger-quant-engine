@@ -37,7 +37,8 @@ This repository contains the initial engineering foundation, version `0.1.0`. It
 | Protocol version-number negotiation helper | Implemented, experimental |
 | Protocol Buffers schema | Experimental draft; no codec, generated bindings, or transport |
 | Exact financial units, bounded immutable historical CSV and pinned run inputs | Implemented experimental P3-01 library; [contract](docs/FINANCIAL_HISTORY.md); closure in PROJECT_STATUS |
-| Local backtesting, accounting, execution simulation, optimization | Planned |
+| Local virtual account, balanced journal, reservation/valuation and recompute replay | Implemented experimental P3-02 library; [contract](docs/LEDGER.md); closure in PROJECT_STATUS |
+| Local backtesting, execution simulation, optimization | Planned |
 | Python / Java / Go workers and source-language compilers | Planned |
 | Plugins, Desktop IPC, persistent history storage, Trading SDK adapter | Planned |
 

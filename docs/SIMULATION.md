@@ -1,6 +1,6 @@
 # Local simulation
 
-Status: planned. No execution simulator, paper account, matching engine, or order-routing adapter is implemented.
+Status: execution simulation remains planned. Experimental [virtual accounts/ledger](LEDGER.md) now implement explicit local accounting postings, holds, valuation and verified recompute replay. Matching, order lifecycle, fee-rate/slippage/margin/broker models and routing are not yet implemented.
 
 Product target: users create virtual accounts locally; FQE supplies local fills, cash/position ledgers, fees/slippage, margin/leverage and versioned broker simulation profiles. A Finger Trader backend simulated account is not required. [ADR-007](ARCHITECTURE_DECISIONS.md#adr-007--local-simulation) fixes this boundary; P3 in [Delivery plan](DELIVERY_PLAN.md) owns implementation and independent accounting acceptance.
 

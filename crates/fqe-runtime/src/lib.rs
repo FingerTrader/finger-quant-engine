@@ -177,3 +177,6 @@ pub mod replay;
 
 /// Frozen historical inputs and event-time visibility cursor.
 pub mod history;
+
+/// Authoritative bounded local accounting journal and derived views.
+pub mod ledger;

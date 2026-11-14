@@ -73,8 +73,8 @@ impl FinancialInstrument {
         }
         let result = Self(d);
         result.price(result.0.price_step)?;
-        result.base_quantity(result.0.quantity_step, false)?;
-        result.base_quantity(result.0.minimum_quantity, true)?;
+        result.quantity_lots(result.0.quantity_step, false)?;
+        result.quantity_lots(result.0.minimum_quantity, true)?;
         result.money(result.0.money_step)?;
         result.money(result.0.minimum_notional)?;
         if result.0.minimum_notional.coefficient() < 0 {
@@ -97,13 +97,14 @@ impl FinancialInstrument {
         multiple(v, self.0.price_step)
     }
     pub fn quantity(&self, v: Decimal, allow_zero: bool) -> Result<Decimal> {
-        self.base_quantity(v, allow_zero)?;
+        self.quantity_lots(v, allow_zero)?;
         if v.coefficient() != 0 && v.coefficient() < self.0.minimum_quantity.coefficient() {
             return Err(FinancialError::Range);
         }
         Ok(v)
     }
-    fn base_quantity(&self, v: Decimal, allow_zero: bool) -> Result<Decimal> {
+    /// Lot alignment without minimum order size, for partial execution and residual holdings.
+    pub fn quantity_lots(&self, v: Decimal, allow_zero: bool) -> Result<Decimal> {
         if v.scale() != self.0.quantity_step.scale() {
             return Err(FinancialError::Scale);
         }

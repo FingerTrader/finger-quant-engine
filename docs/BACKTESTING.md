@@ -8,6 +8,8 @@ Implementation and local optimization are gated by P3-01–P3-07 in [Delivery pl
 
 Backtesting will replay user-selected historical data on the user's device. Offline datasets and strategies must be usable without Flutter Desktop or a Finger Trader login. Data acquisition is a separate adapter concern; no dataset downloader is implemented.
 
+Experimental [virtual ledger](LEDGER.md) supplies accounting postings and valuation, with independent public comparison fixtures; strategy-to-order/fill/report orchestration remains planned.
+
 The Rust engine will own replay ordering and validation. Clients may configure and display runs without owning financial semantics.
 
 ## Planned pipeline
