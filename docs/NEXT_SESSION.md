@@ -6,7 +6,7 @@ Updated 2026-11-14 (Asia/Tokyo). Derived from [Project status](PROJECT_STATUS.md
 
 Read PROJECT_STATUS, DELIVERY_PLAN, ARCHITECTURE_DECISIONS, README, [Workflow](WORKFLOW.md), [authority rules](DOCUMENT_AUTHORITY.md) and current contracts. Verify actual root, Git status/branch/remote/history and evidence commits before editing. Work on main; preserve unrelated work. Code/tests/Git override stale prose. No toolchain installation is needed: activate the existing pin below.
 
-P1-02 is COMPLETED; P1-03 is VERIFIED pending evidence/closure commit. Record that commit and synchronized closure before marking COMPLETED or starting dependent P1-04. P1 remains incomplete. Evidence/status commits are different: `git log -1 --format=%H -- docs/PROJECT_STATUS.md` resolves the latest record; `git rev-parse HEAD` resolves the actual checkout.
+P1-02 and P1-03 are COMPLETED; P1-04 is READY and has no implementation yet. Select P1-04 as the first eligible incomplete task. P1 remains incomplete. Evidence/status commits are different: `git log -1 --format=%H -- docs/PROJECT_STATUS.md` resolves the latest record; `git rev-parse HEAD` resolves the actual checkout.
 
 ## Delivered P1-03 and verification
 
@@ -16,11 +16,11 @@ Existing Rust 1.99.0 macOS ARM64: fmt/check/locked offline workspace tests/stric
 
 Owner approved dependencies/build scripts/public-only advisory queries. [Dependency review](P1_03_DEPENDENCY_REVIEW.md) records serde 1.0.228, serde_json 1.0.145, sha2 0.10.9 and 21 resolved registry packages, all archives verified, metadata/scripts/current owners inspected and OSV no matching advisories on review date. Cargo.lock is aligned. Feature graph: 16 active registry packages on this target; derive/asm disabled. No private code/manifests/graphs uploaded. Existing cache enables offline builds; no customer-installed runtime is introduced. Other targets/security coverage remain unverified.
 
-Evidence commit pending. Changes are still uncommitted at this record; finish WORKFLOW closure. Remote main last read-confirmed at `0ac5d7b163e77bddb5f69689a1455e3560aad872`; six pre-P1-03 local commits remain unpushed. No GitHub publishing requested. No Desk source/data/run changed. P1-02 evidence `a653c105fba5ea6ada15395abc22cc8f82cc4472` and closure `af0c65b844a4620382926580bacf02a0bcfb76ed` remain historical; do not reimplement them.
+Evidence commit `b4b7707fc786c5ea5b68dd7f19fb03cb10f5b45d` contains the verified implementation. This plan/status/handoff-only closure records COMPLETED; resolve its SHA via the status-log command. Remote main last read-confirmed at `0ac5d7b163e77bddb5f69689a1455e3560aad872`; eight local commits including implementation/closure remain unpushed. No GitHub publishing requested. No Desk source/data/run changed. P1-02 evidence `a653c105fba5ea6ada15395abc22cc8f82cc4472` and closure `af0c65b844a4620382926580bacf02a0bcfb76ed` remain historical; do not reimplement them.
 
 ## Next task: P1-04 — Node, Function & Provider Registries
 
-Begin after P1-03 COMPLETED. Read [Extensibility](EXTENSIBILITY_CONTRACT.md), [P1 design](P1_STRATEGY_DESIGN.md), [Type/parameters](TYPE_PARAMETER_CONTRACT.md), [Model loading](MODEL_LOADING.md) and plan acceptance.
+P1-03 is COMPLETED, so P1-04 is READY. Read [Extensibility](EXTENSIBILITY_CONTRACT.md), [P1 design](P1_STRATEGY_DESIGN.md), [Type/parameters](TYPE_PARAMETER_CONTRACT.md), [Model loading](MODEL_LOADING.md) and plan acceptance.
 
 - Deliver shared versioned node/function/provider descriptors, typed named ports, parameter contracts, generic in-process provider interface and deterministic registry identity. Built-ins and independently defined reviewed test providers use the same registration/invocation path.
 - Prove X-001 unknown-name function and Boolean predicate injection without a per-name core/compiler branch. Registry lookup pins namespaced ID/version/signature and artifact identity; model import currently checks declarations only. Define consistent binding to the loaded entry pins.
