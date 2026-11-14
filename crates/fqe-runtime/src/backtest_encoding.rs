@@ -450,6 +450,7 @@ fn decision(v: &PolicyDecision) -> V {
         (
             "outcome",
             s(match v.outcome {
+                DecisionOutcome::RiskDisabled => "risk_disabled",
                 DecisionOutcome::Warmup => "warmup",
                 DecisionOutcome::NotReadyOrFalse => "not_ready_or_false",
                 DecisionOutcome::PositionOrPending => "position_or_pending",
@@ -504,6 +505,7 @@ pub(crate) fn result_value(r: &BacktestResult) -> Result<V, crate::events::Execu
         (
             "terminal",
             s(match r.terminal {
+                BacktestTerminal::Paused => "paused",
                 BacktestTerminal::Completed => "completed",
                 BacktestTerminal::Stopped => "stopped",
                 BacktestTerminal::Cancelled => "cancelled",

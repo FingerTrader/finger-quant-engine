@@ -67,7 +67,18 @@ pub fn prepare(
     bytes: &[u8],
 ) -> Result<PreparedCheckpoint, PersistenceError> {
     SnapshotDocument::from_bytes(bytes).map_err(|e| error("validate", false, e))?;
-    let path = path.as_ref();
+    prepare_validated(path.as_ref(), bytes)
+}
+/// Same atomic publication mechanics, separately validated financial representation.
+pub fn prepare_financial(
+    path: impl AsRef<Path>,
+    bytes: &[u8],
+) -> Result<PreparedCheckpoint, PersistenceError> {
+    crate::financial_checkpoint::FinancialCheckpoint::from_bytes(bytes)
+        .map_err(|e| error("validate", false, e))?;
+    prepare_validated(path.as_ref(), bytes)
+}
+fn prepare_validated(path: &Path, bytes: &[u8]) -> Result<PreparedCheckpoint, PersistenceError> {
     destination(path)?;
     let mut created = None;
     for _ in 0..16 {
@@ -131,7 +142,17 @@ pub fn save(path: impl AsRef<Path>, bytes: &[u8]) -> Result<SaveReceipt, Persist
     prepare(path, bytes)?.commit()
 }
 pub fn read(path: impl AsRef<Path>) -> Result<Vec<u8>, PersistenceError> {
-    let path = path.as_ref();
+    let bytes = read_bounded(path.as_ref())?;
+    SnapshotDocument::from_bytes(&bytes).map_err(|e| error("validate", false, e))?;
+    Ok(bytes)
+}
+pub fn read_financial(path: impl AsRef<Path>) -> Result<Vec<u8>, PersistenceError> {
+    let bytes = read_bounded(path.as_ref())?;
+    crate::financial_checkpoint::FinancialCheckpoint::from_bytes(&bytes)
+        .map_err(|e| error("validate", false, e))?;
+    Ok(bytes)
+}
+fn read_bounded(path: &Path) -> Result<Vec<u8>, PersistenceError> {
     let metadata = fs::symlink_metadata(path).map_err(|e| error("read", false, e))?;
     if !metadata.is_file() || metadata.file_type().is_symlink() {
         return Err(error("read", false, "regular checkpoint file required"));
@@ -141,6 +162,5 @@ pub fn read(path: impl AsRef<Path>) -> Result<Vec<u8>, PersistenceError> {
     file.take(MAX_MODEL_BYTES as u64 + 1)
         .read_to_end(&mut bytes)
         .map_err(|e| error("read", false, e))?;
-    SnapshotDocument::from_bytes(&bytes).map_err(|e| error("validate", false, e))?;
     Ok(bytes)
 }

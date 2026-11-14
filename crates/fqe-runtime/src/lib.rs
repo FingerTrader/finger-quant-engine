@@ -194,3 +194,5 @@ mod backtest_encoding;
 
 pub mod optimization;
 mod optimization_encoding;
+
+pub mod financial_checkpoint;

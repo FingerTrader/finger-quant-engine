@@ -186,6 +186,10 @@ const SOURCES: &[(&str, &[u8])] = &[
         include_bytes!("optimization_encoding.rs").as_slice(),
     ),
     (
+        "crates/fqe-runtime/src/financial_checkpoint.rs",
+        include_bytes!("financial_checkpoint.rs").as_slice(),
+    ),
+    (
         "crates/fqe-runtime/src/report.rs",
         include_bytes!("report.rs").as_slice(),
     ),

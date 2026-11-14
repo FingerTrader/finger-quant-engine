@@ -120,6 +120,7 @@ pub enum RunControl {
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum BacktestTerminal {
+    Paused,
     Completed,
     Stopped,
     Cancelled,
@@ -160,6 +161,7 @@ impl StrategyObservation {
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum DecisionOutcome {
+    RiskDisabled,
     Warmup,
     NotReadyOrFalse,
     PositionOrPending,
@@ -175,6 +177,7 @@ pub struct PolicyDecision {
     pub outcome: DecisionOutcome,
     pub order: Option<String>,
 }
+#[derive(Clone)]
 pub struct PreparedBacktest {
     pub(crate) selection: HistorySelection,
     pub(crate) strategy: StrategyPlan,
@@ -352,6 +355,29 @@ impl PreparedBacktest {
     }
     /// Cancellation is observed between source bars; it releases pending holds, never erases fills.
     pub fn run_with_cancel(&self, cancel: &AtomicBool) -> Result<BacktestResult> {
+        self.execute_prefix(self.selection.bars().len(), true, cancel)
+    }
+    pub(crate) fn reconstruct_prefix(&self, count: usize, finish: bool) -> Result<BacktestResult> {
+        if count > self.selection.bars().len() || self.control != RunControl::Complete {
+            return Err(error(
+                "financial_checkpoint_control",
+                "complete-run preparation and valid source prefix required",
+            ));
+        }
+        if finish && count != self.selection.bars().len() {
+            return Err(error(
+                "financial_checkpoint_control",
+                "finish requires every selected source bar",
+            ));
+        }
+        self.execute_prefix(count, finish, &AtomicBool::new(false))
+    }
+    fn execute_prefix(
+        &self,
+        count: usize,
+        finish: bool,
+        cancel: &AtomicBool,
+    ) -> Result<BacktestResult> {
         let mut broker = SimulationBroker::new(self.config.clone())?;
         let dataset = self.selection.dataset().content_id();
         let mut runner = match &self.strategy {
@@ -370,7 +396,7 @@ impl PreparedBacktest {
         let mut decisions = vec![];
         let mut curve = vec![];
         let mut terminal = BacktestTerminal::Completed;
-        for (i, bar) in self.selection.bars().iter().enumerate() {
+        for (i, bar) in self.selection.bars().iter().take(count).enumerate() {
             if cancel.load(Ordering::Acquire) {
                 terminal = BacktestTerminal::Cancelled;
                 break;
@@ -403,6 +429,14 @@ impl PreparedBacktest {
                     let account = broker.ledger().view();
                     let (side, quantity, cash_cap) = match binding.action {
                         PolicyAction::BuyIfFlat { quantity, cash_cap } => {
+                            if broker
+                                .margin_status()
+                                .is_some_and(|s| s != crate::margin::MarginStatus::Healthy)
+                            {
+                                decision.outcome = DecisionOutcome::RiskDisabled;
+                                decisions.push(decision);
+                                continue;
+                            }
                             if account.quantity.coefficient() != 0
                                 || broker
                                     .orders()
@@ -499,8 +533,12 @@ impl PreparedBacktest {
                 RunControl::CancelAfter(_) => BacktestTerminal::Cancelled,
             };
         }
-        runner.finish()?;
-        broker.apply(SimulationCommand::Finish)?;
+        if finish {
+            runner.finish()?;
+            broker.apply(SimulationCommand::Finish)?;
+        } else {
+            terminal = BacktestTerminal::Paused;
+        }
         let metrics = portfolio::calculate(
             self.config.account.initial_cash,
             &curve,

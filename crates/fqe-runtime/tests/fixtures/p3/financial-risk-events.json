@@ -1,0 +1,99 @@
+{
+  "format": "fqe.event-plan",
+  "schema_version": 1,
+  "id": "public.financial-risk.continuation",
+  "version": "1",
+  "requirements": [
+    "event.plan/1",
+    "expression.scalar/1"
+  ],
+  "graph": {
+    "format": "fqe.graph",
+    "schema_version": 1,
+    "ir_version": 2,
+    "id": "public.financial-risk.price",
+    "version": "1",
+    "parameters": {
+      "version": 1,
+      "entries": []
+    },
+    "requirements": [
+      "model.typed-graph/1"
+    ],
+    "entries": [],
+    "graph": {
+      "inputs": [
+        {
+          "name": "sample",
+          "type": {
+            "version": 1,
+            "shape": "scalar",
+            "kind": "decimal",
+            "scale": 2,
+            "unit": {
+              "kind": "price",
+              "instrument": "DEMO"
+            }
+          }
+        }
+      ],
+      "nodes": [],
+      "outputs": [
+        {
+          "name": "price",
+          "type": {
+            "version": 1,
+            "shape": "scalar",
+            "kind": "decimal",
+            "scale": 2,
+            "unit": {
+              "kind": "price",
+              "instrument": "DEMO"
+            }
+          },
+          "source": {
+            "input": "sample"
+          }
+        }
+      ]
+    },
+    "modules": [],
+    "metadata": {},
+    "workflow": {},
+    "state": [],
+    "dependencies": []
+  },
+  "trigger": {
+    "kind": "closed_bar",
+    "instrument": "DEMO",
+    "timeframe_ns": "60000000000",
+    "price_scale": 2,
+    "volume_scale": 3
+  },
+  "bindings": {
+    "sample": "close"
+  },
+  "warmup_samples": "0",
+  "crossings": [],
+  "outputs": [
+    {
+      "name": "enter",
+      "expression": {
+        "literal": {
+          "type": {
+            "version": 1,
+            "shape": "scalar",
+            "kind": "bool"
+          },
+          "value": true
+        }
+      }
+    }
+  ],
+  "signals": [
+    {
+      "output": "enter",
+      "kind": "long"
+    }
+  ]
+}

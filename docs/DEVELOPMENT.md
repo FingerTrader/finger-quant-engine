@@ -95,7 +95,7 @@ For the consolidated P1 check, run `PYTHONDONTWRITEBYTECODE=1 python3 scripts/ch
 
 Tests cover domain validation, strict price comparison, instrument matching, version rejection, repeatable runtime reports, input ordering, failed and terminal states, empty input, signal provenance, CLI output/exit codes, and protocol version-number compatibility.
 
-Current tests also cover loaded graph/event/indicator execution and exact CLI/independent local-process JSON interoperability. They do not verify financial accounting, Protobuf/worker transport interoperability, worker isolation, Desktop integration, or production workload limits because those features are not implemented. Dated counts and acceptance evidence belong in [Project status](PROJECT_STATUS.md).
+Current tests also cover loaded graph/event/indicator execution and exact CLI/independent local-process JSON interoperability. Experimental exact financial/history, ledger/order/margin, backtest/report and local optimization tests now exist; the complete P3 gate additionally exercises full bounded financial recovery and independent oracles. They do not establish Protobuf/worker transport interoperability, worker isolation, actual Desktop integration or production workload limits. Dated counts and acceptance evidence belong in [Project status](PROJECT_STATUS.md).
 
 ## Protocol schema
 
@@ -130,3 +130,5 @@ The model import example is `cargo run --locked --offline -p fqe-ir --example lo
 Run `cargo run --locked --offline -p fqe-ir --example providers` for two explicitly driven unknown-name provider compositions. The fixture source is reviewed local code; no external extension or language runtime is loaded. `python3 scripts/generate_provider_fixtures.py` deliberately regenerates source pins and independent JSON/SHA expectations after reviewed provider-source changes; tests never regenerate their own expected fixtures. See [Provider registry](PROVIDER_REGISTRY.md).
 
 Run `cargo run --locked --offline -p fqe-ir --example expressions` for typed Boolean/crossing history behavior. [Expression contract](EXPRESSION_CONTRACT.md) distinguishes this in-memory slice from a whole-model compiler/event runtime.
+
+The complete offline financial command is `PYTHONDONTWRITEBYTECODE=1 python3 scripts/check_p3_gate.py`; it nests full P2/P1 required checks and runs all independent financial oracles, actual examples/exports and fresh-child continuation. [P3 acceptance](P3_ACCEPTANCE.md) and [Financial recovery](FINANCIAL_RECOVERY.md) own exact gate/bounds; status records actual pass/closure, not this command listing.

@@ -42,6 +42,7 @@ This repository contains the initial engineering foundation, version `0.1.0`. It
 | Explicit margin-long debt/leverage/maintenance and subsequent-open liquidation | Implemented experimental P3-04 profile; [contract](docs/MARGIN_PROFILES.md); closure in PROJECT_STATUS |
 | Bounded experimental [backtest/report](docs/BACKTESTING.md) | Implemented experimental native Rust; exact financial manifests/reports and close-equity metrics |
 | Bounded [local parameter optimization](docs/OPTIMIZATION.md) | Implemented experimental native Rust; isolated typed grid/training-only ranking/separate validation |
+| Complete bounded financial continuation/private atomic files and full P3 offline gate | Implemented experimental native Rust; [recovery](docs/FINANCIAL_RECOVERY.md), [acceptance](docs/P3_ACCEPTANCE.md); closure in PROJECT_STATUS |
 | Other broker models | Planned |
 | Python / Java / Go workers and source-language compilers | Planned |
 | Plugins, Desktop IPC, persistent history storage, Trading SDK adapter | Planned |
