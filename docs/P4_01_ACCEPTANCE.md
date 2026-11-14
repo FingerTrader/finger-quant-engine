@@ -1,6 +1,6 @@
 # P4-01 candidate and packaging evidence
 
-Date2026-11-14, macOS arm64, Rust1.99.0 / Desk's actual existing Dart3.5.1. Task VERIFIED; all acceptance/checks passed; evidence commit and closure bookkeeping pending. [Boundary](DESKTOP_BOUNDARY.md), [dependency review](P4_01_DEPENDENCY_REVIEW.md), [status](PROJECT_STATUS.md) own exact limits/state.
+Date2026-11-14, macOS arm64, Rust1.99.0 / Desk's actual existing Dart3.5.1. Task COMPLETED; evidence `0d7da5275def9bf93a12823f5c0268a9d99d34de`, all acceptance/checks passed, status/plan/handoff synchronized. Local only; publishing not requested. [Boundary](DESKTOP_BOUNDARY.md), [dependency review](P4_01_DEPENDENCY_REVIEW.md), [status](PROJECT_STATUS.md) own exact limits/state.
 
 Prespecified budgets:100 warm echoes p95<=250ms; cold handshake<=3s; host timer max gap<=250ms during off-main financial request; bar-safe cancellation or post-timeout forced peer cleanup<=2s; bounded messages/log retention/allocations; no orphan peer/native buffers/tasks. First optimized candidate measurement is preserved in [raw first-release comparison](evidence/p4-01/first-release-comparison.json), not replaced by a warm retry.
 
