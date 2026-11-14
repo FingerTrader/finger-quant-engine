@@ -7,7 +7,7 @@
 - Phase: **P1 — Universal Strategy Foundation, incomplete**. P2–P6 NOT_STARTED. No functional phase gate has passed.
 - Completed: GOV-01 architecture governance and P1-01 baseline audit. No implementation task is currently active.
 - Next eligible implementation task: **P1-02 — Universal Types & Parameter Schema**, READY. It has not been implemented.
-- Current scoped work: **GOV-02 — Documentation corrections and Desk integration assessment**, VERIFIED, explicitly requested by the owner. Six findings corrected, actual Desk consumer inspected read-only, embedded delivery/migration acceptance mapped to existing tasks, contracts/plan/handoff synchronized and checks passed. Local evidence/closure commits are pending. No engine or Desk implementation is included.
+- Current scoped work: **GOV-02 — Documentation corrections and Desk integration assessment**, COMPLETED, explicitly requested by the owner. Six findings corrected, actual Desk consumer inspected read-only, embedded delivery/migration acceptance mapped to existing tasks, contracts/plan/handoff synchronized and checks passed. Evidence commit `49282a0daf3d08145d2cfb5ab2f42a2184e2a900` records the delivered documents/checks; closure is local only, with no GitHub publication requested. No engine or Desk implementation is included.
 - Actual root: `/Users/george/Desktop/finger-quant-engine`; main tracking origin/main; remote `https://github.com/FingerTrader/finger-quant-engine.git`.
 - Rust source baseline / latest pre-governance commit: `342d8aa76b48d32fa9c9110609b371eac52b8d86` (foundation). Previous commit: `cbcebad`.
 - Latest status-record commit: resolve `git log -1 --format=%H -- docs/PROJECT_STATUS.md`. Current checkout: `git rev-parse HEAD`. See the non-self-referential recording rule in DOCUMENT_AUTHORITY.
@@ -18,7 +18,7 @@
 | Task(s) | Status | Evidence / next condition |
 | --- | --- | --- |
 | GOV-01 | COMPLETED | All governance artifacts/checks delivered in `f07fe8ccd4c12b46783b67ff0a2421172d05d5dc`; normal GitHub main push and remote SHA confirmed; closure records synchronized |
-| GOV-02 | VERIFIED | Six corrections, ADR-011 and [Desk delivery contract](DESK_INTEGRATION_PLAN.md); checks below passed, local evidence/closure commits pending; no stage implementation credited |
+| GOV-02 | COMPLETED | Six corrections, ADR-011 and [Desk delivery contract](DESK_INTEGRATION_PLAN.md); checks below passed; evidence `49282a0daf3d08145d2cfb5ab2f42a2184e2a900`; local delivery, not pushed; no stage implementation credited |
 | P1-01 | COMPLETED | [Baseline audit](BASELINE_AUDIT.md): all crate/contract inventory, 17 tests, gap/task mapping and document checks; evidence `f07fe8ccd4c12b46783b67ff0a2421172d05d5dc` |
 | P1-02 | READY | P1-01 dependency COMPLETED; acceptance below and in NEXT_SESSION; no code work started |
 | P1-03, P1-04, P1-05, P1-06, P1-07, P1-08, P1-09, P1-10, P1-11 | NOT_STARTED | Dependencies in DELIVERY_PLAN |
@@ -66,7 +66,7 @@ Only this baseline's semantics were tested. Other platforms, external codecs, fi
 - Desk source assessment only: actual HEAD and dirty source inventory recorded in DESK_INTEGRATION_PLAN. No Desk tests, app execution, package installation, API calls or source writes were performed. Existing historical native evidence was not relabeled as new evidence.
 - No third-party scanner/network advisory check or private dependency upload; only existing standard-library/workspace code and the previously audited installed toolchain were used. Cargo.lock remains the same five local packages. These documentation checks do not establish Desk compatibility, financial correctness or future runtime behavior.
 
-Delivery: local evidence/closure commits pending; GitHub publishing was not requested. Next implementation remains P1-02 READY. First Desk scope is historical backtesting/local simulation, with P4 actual integration, P5 Python compatibility and P6 final bundle acceptance still NOT_STARTED.
+Delivery: evidence committed as `49282a0daf3d08145d2cfb5ab2f42a2184e2a900`; this follow-up records local closure and is resolved by the status-log command above. GitHub publishing was not requested; these documentation commits remain local and do not inherit GOV-01's historical remote receipt. Next implementation remains P1-02 READY. First Desk scope is historical backtesting/local simulation, with P4 actual integration, P5 Python compatibility and P6 final bundle acceptance still NOT_STARTED.
 
 ## Open questions and risks
 
