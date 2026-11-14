@@ -10,7 +10,7 @@
 - Previous implementation: **P2-04 — Snapshot / Restore**, COMPLETED; evidence `4dffdfe235eba1f698a34b3e0df6c2198a066ba3`, complete bounded reconstruction/atomic persistence;229 Rust/23 external/11 process cases PASS.
 - Previous implementation: **P2-05 — Replay & Debug Trace**, COMPLETED; evidence `8c2b39f83c03fbcb0794c18a5fef4d92e998a5ee`;238 Rust/23 external/11 process cases PASS.
 - Latest implementation: **P2-06 — Temporal Strategy Gate**, COMPLETED; evidence `d272c4d78445f984686d9025e7cb29c0de9fc544`;244 Rust/23 external/11 process/55 independent rows/full P2 gate PASS.
-- Next eligible implementation: **P4-03.01 — Contextual Catalog & Product Contract**, within **P4-03 — Desktop Client & Local State**, IN_PROGRESS. P4-02 verified/closed; integrate actual Desk binding/editor/state and native offline journey. User authorizes continuing downstream work without routine confirmation; current engine checkpoints were explicitly authorized for GitHub publishing on 2026-11-15.
+- Next eligible implementation: **P4-03.02 — Unified Authoring Frontend**, within **P4-03 — Desktop Client & Local State**, IN_PROGRESS. P4-02 verified/closed; integrate actual Desk binding/editor/state and native offline journey. User authorizes continuing downstream work without routine confirmation; current engine checkpoints were explicitly authorized for GitHub publishing on 2026-11-15.
 - P1-02 acceptance met: evaluated numeric policy/limits, strict type/unit/scale checks, unsupported-shape rejection, full binding matrix and tests. Evidence `a653c105fba5ea6ada15395abc22cc8f82cc4472` and local closure recorded below; publishing not requested.
 - Actual root: `/Users/george/Desktop/finger-quant-engine`; main tracking origin/main; remote `https://github.com/FingerTrader/finger-quant-engine.git`.
 - Rust source baseline / latest pre-governance commit: `342d8aa76b48d32fa9c9110609b371eac52b8d86` (foundation). Previous commit: `cbcebad`.
@@ -51,8 +51,8 @@
 | P4-01 | COMPLETED | [Boundary](DESKTOP_BOUNDARY.md)/[evidence](P4_01_ACCEPTANCE.md), actual pinned Dart/native Sandbox comparison;331 Rust/full P3 gate PASS; evidence `0d7da5275def9bf93a12823f5c0268a9d99d34de`; local closure, not pushed |
 | P4-02 | COMPLETED | [Managed controls](ENGINE_CONTROLS.md),340 Rust/full P3 gate, actual pinned Dart/13 native lifecycle/workload cases/old compatibility PASS; evidence `1275b5cb1f9792f3c2540e62c00b5accebebb146`; local closure, not pushed |
 | P4-03 | IN_PROGRESS | [Partial implementation/evidence](P4_03_PROGRESS.md):341 Rust/23 external,14 Flutter, actual native baseline; accepted existing-editor integration implemented; native no-login/current-candidate acceptance remain open |
-| P4-03.01 | VERIFIED | Contextual catalog/contract;344 Rust/23 external full gate,3 new Rust tests and actual framed peer8 checks; evidence commit pending |
-| P4-03.02 | NOT_STARTED | Unified authoring frontend; [new scope](DESK_UNIFIED_AUTHORING.md) |
+| P4-03.01 | COMPLETED | Evidence efa003f;344 Rust/23 external full gate,3 new Rust tests, actual framed peer8 checks; local delivery |
+| P4-03.02 | VERIFIED | Unified authoring frontend; [new scope](DESK_UNIFIED_AUTHORING.md) |
 | P4-03.03 | NOT_STARTED | Desk project/run/replay; [new scope](DESK_UNIFIED_AUTHORING.md) |
 | P4-03.04 | NOT_STARTED | Stateful authoring/modules; [new scope](DESK_UNIFIED_AUTHORING.md) |
 | P4-03.05 | NOT_STARTED | Optimization bridge/Desk; [new scope](DESK_UNIFIED_AUTHORING.md) |
@@ -64,7 +64,7 @@
 | P6-01, P6-02, P6-03, P6-04, P6-05, P6-06 | NOT_STARTED | P5 gate first |
 | P6-03.01 | NOT_STARTED | Java-indicator/Go-predicate graph after P6-02; prerequisite of parent P6-03 |
 
-Stage-task totals: **49 = 40 parent tasks + 9 child tasks**: 26 COMPLETED, 1 IN_PROGRESS, 1 VERIFIED, 21 NOT_STARTED. P4-03 is next eligible; none is BLOCKED. P1/P2/P3 gates passed; P4–P6 gates remain open. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
+Stage-task totals: **49 = 40 parent tasks + 9 child tasks**: 27 COMPLETED, 1 VERIFIED, 1 IN_PROGRESS, 20 NOT_STARTED. P4-03 is next eligible; none is BLOCKED. P1/P2/P3 gates passed; P4–P6 gates remain open. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
 
 ## Delivered baseline and limitations
 
@@ -540,3 +540,11 @@ User approved executing the review of Desk `docs/quant/desk-fqe-product-integrat
 ### P4-03.01 verified contextual discovery
 
 2026-11-15: optional catalog.describe/1 accepts an exact native trigger without model/parameters, returns seven current closed-bar descriptors with registry/source pins and actual exposed profiles/limits. Tick catalog excludes bar indicators. Three new Rust cases cover domain identity, old method separation, negotiation and invalid/extra/missing/inexact context. Independent actual framed peer checks8 conditions over5 requests, including exact old model.inspect registry/descriptor parity and clean EOF exit. Full financial gate PASS at2026-11-14T16:05:59.024109+00:00:344 Rust/23 external, required fmt/check/test/strict all-target Clippy,64 preserved financial source pins, all old process/oracles/examples/fresh-child restore and docs/diff. Evidence: [gate](evidence/p4-03/unified-catalog-gate.json), [peer](evidence/p4-03/unified-catalog-peer.json). No registry dependencies, manifest/lock/toolchain or financial semantics changed; previous third-party review reused, no network scanner/upload. Desk pin/bundle remains the previous candidate until coordinated consumer replacement. This is child verification only; no actual new Desk UI acceptance or parent closure. Local evidence commit pending, no new publishing request.
+
+P4-03.01 closure: local evidence commit `efa003f` records code/contract/checks; all child acceptance satisfied, status COMPLETED. No GitHub publication requested. P4-03.02 is now IN_PROGRESS; parent P4-03 remains open.
+
+### P4-03.02 implementation under verification
+
+First-party authoring.rs and optional authoring.event/1 parse/inspect/print one semantic Event document plus ordered policies. Nine targeted tests and actual framed peer checks pass, including independent SMA2/3 source/graph canonical identity and next-open one-unit fills4/2 at bars6/8, cash/equity100→98 with no costs, full curve oracle, generic u64MAX, precise decimal/bool, invalid/stale/persisted drafts and explicit discard. Scope/limits are in DESK_UNIFIED_AUTHORING. Full workspace verification pending for current source. Existing financial provider/source pins, dependencies, Cargo manifests/lock, toolchain and Desk pin unchanged. No actual Desk frontend integration claimed.
+
+P4-03.02 final verification PASS2026-11-14T16:21:32.111059+00:00:354 Rust/23 external, all required fmt/check/test/strict all-target Clippy/docs/diff, financial64 source pins, old P1/P2/P3 process goldens, independent rational oracles, examples and fresh-child restore. Ten authoring tests include gate-only unknown-name providers without evaluator invocation and independently asserted exact decimal coefficient. Actual framed peer7 requests/8 checks passes with current debug peer SHA c5f5fdf3c7f40e861357cc572c0f6b9add1ad5797150d6e6014b99f644ccbce1. Evidence: [full gate](evidence/p4-03/unified-authoring-gate.json), [peer](evidence/p4-03/unified-authoring-peer.json). Initial9-test regression correctly caught missing decimal human-text→coefficient conversion; fixed before this final pass. Early independent peer harness EOF-cancel behavior was corrected by holding its owned pipe open until response; native cancellation was preserved. Child02 VERIFIED pending evidence commit. No packages/manifests/lock/toolchain/financial-source changes, scanners or private uploads. Desk pin/bundle and UI unchanged.

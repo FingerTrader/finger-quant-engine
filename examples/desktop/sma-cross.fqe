@@ -1,0 +1,15 @@
+// One semantic strategy, editable as graph or structured text.
+fqe 1;
+strategy "research.sma-cross" version "1";
+context closed_bar "DEMO" timeframe "60000000000" price_scale 2 volume_scale 3;
+param fast_period : u64 = "2" within ("1", "10000");
+param slow_period : u64 = "3" within ("1", "10000");
+input sample = close;
+node fast = "reference.sma" @ "1" (period=$fast_period) (close=sample);
+node slow = "reference.sma" @ "1" (period=$slow_period) (close=sample);
+cross up = above(fast.value, slow.value);
+cross down = below(fast.value, slow.value);
+output enter = cross(up);
+output exit = cross(down);
+policy entry = buy_if_flat(enter, "1.000", "10.00");
+policy exit = close_long(exit);

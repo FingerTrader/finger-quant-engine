@@ -54,3 +54,7 @@ Final full `scripts/check_p3_gate.py` PASS2026-11-14T13:39:13.469005+00:00:340 R
 ## Contextual discovery extension (P4-03.01)
 
 Optional `catalog.describe/1` provides `catalog.describe {trigger}` without any model/bindings. [Unified authoring](DESK_UNIFIED_AUTHORING.md#contextual-reference-discovery-p4-0301) owns exact context, descriptors/registry identities and truthful exposed capability/limit flags. It does not change the model-based descriptor.list or model.inspect contract. No provider evaluation or external discovery occurs. Consumer bundle replacement and unified UI remain later children.
+
+## Structured Event authoring extension (P4-03.02)
+
+Optional `authoring.event/1` adds pure authoring.inspect / authoring.print with exact fields, diagnostic-as-data outcomes, preserved native identity and fail-closed lossless lowering. [Frontend reference](DESK_UNIFIED_AUTHORING.md#experimental-event-frontend-reference-p4-0302) owns the bounded grammar, spans/comments, supported scalar/parameter subset and conflict-safe draft rules. Catalog support now advertises authoring=true/profile authoring.event/1; optimization/languages/general temporal scheduler remain unavailable. This does not imply the Desk pin has been replaced or the five-stage UI is integrated.

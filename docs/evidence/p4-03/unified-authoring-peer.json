@@ -1,0 +1,32 @@
+{
+  "format": "fqe.authoring-peer-evidence/1",
+  "status": "passed",
+  "calls": [
+    "hello",
+    "authoring.inspect",
+    "authoring.print",
+    "authoring.inspect",
+    "backtest.run",
+    "backtest.run",
+    "authoring.inspect"
+  ],
+  "peer_sha256": "c5f5fdf3c7f40e861357cc572c0f6b9add1ad5797150d6e6014b99f644ccbce1",
+  "source_sha256": "979c846d5dbf9403ddec18e145a967d4711a544f0cac0ea403fc0b45b0d82731",
+  "execution_id": "sha256:46f79c929fe43d78f1677547ff5a45021661b46395e8ceda79a072eeb0d10880",
+  "result_id": "sha256:07c8d4e7f895a99541e87c2cac326d6b0e2690e8823f2463236f768d8302d0a6",
+  "final_equity": "98.00",
+  "fill_bars": [
+    "6",
+    "8"
+  ],
+  "checks": [
+    "framed-native-authoring",
+    "exact-semantic-print-roundtrip",
+    "comments-retained",
+    "independent-native-graph-parity",
+    "hand-cash-and-equity-curve",
+    "next-open-fill-prices",
+    "invalid-source-has-no-executable",
+    "clean-child-exit"
+  ]
+}

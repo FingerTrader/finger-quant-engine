@@ -18,7 +18,7 @@ Limits use actual implementation constants wherever public. Request262144 bytes,
 
 ## Initial structured language (P4-03.02)
 
-The experimental source format will have an explicit version and a deliberately bounded grammar: strategy/context, exact typed parameters, field bindings, generic descriptor ID/version calls, named ports, comparisons/Boolean operators and crossings, outputs and ordered policies. No indicator-name dispatch. The initial Event subset precedes Workflow/module syntax in P4-03.04. Unsupported expressions/units/state/order kinds fail with source-linked diagnostics. Native validation is authoritative; successful parsing alone never means runnable. Main-flow language is not Python; arbitrary Python/Java/Go files are legacy attachments or future explicitly supported language modules.
+The implemented experimental `authoring.event/1` source begins `fqe 1;` and has a deliberately bounded grammar: strategy/context, exact typed parameters, field bindings, generic descriptor ID/version calls, named ports, comparisons/Boolean operators and crossings, outputs and ordered policies. No indicator-name dispatch. The initial Event subset precedes Workflow/module syntax in P4-03.04. Unsupported expressions/units/state/order kinds fail with source-linked diagnostics. Native validation is authoritative; successful parsing alone never means runnable. Main-flow language is not Python; arbitrary Python/Java/Go files are legacy attachments or future explicitly supported language modules.
 
 Native frontend interface must provide parse/inspect/print with a semantic representation and byte/line/column spans. Imported raw models must either be fully representable in the negotiated subset or reject printing; never lose unsupported modules/state/metadata. Round-trip tests compare canonical native semantics and actual output, not only source strings. Revision conflict/invalid buffer tests prove stale models cannot start.
 
@@ -40,10 +40,40 @@ P4-03.07 establishes a new scalable profile before claiming ordinary long-histor
 
 ## Independent acceptance anchors
 
-- Proposed SMA2/3 closes3,2,1,2,3,2,1,2: upward crossing5, downward7; next opens4 at6 and2 at8, one unit, cash100/no costs gives final98. This proposal needs actual native execution plus graph/text parity; it is not an existing passing test.
+- Proposed SMA2/3 closes3,2,1,2,3,2,1,2: upward crossing5, downward7; next opens4 at6 and2 at8, one unit, cash100/no costs gives final98. Implemented under P4-03.02: independent graph/text canonical parity and actual native execution pass; the complete cash/equity curve is independently checked.
 - Existing [G-006 independent goldens](P2_ACCEPTANCE.md) cover early/expiry/late/re-cross/EOF and instance isolation.
 - Existing [optimization oracle](OPTIMIZATION.md) chooses threshold90 from training profits−2.50/−3.00/0.00; separate validation−11.00/equity89 must not reselect threshold0 even though its validation is better.
 
 ## Verification and delivery
 
 Run all required Rust/docs/diff checks and the full financial gate after native edits. No new dependencies for initial discovery/frontend; reuse previously reviewed locked libraries/offline toolchain. Preserve historical evidence and consumer pins until replacement builds are verified. This contract and its accepted direction do not establish any child completion, Desk UI acceptance or GitHub publication.
+
+## Experimental Event frontend reference (P4-03.02)
+
+Source: first-party `fqe_bridge::authoring`, no parser dependency or financial-source edits. Capability `authoring.event/1` adds pure `authoring.inspect {source,parameters}` and `authoring.print {document,comments}`. Exact outer fields are mandatory. Inspect returns `valid`, diagnostics, and only on success document/source_map/comments/native inspection. Invalid source returns no executable/native field. Native parameter failures return diagnostics; parsing/inspection never starts a job. Print returns valid/source or diagnostics and rejects any lossy conversion by canonical native-model and exact ordered-policy round-trip comparison. Existing raw native models remain available independently.
+
+Use [the complete sample](../examples/desktop/sma-cross.fqe). Grammar in source order:
+
+```text
+fqe 1;
+strategy "stable.semantic.id" version "1";
+context closed_bar "DEMO" timeframe "60000000000" price_scale 2 volume_scale 3;
+warmup "0";
+param fast_period : u64 = "2" within ("1", "10000");
+input sample = close;
+node fast = "reference.sma" @ "1" (period=$fast_period) (close=sample);
+```
+
+Tick context is `context tick "DEMO";`. Types are u64/bool/decimal(scale,ratio), decimal(scale,price,"instrument"), decimal(scale,quantity,"instrument"), decimal(scale,money,"currency"). Parameters have explicit defaults, optional inclusive `within(lower,upper)` and optional `description "text"`. Full-width integer/decimal defaults and node literal arguments are quoted exact strings; Boolean literals are unquoted. Required/absent parameters, enum/exclusive/one-sided constraints, arbitrary expression literals, rounded multiply/divide and unsupported types are not silently translated; they remain outside this authoring subset. Native model APIs retain their broader contracts.
+
+Nodes use provider ID/version and contextual descriptor-supplied types/pins. First parentheses bind descriptor parameters from exact literals or `$parameter`; second parentheses bind input ports to an earlier node.port or named field input. Every native output port is exported under node.port. Local declaration names are dot-free ASCII identifiers; provider/strategy IDs remain quoted/native validated. There are no SMA/RSI/MACD-specific execution branches. Cross declarations are `cross up = above(fast.value, slow.value);` or below. Outputs use input/node.port, `$parameter`, `cross(id)`, `not(expr)` and two-argument add/subtract/multiply/divide/equal/not_equal/less/less_equal/greater/greater_equal/and/or. Expressions are typed by the existing native compiler; default numeric operation rounding is exact. Policies in declaration order are `policy entry = buy_if_flat(output, "quantity", "cash_cap");` and `policy exit = close_long(output);`; their roots must be Boolean. Monetary/quantity scale and step validation belongs to financial preflight.
+
+Bound source65536 UTF-8 bytes,8192 tokens,4096-byte strings, expression nesting16 intersect existing native source/JSON/graph/slot bounds. Unknown syntax, versions, field ports, providers, arguments, duplicate declarations, cycles/forward wires, type/unit mismatches and unrepresentable print imports fail. Diagnostics include code, native path, byte offset and 1-based Unicode line/column in strategy.fqe; source maps retain stable declaration IDs and spans. A native diagnostic without a matching declaration keeps its original path and start-of-file location rather than inventing a node.
+
+`//` comments are preserved as separate ordered strings. Printing currently moves them to a leading comment block, retaining content/order; it does not preserve original whitespace or inline placement. Original source remains in the draft; comment anchoring and richer CST editing are future refinements, not claimed current behavior. Graph presentation stays in the Desk outer project and is never lowered into financial metadata.
+
+The reference `Draft` transaction API tracks semantic revision and independent text generation, retains invalid buffers, refuses executable access or graph edits while text is unapplied, rejects stale responses, and requires explicit apply/discard. Source-only snapshots restore the valid document by native parsing without execution and retain pending invalid text. Semantic revisions do not change for comment-only edits; text generation still prevents stale application. Desk must implement the same rules in its project service in child03; this Rust reference alone is not actual Flutter integration.
+
+Nine targeted Rust tests and an independent actual-peer consumer cover graph/text native identity, economic output parity with the separate graph fixture, exact full u64/decimal/Boolean constraints, comment retention, unsupported/lossy rejection, source-linked native errors, stale/invalid/persisted draft transactions. The first Python peer harness attempt closed stdin immediately and correctly cancelled the asynchronous backtest; the corrected harness keeps stdin open through the final response and observes clean EOF afterward. This was a harness lifecycle error, not hidden as a passing run. Complete current workspace gate and evidence commit are required before child closure.
+
+The reusable Rust `parse_with_registry` accepts an already reviewed caller-owned registry; it never loads packages. An independent gate-only shift/window registry proves unknown provider names, parameter names, ports and output types compile without frontend changes or provider evaluation. Desktop authoring RPCs still expose only their contextual reference registry. Decimal source literals use exact human notation and are converted to signed integer coefficients at the declared scale; printing reverses this without floating point or rounding. A fresh regression initially exposed this conversion defect in the new decimal test; it was fixed before closure, with an independent coefficient assertion.

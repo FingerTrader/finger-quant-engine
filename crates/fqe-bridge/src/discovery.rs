@@ -71,7 +71,8 @@ pub(crate) fn describe(p: &Value) -> Result<Value> {
             object([
                 ("artifact_kinds", strings(&["event", "workflow"])),
                 ("financial_profiles", strings(&["cash_long", "margin_long"])),
-                ("authoring", Value::Bool(false)),
+                ("authoring", Value::Bool(true)),
+                ("authoring_profile", string("authoring.event/1")),
                 ("optimization", Value::Bool(false)),
                 ("external_languages", Value::Bool(false)),
                 ("temporal_scheduler", Value::Bool(false)),

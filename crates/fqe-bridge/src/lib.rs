@@ -1,4 +1,5 @@
 //! Experimental desktop boundary. Native engine owns all financial state and values.
+pub mod authoring;
 mod codec;
 mod discovery;
 pub mod ffi;
@@ -29,6 +30,7 @@ pub const CAPABILITIES: &[&str] = &[
     "desktop.exact-json/1",
     "catalog.reference/1",
     "catalog.describe/1",
+    "authoring.event/1",
     "model.validate/1",
     "model.inspect/1",
     "backtest.validate/1",
@@ -128,6 +130,7 @@ pub fn bridge_id() -> String {
         include_bytes!("framing.rs").as_slice(),
         include_bytes!("codec.rs").as_slice(),
         include_bytes!("discovery.rs").as_slice(),
+        include_bytes!("authoring.rs").as_slice(),
         include_bytes!("managed.rs").as_slice(),
         include_bytes!("bin/peer.rs").as_slice(),
         include_bytes!("../Cargo.toml").as_slice(),
@@ -187,6 +190,8 @@ pub fn execute(request: &Request, cancel: &AtomicBool) -> Result<Value> {
         // Measurement method is an exact arbitrary bounded JSON echo, not strategy execution.
         "echo" => Ok(p.clone()),
         "catalog.describe" => discovery::describe(p),
+        "authoring.inspect" => authoring::inspect_rpc(p),
+        "authoring.print" => authoring::print_rpc(p),
         "model.validate" | "descriptor.list" | "model.inspect" => {
             fields(p, &["kind", "model", "parameters"])?;
             let (plan, registry) = compile(p)?;
