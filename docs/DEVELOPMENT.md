@@ -115,3 +115,5 @@ Before pushing, inspect `git diff --check`, all intended staged files, the lockf
 The model import example is `cargo run --locked --offline -p fqe-ir --example load_model`; it imports/prepares declarations only. See [Model loading](MODEL_LOADING.md) for exact JSON and identity/resource contracts.
 
 Run `cargo run --locked --offline -p fqe-ir --example providers` for two explicitly driven unknown-name provider compositions. The fixture source is reviewed local code; no external extension or language runtime is loaded. `python3 scripts/generate_provider_fixtures.py` deliberately regenerates source pins and independent JSON/SHA expectations after reviewed provider-source changes; tests never regenerate their own expected fixtures. See [Provider registry](PROVIDER_REGISTRY.md).
+
+Run `cargo run --locked --offline -p fqe-ir --example expressions` for typed Boolean/crossing history behavior. [Expression contract](EXPRESSION_CONTRACT.md) distinguishes this in-memory slice from a whole-model compiler/event runtime.

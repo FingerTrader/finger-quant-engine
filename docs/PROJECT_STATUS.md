@@ -7,7 +7,7 @@
 - Phase: **P1 — Universal Strategy Foundation, incomplete**. P2–P6 NOT_STARTED. No functional phase gate has passed.
 - Completed: GOV-01 architecture governance, GOV-02 Desk planning, GOV-03 extensibility planning, P1-01 baseline audit and P1-02 type/parameter implementation. P1-03 is now COMPLETED with local evidence recorded below.
 - Latest implementation: **P1-04 — Node, Function & Provider Registries**, COMPLETED. Frozen typed pure scalar registries, generic validated invocation and local model-node preparation, independent loaded X-001 compositions delivered.
-- Next eligible implementation: **P1-05 — Universal Expression Engine**, READY. P1-04 evidence `d0382d365815d233e4f28773995e2ef688f2a656`; no P1-05 code begun at this closure. User authorized continuing downstream tasks without repeated confirmation.
+- Next eligible implementation: **P1-05 — Universal Expression Engine**, VERIFIED. P1-04 evidence `d0382d365815d233e4f28773995e2ef688f2a656`; P1-05 now begins from the clean closure 76d6d58d2cb19631a63aa7a587d713b3028d0e88. User authorized continuing downstream tasks without repeated confirmation.
 - P1-02 acceptance met: evaluated numeric policy/limits, strict type/unit/scale checks, unsupported-shape rejection, full binding matrix and tests. Evidence `a653c105fba5ea6ada15395abc22cc8f82cc4472` and local closure recorded below; publishing not requested.
 - Actual root: `/Users/george/Desktop/finger-quant-engine`; main tracking origin/main; remote `https://github.com/FingerTrader/finger-quant-engine.git`.
 - Rust source baseline / latest pre-governance commit: `342d8aa76b48d32fa9c9110609b371eac52b8d86` (foundation). Previous commit: `cbcebad`.
@@ -25,7 +25,7 @@
 | P1-02 | COMPLETED | Checked decimal/type/parameter APIs, contract/ADR and 36 tests/full checks/two examples; evidence `a653c105fba5ea6ada15395abc22cc8f82cc4472`; local closure, not pushed |
 | P1-03 | COMPLETED | Strict bounded import/identity/binding/compatibility contract; 56 tests/full checks; evidence `b4b7707fc786c5ea5b68dd7f19fb03cb10f5b45d`; local closure, not pushed |
 | P1-04 | COMPLETED | Pure registry/invocation/model-node preparation, two independent X-001 compositions, 69 tests/full checks; evidence `d0382d365815d233e4f28773995e2ef688f2a656`, local closure |
-| P1-05 | READY | P1-04 completed; typed expressions/crossing/readiness/history acceptance in NEXT_SESSION |
+| P1-05 | VERIFIED | Typed expressions/calls and transactional crossings; 86 tests/full checks/all examples PASS, evidence/closure pending |
 | P1-06, P1-07, P1-08, P1-09, P1-10, P1-11 | NOT_STARTED | Dependencies in DELIVERY_PLAN |
 | P2-01, P2-02, P2-03, P2-04, P2-05, P2-06 | NOT_STARTED | P1 gate first |
 | P3-01, P3-02, P3-03, P3-04, P3-05, P3-06, P3-07 | NOT_STARTED | P2 gate first |
@@ -35,7 +35,7 @@
 | P6-01, P6-02, P6-03, P6-04, P6-05, P6-06 | NOT_STARTED | P5 gate first |
 | P6-03.01 | NOT_STARTED | Java-indicator/Go-predicate graph after P6-02; prerequisite of parent P6-03 |
 
-Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 4 COMPLETED, 1 READY, 37 NOT_STARTED. P1-05 is next; none is IN_PROGRESS or BLOCKED. No functional phase gate has passed. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
+Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 4 COMPLETED, 1 VERIFIED, 37 NOT_STARTED. P1-05 is active; none is BLOCKED. No functional phase gate has passed. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
 
 ## Delivered baseline and limitations
 
@@ -128,7 +128,7 @@ Delivery: implementation/test/contract evidence committed as `a653c105fba5ea6ada
 - Legacy core/numeric/types/parameters/evaluator/runtime/CLI/protocol behavior, LICENSE and toolchain remain preserved; only fqe-ir dependencies/exports and scoped new model/import artifacts changed. No registry/compiler/worker/simulator or Flutter run added.
 - Evidence `b4b7707fc786c5ea5b68dd7f19fb03cb10f5b45d` is committed; this status/handoff/plan-only closure records COMPLETED after all acceptance/checks. Resolve the closure SHA via the status-log command. Remote main read-confirmed at `0ac5d7b163e77bddb5f69689a1455e3560aad872`; no publish requested or attempted. Including this closure, eight local commits are ahead of origin/main.
 
-## Next implementation acceptance — P1-04
+## Historical P1-04 acceptance
 
 P1-04 is closed with verified evidence below. Implement shared versioned node/function/provider descriptors and deterministic registries. Resolve namespaced ID/version/signature, typed named ports and parameter contracts generically. Prove X-001 unknown-name function and predicate injection through the same in-process interface as built-ins; reject duplicate/version/type/arity/capability/unsupported-shape failures and cover multi-input/output signatures and deterministic registry identity. No per-name compiler branch or external artifact loader. Detailed scope is [Next session](NEXT_SESSION.md); remain within [Extensibility](EXTENSIBILITY_CONTRACT.md) and the 42-task dependency plan.
 
@@ -143,3 +143,13 @@ Implemented registry.rs and builtins.rs, independent examples/support/providers.
 The intended diff was reviewed; preservation checks confirm no manifest/lockfile/core/runtime/CLI/protocol/toolchain/LICENSE changes. `rg` for both independent provider IDs under engine src returned no matches; example/test source holds the implementation. Remote main read-confirmed unchanged at 0ac5d7b163e77bddb5f69689a1455e3560aad872. No GitHub publishing requested. All checks used cached reviewed dependencies with locked/offline flags; no new advisory query or private upload.
 
 P1-04 closure: evidence commit is recorded; resolve this closure SHA via the status-log command. Including this closure, main is ten commits ahead of the last confirmed origin/main. No publishing requested. Next P1-05 is READY; no phase gate passed.
+
+## P1-05 execution scope
+
+Started after P1-04 closure on 2026-11-14. Implement bounded immutable typed expression plans, exact checked scalar arithmetic/comparison/Boolean composition and generic P1-04 calls. Crossing subscriptions advance in stable dependency order independently of Boolean guards; per-instance memory is staged until whole evaluation succeeds. Tests cover readiness truth tables/short-circuit, numeric/unit boundaries, shared/history-once/false-guard behavior and rollback. No graph/module compiler, indicators, event scheduler, workers, financial ledger or Desk changes; no dependencies planned.
+
+## P1-05 expression verification
+
+Added expressions.rs, 17 public expression tests, expressions example and EXPRESSION_CONTRACT/ADR-016. Tests cover independently enumerated Boolean tables, exact checked numeric/dimensional policy, custom provider/predicate composition, crossing edges/dependencies/cycles, false guards/shared references/operand ordering, gap reset, isolation and failed-step rollback. Targeted 17 tests PASS. Earlier strict Clippy found three collapsible-if style issues; corrected and strict all-target Clippy now PASS. Expression example PASS: false/false/false/false/true over five accepted steps. Full final workspace checks PASS: 86 tests (69 prior + 17 expressions), zero failed/ignored/doc tests, fmt/check/strict all-target Clippy and all five example/demo commands. Document checker PASS: 30 Markdown/285 local links/42 tasks; diff checks PASS. Evidence/closure commit pending. No dependency changes or private uploads; no Desk/worker/compiler/accounting expansion.
+
+P1-05 intended diff reviewed; preservation checks confirm manifests/lockfile/core/runtime/CLI/protocol/loader/registry/built-ins/toolchain/LICENSE unchanged. No independent-provider business ID appears under engine src. All builds/checks used the existing reviewed cached dependencies offline; no new dependency, network advisory query, private upload, Desk or external repository change. Remote main remains 0ac5d7b163e77bddb5f69689a1455e3560aad872; publication not requested.

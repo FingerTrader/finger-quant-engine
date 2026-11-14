@@ -41,7 +41,7 @@ NumericUnit distinguishes Scalar, Ratio, Price(instrument), Quantity(instrument)
 
 Only **scalar shape** is implemented. Series, Window, Record, Collection, unknown shapes, unknown scalar types and unsupported contract versions are rejected at descriptor construction. Timestamp, Duration, InstrumentRef, nominal enum types and floating values remain unsupported scalar requests. A finite typed parameter choice set implements enum restrictions; it is not a nominal enum scalar. Future multiple named scalar ports do not require an opaque record value; P1-04 owns those port signatures. Series/timeframe alignment and window evaluation remain P2 work. No advertised capability is inferred from a request enum variant.
 
-`TypedValue` contains a validated descriptor/value pair with immutable accessors. `Evaluation<T>` distinguishes Ready(T), Missing, Warmup and Error(NumericError). Ready(zero), Missing and Warmup are distinct; absent optional bindings are a separate BoundValue::Unbound. Boolean/readiness propagation and event transactions are still P1-05/P1-08 targets, not implemented by this enum.
+`TypedValue` contains a validated descriptor/value pair with immutable accessors. `Evaluation<T>` distinguishes Ready(T), Missing, Warmup and Error(NumericError). Ready(zero), Missing and Warmup are distinct; absent optional bindings are a separate BoundValue::Unbound. P1-05 now implements separate [expression/readiness and crossing-step staging](EXPRESSION_CONTRACT.md); this enum alone does not implement it. Whole-model event transactions remain P1-08.
 
 ## Parameter definition and binding
 

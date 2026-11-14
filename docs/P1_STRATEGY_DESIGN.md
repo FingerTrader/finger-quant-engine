@@ -135,3 +135,5 @@ P1 succeeds only with real loaded artifacts, generic typed evaluation, registere
 P1-11 also requires the X-001 unknown-name provider and reusable-rule composition acceptance in EXTENSIBILITY_CONTRACT. The existing G-001–G-007 financial-indicator examples remain unchanged. External workers/plugins are still later gates; their future interfaces must preserve this generic descriptor/invocation boundary.
 
 P1-03 now provides the experimental scalar-graph IR2 [model JSON importer](MODEL_LOADING.md), exact values, content identity and immutable parameter preparation. This is separate from the legacy IR1 evaluator. Broader graph/module/workflow/runtime targets above remain planned until their task acceptance; only the tracked P1-03 scalar declaration fixture is currently importable, without execution.
+
+P1-05 implements the bounded in-memory [expression/crossing subset](EXPRESSION_CONTRACT.md), including Boolean/readiness tables and history staging. Registered indicator formulas/precision, full loaded-graph compilation, per-event subscriptions and durable state retain later gates; the Rust AST is not an external schema.

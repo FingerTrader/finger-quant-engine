@@ -22,6 +22,7 @@ This repository contains the initial engineering foundation, version `0.1.0`. It
 | Checked decimal values, scalar/unit descriptors and immutable parameter bindings | Implemented, experimental P1-02 subset; [contract](docs/TYPE_PARAMETER_CONTRACT.md) |
 | Bounded JSON model import, canonical content identity and pinned parameter preparation | Implemented, experimental P1-03 subset; [contract](docs/MODEL_LOADING.md); no graph execution |
 | Frozen callable descriptors, typed scalar provider invocation and independent unknown-name example | Implemented, experimental P1-04 subset; [contract](docs/PROVIDER_REGISTRY.md) |
+| Typed arithmetic/Boolean expressions and transactional crossing subscriptions | Implemented, experimental P1-05 subset; [contract](docs/EXPRESSION_CONTRACT.md) |
 | Typed IR: a single-instrument price comparison producing signals | Implemented, experimental API |
 | Synchronous, deterministic in-memory event runtime and run state | Implemented, experimental API |
 | Offline CLI demonstration and behavioral tests | Implemented |
@@ -101,6 +102,7 @@ Commit `Cargo.lock` alongside dependency changes. The lockfile contains five wor
 - [Architecture](docs/ARCHITECTURE.md)
 - [Strategy contract](docs/STRATEGY_CONTRACT.md)
 - [Type/parameter subset and numeric decision](docs/TYPE_PARAMETER_CONTRACT.md)
+- [Typed expressions and crossing history](docs/EXPRESSION_CONTRACT.md)
 - [Pure provider registry and invocation](docs/PROVIDER_REGISTRY.md)
 - [External model loading and content identity](docs/MODEL_LOADING.md)
 - [Event contract](docs/EVENT_CONTRACT.md)

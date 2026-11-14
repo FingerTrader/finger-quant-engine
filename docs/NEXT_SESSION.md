@@ -6,7 +6,7 @@ Updated 2026-11-14 (Asia/Tokyo), derived from [Project status](PROJECT_STATUS.md
 
 Read PROJECT_STATUS, DELIVERY_PLAN, ARCHITECTURE_DECISIONS, README, [Workflow](WORKFLOW.md), [authority](DOCUMENT_AUTHORITY.md) and current contracts. Verify actual root/Git status/branch/upstream/history/evidence. Main only, preserve unrelated work. Actual code/tests/Git override stale records. User authorized continuing downstream tasks without routine confirmation; no GitHub publishing requested. Do not install tools just because default PATH lacks Cargo.
 
-P1-01–P1-04 COMPLETED. P1-05 READY at this closure; recover any newer dirty partial implementation before starting. P1 remains incomplete. `git log -1 --format=%H -- docs/PROJECT_STATUS.md` resolves latest progress record; `git rev-parse HEAD` resolves checkout.
+P1-01–P1-04 COMPLETED. P1-05 VERIFIED after this closure; recover any newer dirty partial implementation before starting. P1 remains incomplete. `git log -1 --format=%H -- docs/PROJECT_STATUS.md` resolves latest progress record; `git rev-parse HEAD` resolves checkout.
 
 ## Latest delivered evidence
 
@@ -18,7 +18,7 @@ P1-03 evidence b4b7707fc786c5ea5b68dd7f19fb03cb10f5b45d implements the separate 
 
 This status/handoff/plan-only closure records the P1-04 evidence. Remote main read-confirmed at 0ac5d7b163e77bddb5f69689a1455e3560aad872; ten local commits including closure are unpushed. Resolve exact local closure SHA through Git. No push attempted/requested. The three existing reviewed libraries and 21 locked registry packages remain unchanged; use cached locked/offline dependencies, no private uploads or new advisory checks in P1-04.
 
-## Next task: P1-05 — Universal Expression Engine
+## Current task: P1-05 — Universal Expression Engine
 
 Read [P1 design](P1_STRATEGY_DESIGN.md), [Type/parameters](TYPE_PARAMETER_CONTRACT.md), [Provider registry](PROVIDER_REGISTRY.md), [Extensibility](EXTENSIBILITY_CONTRACT.md), [State](STATE_CONTRACT.md) and plan acceptance. Implement the bounded typed expression/evaluation slice without a whole-graph compiler or financial/runtime expansion.
 
@@ -55,3 +55,5 @@ Add current-task acceptance commands and record actual outputs/counts. Close und
 ## Product constraints
 
 First product delivery is Desk historical backtesting/local simulation, then separately accepted live trading. FQE and supported runtimes must ship within existing Flutter Desk so customers install once. Standalone/offline engine needs no Flutter/login/trading account; broker APIs remain in the independent Trading SDK. [Desk integration](DESK_INTEGRATION_PLAN.md) owns migration, paired native acceptance and installed bundle proof. Preserve existing Desk dirty work, old drafts/data/historical backend identity. No native FQE/Desk run verified yet. Engine compatibility and bundled platform/runtime availability are separate matrices; no universal-language/distribution promise from an in-process Rust trait.
+
+P1-05 began from clean 76d6d58. See PROJECT_STATUS scope. expressions.rs/tests/example/contract exist. Targeted 17 tests, strict Clippy and expression example pass after correcting three style findings; full workspace checks/all examples PASS (86 tests); evidence/closure pending.

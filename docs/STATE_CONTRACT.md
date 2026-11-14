@@ -1,6 +1,6 @@
 # State contract
 
-Status: an in-memory run lifecycle and counters are implemented experimentally. Durable state, strategy memory, portfolio state, and recovery are planned.
+Status: an in-memory run lifecycle and counters are implemented experimentally. P1-05 separately implements in-memory [transactional crossing history](EXPRESSION_CONTRACT.md), without integration into the legacy runtime. Durable/generalized strategy state, portfolio state and recovery are planned.
 
 ## Current ownership
 
@@ -30,7 +30,7 @@ Calling `run()` again returns `AlreadyStarted` and preserves the existing termin
 
 ## Strategy and financial state
 
-The current IR is stateless. It reads only the current tick and constants. The runtime does not hold indicator windows, user dictionaries, cash, margin, positions, orders, P&L, or optimization trials. A repeated Long signal cannot be interpreted as an existing position.
+The legacy IR1 evaluator is stateless. It reads only the current tick and constants. The runtime does not hold indicator windows, user dictionaries, cash, margin, positions, orders, P&L, or optimization trials. A repeated Long signal cannot be interpreted as an existing position.
 
 Future state domains must be separated:
 
