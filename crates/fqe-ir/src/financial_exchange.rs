@@ -20,6 +20,9 @@ pub fn content_id(domain: &[u8], bytes: &[u8]) -> ContentId {
 pub fn decode_input(bytes: &[u8]) -> Result<JsonValue, ModelError> {
     loading::decode(bytes)
 }
+pub fn typed_value(value: &fqe_core::types::TypedValue) -> JsonValue {
+    loading::typed_json(value)
+}
 pub fn parameters(values: &BoundParameters) -> JsonValue {
     object(values.iter().map(|(key, value)| {
         (

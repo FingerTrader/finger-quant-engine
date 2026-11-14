@@ -40,7 +40,7 @@ fn margin(v: Option<MarginStatus>) -> V {
 fn source(v: &SignalSource) -> V {
     o([("run", s(&v.run)), ("execution_id", s(v.execution_id))])
 }
-fn policy(v: &PolicyBinding) -> V {
+pub(crate) fn policy(v: &PolicyBinding) -> V {
     let src = match &v.source {
         PolicySource::LongSignal => o([("kind", s("long_signal"))]),
         PolicySource::EventBoolean { name } => {
@@ -484,7 +484,7 @@ fn simulation_event(v: &SimulationEvent) -> V {
         SimulationEvent::Finished => o([("kind", s("finished"))]),
     }
 }
-pub(crate) fn result(r: &BacktestResult) -> Result<Vec<u8>, crate::events::ExecutionError> {
+pub(crate) fn result_value(r: &BacktestResult) -> Result<V, crate::events::ExecutionError> {
     let m = &r.metrics;
     let b = &r.broker;
     let metrics = o([
@@ -569,5 +569,11 @@ pub(crate) fn result(r: &BacktestResult) -> Result<Vec<u8>, crate::events::Execu
             ]),
         ),
     ]);
-    Ok(json::encode(&value, json::MAX_FINANCIAL_REPORT_BYTES)?)
+    Ok(value)
+}
+pub(crate) fn result(r: &BacktestResult) -> Result<Vec<u8>, crate::events::ExecutionError> {
+    Ok(json::encode(
+        &result_value(r)?,
+        json::MAX_FINANCIAL_REPORT_BYTES,
+    )?)
 }

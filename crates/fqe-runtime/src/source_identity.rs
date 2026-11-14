@@ -178,6 +178,14 @@ const SOURCES: &[(&str, &[u8])] = &[
         include_bytes!("backtest_encoding.rs").as_slice(),
     ),
     (
+        "crates/fqe-runtime/src/optimization.rs",
+        include_bytes!("optimization.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-runtime/src/optimization_encoding.rs",
+        include_bytes!("optimization_encoding.rs").as_slice(),
+    ),
+    (
         "crates/fqe-runtime/src/report.rs",
         include_bytes!("report.rs").as_slice(),
     ),

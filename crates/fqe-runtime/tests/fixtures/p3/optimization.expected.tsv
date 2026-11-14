@@ -1,0 +1,4 @@
+threshold	parameter_id	training_profit	training_drawdown	rank	validation_profit
+0	sha256:714c3c7bdf66e9b4f813e94da45e0e8b9e0c19601ed38eed6aa56d45b9508629	-2.50	2.50	2	-10.50
+60	sha256:f1cd83af2ca9a8dce3ab74ed49df727643b5c66c420fde2be87c319ad3502265	-3.00	3.00	3	-11.00
+90	sha256:2a8a690904d032fdc6cb88a441ef4671efc8130c5591e4719785d78dff0c6435	0.00	0.00	1	-11.00

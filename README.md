@@ -41,7 +41,8 @@ This repository contains the initial engineering foundation, version `0.1.0`. It
 | Explicit local cash-long orders, next-open/prior-volume fills, costs, lifecycle and replay | Implemented experimental P3-03 library; [contract](docs/ORDER_SIMULATION.md); closure in PROJECT_STATUS |
 | Explicit margin-long debt/leverage/maintenance and subsequent-open liquidation | Implemented experimental P3-04 profile; [contract](docs/MARGIN_PROFILES.md); closure in PROJECT_STATUS |
 | Bounded experimental [backtest/report](docs/BACKTESTING.md) | Implemented experimental native Rust; exact financial manifests/reports and close-equity metrics |
-| Local optimizer and other broker models | Planned |
+| Bounded [local parameter optimization](docs/OPTIMIZATION.md) | Implemented experimental native Rust; isolated typed grid/training-only ranking/separate validation |
+| Other broker models | Planned |
 | Python / Java / Go workers and source-language compilers | Planned |
 | Plugins, Desktop IPC, persistent history storage, Trading SDK adapter | Planned |
 

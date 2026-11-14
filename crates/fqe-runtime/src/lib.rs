@@ -191,3 +191,6 @@ pub mod portfolio;
 
 pub mod backtest;
 mod backtest_encoding;
+
+pub mod optimization;
+mod optimization_encoding;
