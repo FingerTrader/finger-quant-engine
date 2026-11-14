@@ -5,9 +5,9 @@
 ## Current position
 
 - Phase: **P1 — Universal Strategy Foundation, incomplete**. P2–P6 NOT_STARTED. No functional phase gate has passed.
-- Completed: GOV-01 architecture governance, GOV-02 Desk planning and P1-01 baseline audit. No implementation task is currently active.
+- Completed: GOV-01 architecture governance, GOV-02 Desk planning, GOV-03 extensibility planning and P1-01 baseline audit. No implementation task is currently active.
 - Next eligible implementation task: **P1-02 — Universal Types & Parameter Schema**, READY. It has not been implemented.
-- Current scoped work: **GOV-03 — Open language, indicator and rule extensibility planning**, VERIFIED, owner-requested. Acceptance: canonical extension contract and ADR, generic language onboarding and computation-provider bridge, early extension tests, explicit child-task dependencies, descriptor-driven Desk acceptance, synchronized status/handoff and required checks. Documentation only; P1-02 implementation remains unstarted.
+- Current scoped work: **GOV-03 — Open language, indicator and rule extensibility planning**, COMPLETED, owner-requested. Acceptance met: canonical extension contract and ADR, generic language onboarding and computation-provider bridge, early extension tests, explicit child-task dependencies, descriptor-driven Desk acceptance, synchronized status/handoff and required checks. Documentation only; evidence `5e9f770c01e513598478f4cbdd42a9a5278fb804` and local closure recorded below. P1-02 implementation remains unstarted.
 - Actual root: `/Users/george/Desktop/finger-quant-engine`; main tracking origin/main; remote `https://github.com/FingerTrader/finger-quant-engine.git`.
 - Rust source baseline / latest pre-governance commit: `342d8aa76b48d32fa9c9110609b371eac52b8d86` (foundation). Previous commit: `cbcebad`.
 - Latest status-record commit: resolve `git log -1 --format=%H -- docs/PROJECT_STATUS.md`. Current checkout: `git rev-parse HEAD`. See the non-self-referential recording rule in DOCUMENT_AUTHORITY.
@@ -19,7 +19,7 @@
 | --- | --- | --- |
 | GOV-01 | COMPLETED | All governance artifacts/checks delivered in `f07fe8ccd4c12b46783b67ff0a2421172d05d5dc`; normal GitHub main push and remote SHA confirmed; closure records synchronized |
 | GOV-02 | COMPLETED | Six corrections, ADR-011 and [Desk delivery contract](DESK_INTEGRATION_PLAN.md); checks below passed; evidence `49282a0daf3d08145d2cfb5ab2f42a2184e2a900`; local delivery, not pushed; no stage implementation credited |
-| GOV-03 | VERIFIED | Open extensibility contract/ADR and 42-task refinement; checks below passed; evidence commit/closure pending; no implementation capability credited |
+| GOV-03 | COMPLETED | Open extensibility contract/ADR and 42-task refinement; checks below passed; evidence `5e9f770c01e513598478f4cbdd42a9a5278fb804`; local closure, not pushed; no implementation capability credited |
 | P1-01 | COMPLETED | [Baseline audit](BASELINE_AUDIT.md): all crate/contract inventory, 17 tests, gap/task mapping and document checks; evidence `f07fe8ccd4c12b46783b67ff0a2421172d05d5dc` |
 | P1-02 | READY | P1-01 dependency COMPLETED; acceptance below and in NEXT_SESSION; no code work started |
 | P1-03, P1-04, P1-05, P1-06, P1-07, P1-08, P1-09, P1-10, P1-11 | NOT_STARTED | Dependencies in DELIVERY_PLAN |
@@ -82,7 +82,7 @@ Delivery: evidence committed as `49282a0daf3d08145d2cfb5ab2f42a2184e2a900`; this
 - Independent rational calculation verified X-005 example specification: Warmup/Warmup/2/2/2/2, threshold 1 true on bars 3–6, strict threshold 2 never true. This is a specification check; no Java/Go provider or graph has been implemented/executed.
 - Full intended document diff reviewed; diff whitespace checks and Rust/manifests/lockfile/toolchain/LICENSE preservation passed. No Desk writes/execution/tests or new consumer inventory occurred in this slice. No dependency/tool installation, third-party scanner, network advisory check or private dependency upload; Cargo.lock remains the same five local packages.
 
-Delivery: VERIFIED pending local evidence/closure commits. GitHub publication is not requested. P1-02 remains READY; all new capabilities and X-001–X-006 runtime/product evidence remain future work.
+Delivery: evidence `5e9f770c01e513598478f4cbdd42a9a5278fb804` committed; this follow-up records COMPLETED local closure and is resolved using the status-log command above. GitHub publication is not requested. Remote main was checked on 2026-11-14 and remained `0ac5d7b163e77bddb5f69689a1455e3560aad872`; this is a read-only receipt, not a push of GOV-02/GOV-03. Initial local Git index write was sandbox-restricted; the scoped local commit succeeded with the filesystem permission override. P1-02 remains READY; all new capabilities and X-001–X-006 runtime/product evidence remain future work.
 
 ## Open questions and risks
 
