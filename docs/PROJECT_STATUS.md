@@ -5,9 +5,10 @@
 ## Current position
 
 - Phase: **P1 — Universal Strategy Foundation, incomplete**. P2–P6 NOT_STARTED. No functional phase gate has passed.
-- Completed: GOV-01 architecture governance, GOV-02 Desk planning, GOV-03 extensibility planning and P1-01 baseline audit. P1-02 is active.
-- Active implementation task: **P1-02 — Universal Types & Parameter Schema**, VERIFIED; evidence commit/closure pending. Scope: checked decimal primitives, versioned scalar/unit subset, readiness representation, validated parameter schemas and immutable bindings; no graph/codec/worker/accounting implementation.
-- Acceptance: evaluated numeric policy and documented limits; strict type/unit/scale checks and unsupported-shape rejection; required/default/absence/null/readiness/range/enum/duplicate matrix; meaningful numeric/schema tests, baseline regressions, four Rust checks, document checks, evidence commit and handoff. Publishing is not requested.
+- Completed: GOV-01 architecture governance, GOV-02 Desk planning, GOV-03 extensibility planning, P1-01 baseline audit and P1-02 type/parameter implementation. No implementation task is currently active.
+- Latest implementation: **P1-02 — Universal Types & Parameter Schema**, COMPLETED. Checked decimal primitives, versioned scalar/unit subset, readiness, validated schemas and immutable bindings delivered; no graph/codec/worker/accounting implementation.
+- Next eligible implementation task: **P1-03 — Versioned Definition & Model Loading**, READY; not started.
+- P1-02 acceptance met: evaluated numeric policy/limits, strict type/unit/scale checks, unsupported-shape rejection, full binding matrix and tests. Evidence `a653c105fba5ea6ada15395abc22cc8f82cc4472` and local closure recorded below; publishing not requested.
 - Actual root: `/Users/george/Desktop/finger-quant-engine`; main tracking origin/main; remote `https://github.com/FingerTrader/finger-quant-engine.git`.
 - Rust source baseline / latest pre-governance commit: `342d8aa76b48d32fa9c9110609b371eac52b8d86` (foundation). Previous commit: `cbcebad`.
 - Latest status-record commit: resolve `git log -1 --format=%H -- docs/PROJECT_STATUS.md`. Current checkout: `git rev-parse HEAD`. See the non-self-referential recording rule in DOCUMENT_AUTHORITY.
@@ -21,8 +22,9 @@
 | GOV-02 | COMPLETED | Six corrections, ADR-011 and [Desk delivery contract](DESK_INTEGRATION_PLAN.md); checks below passed; evidence `49282a0daf3d08145d2cfb5ab2f42a2184e2a900`; local delivery, not pushed; no stage implementation credited |
 | GOV-03 | COMPLETED | Open extensibility contract/ADR and 42-task refinement; checks below passed; evidence `5e9f770c01e513598478f4cbdd42a9a5278fb804`; local closure, not pushed; no implementation capability credited |
 | P1-01 | COMPLETED | [Baseline audit](BASELINE_AUDIT.md): all crate/contract inventory, 17 tests, gap/task mapping and document checks; evidence `f07fe8ccd4c12b46783b67ff0a2421172d05d5dc` |
-| P1-02 | VERIFIED | Checked decimal/type/parameter APIs and numeric decision; 36 tests/full checks/two examples passed; local evidence commit/closure pending |
-| P1-03, P1-04, P1-05, P1-06, P1-07, P1-08, P1-09, P1-10, P1-11 | NOT_STARTED | Dependencies in DELIVERY_PLAN |
+| P1-02 | COMPLETED | Checked decimal/type/parameter APIs, contract/ADR and 36 tests/full checks/two examples; evidence `a653c105fba5ea6ada15395abc22cc8f82cc4472`; local closure, not pushed |
+| P1-03 | READY | P1-02 COMPLETED; bounded external model-loading acceptance below; no implementation begun |
+| P1-04, P1-05, P1-06, P1-07, P1-08, P1-09, P1-10, P1-11 | NOT_STARTED | Dependencies in DELIVERY_PLAN |
 | P2-01, P2-02, P2-03, P2-04, P2-05, P2-06 | NOT_STARTED | P1 gate first |
 | P3-01, P3-02, P3-03, P3-04, P3-05, P3-06, P3-07 | NOT_STARTED | P2 gate first |
 | P4-01, P4-02, P4-03, P4-04, P4-05 | NOT_STARTED | P3 gate first |
@@ -31,13 +33,13 @@
 | P6-01, P6-02, P6-03, P6-04, P6-05, P6-06 | NOT_STARTED | P5 gate first |
 | P6-03.01 | NOT_STARTED | Java-indicator/Go-predicate graph after P6-02; prerequisite of parent P6-03 |
 
-Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 1 COMPLETED audit, 1 VERIFIED, 40 NOT_STARTED. No functional implementation task has been completed under the new plan. P1-02 is the only active stage task; none is BLOCKED. Open technical choices are future work, not evidence that a ready task cannot begin. No P1 implementation gap is closed by planning it. GOV-01/GOV-02 verification counts remain historical to their original 40-task plans.
+Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 2 COMPLETED (audit and type/parameter implementation), 1 READY, 39 NOT_STARTED. P1-02 is the first completed implementation task; no functional phase gate has passed. No stage task is currently active or BLOCKED. Open technical choices are future work, not evidence that a ready task cannot begin. No P1 implementation gap is closed by planning it. GOV-01/GOV-02 verification counts remain historical to their original 40-task plans.
 
 ## Delivered baseline and limitations
 
 Five Rust crates exist with workspace-only dependencies: validated domain values, experimental price-only IR, synchronous one-shot runtime, protocol version-number helper/draft schema and offline CLI demo. These predate the six-stage plan and remain preserved. Technical maturity: implemented but experimental, not stable/public SDK release.
 
-An experimental P1-02 decimal/type/parameter layer now exists in new fqe-core/fqe-ir modules, verified, pending evidence commit/closure. It is separate from the legacy evaluator. No universal graph/indicator/compiler/model loader, generalized state scheduler/snapshot, backtester/virtual ledger/optimizer, Desktop boundary, SDK adapter, language worker or plugin runtime exists. Signals are observations, not orders/fills/performance. The `.proto` is not a codec or transport. [Audit](BASELINE_AUDIT.md) links exact sources/tests and every gap.
+An experimental P1-02 decimal/type/parameter layer now exists in new fqe-core/fqe-ir modules, verified and locally committed. It is separate from the legacy evaluator. No universal graph/indicator/compiler/model loader, generalized state scheduler/snapshot, backtester/virtual ledger/optimizer, Desktop boundary, SDK adapter, language worker or plugin runtime exists. Signals are observations, not orders/fills/performance. The `.proto` is not a codec or transport. [Audit](BASELINE_AUDIT.md) links exact sources/tests and every gap.
 
 ## Actual verification evidence
 
@@ -106,8 +108,8 @@ Delivery: evidence `5e9f770c01e513598478f4cbdd42a9a5278fb804` committed; this fo
 - `python3 scripts/check_docs.py`: PASS: 26 Markdown files, 211 local links/anchors, 42 stage tasks; task dependencies/status projections consistent. `git diff --check` passed. Legacy core/IR source differs only by module exports; runtime/CLI/protocol code, original tests, manifests/lockfile, toolchain and LICENSE are unchanged. No Desk source or app execution in this slice.
 - No third-party dependency changes, downloads/installers/generators or network advisory/scanner calls. Existing stdlib/workspace code and pinned toolchain only; Cargo.lock remains five local packages. No private source/manifests/graphs uploaded. The API remains experimental; indicator accuracy, model decoding, accounting, workers/plugins and Desk integration need their own gates.
 
-Delivery: VERIFIED pending local evidence/closure commits; publishing not requested. P1-02 remains the current task until evidence is committed. P1-03 is next only after this closure. P1 is incomplete.
+Delivery: implementation/test/contract evidence committed as `a653c105fba5ea6ada15395abc22cc8f82cc4472`; this follow-up records COMPLETED closure (resolve its containing commit by the status-log command). Local only, no GitHub push requested. Remote main was checked on 2026-11-14 at `0ac5d7b163e77bddb5f69689a1455e3560aad872`; this is not a publication receipt for P1-02 or the preceding local governance commits. P1-03 is READY, unstarted. P1 is incomplete.
 
 ## Next implementation acceptance — P1-03
 
-After P1-02 closure, evaluate and implement bounded external definitions/model loading with explicit definition/instance/version separation, canonical descriptor/artifact identity, parameter declarations and capability requirements. Preserve exact full-width signed decimal coefficients/u64 values, absent versus null, duplicate schema/binding/entry keys and all P1-02 validation. Reject unknown required versions/types/shapes/capabilities and malformed/oversized/deep inputs before execution. Record the existing Desk visual/hosted compatibility dispositions without modifying Desk in this loader slice. Registry resolution/compiler/runtime/worker/financial behavior stays with its owning later tasks. Any new codec/hash dependency or generator needs supply-chain review before execution; no codec is preselected. Detailed scope/commands: [NEXT_SESSION](NEXT_SESSION.md).
+P1-02 is closed. Evaluate and implement bounded external definitions/model loading with explicit definition/instance/version separation, canonical descriptor/artifact identity, parameter declarations and capability requirements. Preserve exact full-width signed decimal coefficients/u64 values, absent versus null, duplicate schema/binding/entry keys and all P1-02 validation. Reject unknown required versions/types/shapes/capabilities and malformed/oversized/deep inputs before execution. Record the existing Desk visual/hosted compatibility dispositions without modifying Desk in this loader slice. Registry resolution/compiler/runtime/worker/financial behavior stays with its owning later tasks. Any new codec/hash dependency or generator needs supply-chain review before execution; no codec is preselected. Detailed scope/commands: [NEXT_SESSION](NEXT_SESSION.md).
