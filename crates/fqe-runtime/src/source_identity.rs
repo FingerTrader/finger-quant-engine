@@ -2,6 +2,26 @@
 use fqe_ir::model::ContentId;
 const SOURCES: &[(&str, &[u8])] = &[
     (
+        "crates/fqe-runtime/src/history.rs",
+        include_bytes!("history.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-ir/src/history.rs",
+        include_bytes!("../../fqe-ir/src/history.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-ir/src/history_csv.rs",
+        include_bytes!("../../fqe-ir/src/history_csv.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-core/src/finance.rs",
+        include_bytes!("../../fqe-core/src/finance.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-core/src/utc.rs",
+        include_bytes!("../../fqe-core/src/utc.rs").as_slice(),
+    ),
+    (
         "crates/fqe-runtime/src/trace.rs",
         include_bytes!("trace.rs").as_slice(),
     ),

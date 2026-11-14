@@ -1,0 +1,29 @@
+{
+  "format": "fqe.cash-long-comparison",
+  "schema_version": 1,
+  "legacy_profile": "cash-long-ohlcv/1",
+  "fqe_delivery": "fixture-only;ledger-and-Desk-parity-not-yet-implemented",
+  "instrument": "DEMO",
+  "currency": "USD",
+  "initial_cash": "1000.00",
+  "quantity": "2.000",
+  "buy": {
+    "intent_after_bar": "1",
+    "fill_at_open_bar": "2",
+    "price": "120.00",
+    "gross": "240.00",
+    "fee": "0.50",
+    "cash_after": "759.50"
+  },
+  "sell": {
+    "intent_after_bar": "3",
+    "fill_at_open_bar": "4",
+    "price": "130.00",
+    "gross": "260.00",
+    "fee": "0.50",
+    "cash_after": "1019.00"
+  },
+  "final_quantity": "0.000",
+  "fees": "1.00",
+  "net_profit": "19.00"
+}

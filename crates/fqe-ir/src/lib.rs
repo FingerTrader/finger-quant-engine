@@ -187,3 +187,7 @@ pub mod schedule;
 pub mod temporal;
 
 pub mod checkpoint;
+
+/// Exact bounded historical specifications, inputs and immutable selections.
+pub mod history;
+mod history_csv;

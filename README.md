@@ -36,9 +36,10 @@ This repository contains the initial engineering foundation, version `0.1.0`. It
 | Actual MACD-cross/wait3/RSI temporal signals and unified P2 gate | Implemented suite; [P2 acceptance](docs/P2_ACCEPTANCE.md); phase closure in PROJECT_STATUS |
 | Protocol version-number negotiation helper | Implemented, experimental |
 | Protocol Buffers schema | Experimental draft; no codec, generated bindings, or transport |
+| Exact financial units, bounded immutable historical CSV and pinned run inputs | Implemented experimental P3-01 library; [contract](docs/FINANCIAL_HISTORY.md); closure in PROJECT_STATUS |
 | Local backtesting, accounting, execution simulation, optimization | Planned |
 | Python / Java / Go workers and source-language compilers | Planned |
-| Plugins, Desktop IPC, financial/history storage, Trading SDK adapter | Planned |
+| Plugins, Desktop IPC, persistent history storage, Trading SDK adapter | Planned |
 
 **Implemented** means executable code is present and tested. **Experimental** means the API or schema can change and has no compatibility guarantee. **Planned** means design intent only. These labels can overlap: an experimental component may have implemented code.
 

@@ -174,3 +174,6 @@ pub mod trace;
 
 /// Deterministic user replay with bounded source diagnostics.
 pub mod replay;
+
+/// Frozen historical inputs and event-time visibility cursor.
+pub mod history;

@@ -180,3 +180,8 @@ mod tests {
         assert_eq!(event.sequence(), 1);
     }
 }
+
+/// Exact bounded instrument units and financial rounding.
+pub mod finance;
+/// Strict explicit UTC calendar/timestamp conversions.
+pub mod utc;

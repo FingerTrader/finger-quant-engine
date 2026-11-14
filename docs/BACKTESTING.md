@@ -1,6 +1,6 @@
 # Local backtesting
 
-Status: planned. The current event demo evaluates a rule; it is not a backtester and produces no trading performance.
+Status: backtesting remains planned. The implemented experimental [financial/history inputs](FINANCIAL_HISTORY.md) validate local CSV, exact units, immutable selection and pinned strategy/run inputs; the loaded history example evaluates a strategy and produces no trading performance.
 
 Implementation and local optimization are gated by P3-01–P3-07 in [Delivery plan](DELIVERY_PLAN.md). [Project status](PROJECT_STATUS.md) is the only progress authority; this guide describes requirements, not delivery claims.
 
