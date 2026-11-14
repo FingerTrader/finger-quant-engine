@@ -6,9 +6,11 @@ Updated2026-11-14 (Asia/Tokyo); derived from [Project status](PROJECT_STATUS.md)
 
 Read PROJECT_STATUS, DELIVERY_PLAN, ARCHITECTURE_DECISIONS, README, [Workflow](WORKFLOW.md), [authority](DOCUMENT_AUTHORITY.md), then current contracts. Verify actual Git status/main/upstream/history/evidence; code/tests/Git override stale records. Main only, preserve unrelated work/history. User authorizes downstream implementation without routine confirmation; no publishing requested. Old push receipts are not authorization.
 
-P1-01–P1-10 COMPLETED; P1-11 VERIFIED, evidence/closure pending. P2-01 NOT_STARTED until that closure, P2–P6 incomplete. Resolve HEAD with `git rev-parse HEAD` and latest status commit with `git log -1 --format=%H -- docs/PROJECT_STATUS.md`. Reuse the project-local pinned toolchain/cache; no installation needed.
+P1-01–P1-11 COMPLETED; P1 phase gate passed; P2-01 READY. P2–P6 remain incomplete. Resolve HEAD with `git rev-parse HEAD` and latest status commit with `git log -1 --format=%H -- docs/PROJECT_STATUS.md`. Reuse the project-local pinned toolchain/cache; no installation needed.
 
 ## Latest implementation and checks
+
+P1-11 implementation evidence **949a286df391c5bc23eebd5b2e11dfb19268d390**, COMPLETED with synchronized local closure; P1 gate passed. No push requested/performed.
 
 P1-11 [acceptance](P1_ACCEPTANCE.md): versioned suite/index/38 pins, shared exact financial/provider/diagnostic tables,12 invalid artifacts, six loaded runtime gate tests and stdlib unified checker. New unknown-name checked-u64 function/predicate compose in a reusable rule instantiated twice; model/binding edits change exact signals through public generic APIs. No production core/CLI name branches or edits. Compilation/invalidation performs zero provider invocations, numeric failure/retry preserves committed event state, deterministic/prefix/identity/source tests pass. Stock CLI rejects unregistered X-001 deliberately; custom library catalog is explicit, not an external loader.
 
@@ -18,11 +20,9 @@ No new dependency/manifests/lockfile/toolchain/production Rust/provider-old-sour
 
 Previous evidence: P1-10 `5c7a7f6cdd1b0fe59bda7d740444da4f5299dcc3`, P1-09 `9dbac2b14e85298c18131646219a178a4ef8ddea`, P1-08 `cea3f92df2027743711e73a84927396417689042`. Do not reimplement completed verified tasks.
 
-## Pending closure and next P2-01 — Stateful Workflow and Lifecycle
+## Next implementation: P2-01 — Stateful Workflow and Lifecycle
 
-P1-11 is VERIFIED. Inspect/stage scoped tests/fixtures/runner/docs, record evidence commit, then synchronize only status/plan/handoff to COMPLETED and P2-01 READY in a closure commit. P1 gate passes only after that bookkeeping. No push requested.
-
-After closure, first eligible task is P2-01. Read [state](STATE_CONTRACT.md), [runtime](RUNTIME.md), [events](EVENT_CONTRACT.md), [compiled events](EVENT_EXECUTION.md), [P1/P2 design](P1_STRATEGY_DESIGN.md), [extensibility/state](EXTENSIBILITY_CONTRACT.md), [compiler](GRAPH_COMPILER.md), plan row and actual state/provider/event code. Mark IN_PROGRESS with a concrete scoped design/acceptance before edits; this task is substantially broader than the completed pure P1 graph.
+P1-11 is closed. First eligible task is P2-01. Read [state](STATE_CONTRACT.md), [runtime](RUNTIME.md), [events](EVENT_CONTRACT.md), [compiled events](EVENT_EXECUTION.md), [P1/P2 design](P1_STRATEGY_DESIGN.md), [extensibility/state](EXTENSIBILITY_CONTRACT.md), [compiler](GRAPH_COMPILER.md), plan row and actual state/provider/event code. Mark IN_PROGRESS with a concrete scoped design/acceptance before edits; this task is substantially broader than the completed pure P1 graph.
 
 - Define typed strategy-state declarations and bounded workflow/State/Delay semantics with explicit schema/capabilities. Preserve existing artifacts and old evaluator/lifecycle; unsupported future constructs must fail rather than silently change meaning.
 - Separate immutable definition from instance-owned state. Guards read committed old state and current event outputs; writes become visible only at successful event commit. Specify deterministic transition/guard/effect ordering and reject conflicting writes/types/cycles. Delay is an explicit prior-event boundary, never permission for an ordinary same-event cycle.
@@ -45,4 +45,4 @@ python3 scripts/check_docs.py
 git diff --check
 ```
 
-The full runner executes the four required Rust checks/build,23 external tests and11 actual process cases. `--skip-checks` reports partial only. It never rewrites expected files. Record actual failures/dirty work before interruption. Evidence first, then three-document closure with its SHA, no self-hash. Publishing requires authorization, normal push and confirmed remote SHA. Last remote main read-confirmed `0ac5d7b163e77bddb5f69689a1455e3560aad872`; current pre-evidence HEAD9fb28981f7d9b537a0160bbc99b07c58efc4d7fa, main22 commits ahead; P1-11 work is currently uncommitted. Recheck live before action.
+The full runner executes the four required Rust checks/build,23 external tests and11 actual process cases. `--skip-checks` reports partial only. It never rewrites expected files. Record actual failures/dirty work before interruption. Evidence first, then three-document closure with its SHA, no self-hash. Publishing requires authorization, normal push and confirmed remote SHA. Last remote main read-confirmed `0ac5d7b163e77bddb5f69689a1455e3560aad872`; latest implementation evidence `949a286df391c5bc23eebd5b2e11dfb19268d390`, main24 commits ahead after this closure. P1-11 work is committed locally; verify live HEAD/count/dirty work before action. Recheck live before action.

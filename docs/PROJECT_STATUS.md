@@ -4,10 +4,10 @@
 
 ## Current position
 
-- Phase: **P1 — Universal Strategy Foundation, incomplete**. P2–P6 NOT_STARTED. No functional phase gate has passed.
-- Completed: GOV-01/GOV-02/GOV-03 and P1-01 through P1-10; local evidence and closure records synchronized.
-- Latest implementation: **P1-10 — Minimal External Invocation**, COMPLETED. Evidence `5c7a7f6cdd1b0fe59bda7d740444da4f5299dcc3`. Independent caller, strict exact results/source validation, seven requests and bounded POSIX process cleanup delivered.175 Rust +23 external tests/full checks/all examples PASS. Previous P1-09 evidence `9dbac2b14e85298c18131646219a178a4ef8ddea`.
-- Next eligible implementation: **P1-11 — Golden Suite & P1 Gate**, VERIFIED. All prior P1 tasks are closed; the complete golden/generic-engine gate still requires its own acceptance. User authorizes continuing downstream work without routine confirmation; publishing is not requested.
+- Phase: **P1 — Universal Strategy Foundation, COMPLETED**. The P1 golden/generic-engine gate passed. **P2-01 READY**; P2–P6 remain incomplete and no later phase gate has passed.
+- Completed: GOV-01/GOV-02/GOV-03 and P1-01 through P1-11; local evidence and closure records synchronized.
+- Latest implementation: **P1-11 — Golden Suite & P1 Gate**, COMPLETED. Evidence `949a286df391c5bc23eebd5b2e11dfb19268d390`. Versioned independent financial/extension goldens, loaded generic function/predicate/reused rules, unified offline gate/report delivered.181 Rust +23 external tests/11 process cases/full checks/all examples PASS. Previous P1-10 evidence `5c7a7f6cdd1b0fe59bda7d740444da4f5299dcc3`.
+- Next eligible implementation: **P2-01 — Stateful Workflow & Lifecycle**, READY. Define typed strategy/extension state, workflow transitions and explicit lifecycle/State/Delay boundaries before scoped implementation. User authorizes continuing downstream work without routine confirmation; publishing is not requested.
 - P1-02 acceptance met: evaluated numeric policy/limits, strict type/unit/scale checks, unsupported-shape rejection, full binding matrix and tests. Evidence `a653c105fba5ea6ada15395abc22cc8f82cc4472` and local closure recorded below; publishing not requested.
 - Actual root: `/Users/george/Desktop/finger-quant-engine`; main tracking origin/main; remote `https://github.com/FingerTrader/finger-quant-engine.git`.
 - Rust source baseline / latest pre-governance commit: `342d8aa76b48d32fa9c9110609b371eac52b8d86` (foundation). Previous commit: `cbcebad`.
@@ -31,8 +31,9 @@
 | P1-08 | COMPLETED | Compiled event runtime/strict expression codec and bars, atomic state/signals, 146 tests/full checks/all examples PASS; evidence `cea3f92df2027743711e73a84927396417689042`, local closure |
 | P1-09 | COMPLETED | Actual loaded validate/run, bounded exact file/results and library parity;175 tests/full checks/all examples/CLI acceptance PASS; evidence `9dbac2b14e85298c18131646219a178a4ef8ddea`, local closure |
 | P1-10 | COMPLETED | Independent caller/contract/seven requests;175 Rust +23 external tests/full checks PASS; evidence `5c7a7f6cdd1b0fe59bda7d740444da4f5299dcc3`, local closure |
-| P1-11 | VERIFIED | [Consolidated P1 acceptance](P1_ACCEPTANCE.md), loaded X-001/valid-invalid goldens;181 Rust +23 external tests/11 process cases/full checks PASS; evidence/closure pending |
-| P2-01, P2-02, P2-03, P2-04, P2-05, P2-06 | NOT_STARTED | P1 gate first |
+| P1-11 | COMPLETED | [P1 acceptance](P1_ACCEPTANCE.md);181 Rust +23 external tests/11 process cases/full checks PASS; evidence `949a286df391c5bc23eebd5b2e11dfb19268d390`, local closure |
+| P2-01 | READY | P1 gate closed; typed state/workflow/lifecycle/State/Delay and generic X-002 in-process state acceptance next |
+| P2-02, P2-03, P2-04, P2-05, P2-06 | NOT_STARTED | Prior P2 dependencies/gate first |
 | P3-01, P3-02, P3-03, P3-04, P3-05, P3-06, P3-07 | NOT_STARTED | P2 gate first |
 | P4-01, P4-02, P4-03, P4-04, P4-05 | NOT_STARTED | P3 gate first |
 | P5-01, P5-02, P5-03, P5-04, P5-05 | NOT_STARTED | P4 gate first; Python → Java → Go |
@@ -40,7 +41,7 @@
 | P6-01, P6-02, P6-03, P6-04, P6-05, P6-06 | NOT_STARTED | P5 gate first |
 | P6-03.01 | NOT_STARTED | Java-indicator/Go-predicate graph after P6-02; prerequisite of parent P6-03 |
 
-Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 10 COMPLETED, 1 VERIFIED, 31 NOT_STARTED. P1-11 is first eligible; none is BLOCKED. No functional phase gate has passed. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
+Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 11 COMPLETED, 1 READY, 30 NOT_STARTED. P2-01 is first eligible; none is BLOCKED. P1 gate passed; later phase gates remain open. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
 
 ## Delivered baseline and limitations
 
@@ -248,6 +249,6 @@ Initial new-test runs exposed expectation issues only: shift0 upper120 inclusion
 
 No dependency/package/manifest/Cargo.lock/toolchain/LICENSE/production Rust change. Existing approved reviewed cached libraries only; no new advisory query/scanner/installer/private upload/runtime download. Protected sources retain indicator125c8a17228b1a0f92b99661d2d7a69024672672b86292b4cd91c78086b0a29e, builtin101df288c16907a6d6953df729c40d082b31ee1fb374e513319b8a5f1f4c13d1 and prior independent-providerc17c31b99564b24886511bb674eb5084b57ad166a20006c795b5ece58cd2d3bf. New gate-only provider source pin4a8427ed8f4936e78f96e583f422c5577f2d4355042087c85da6a1df6cf5e733 is independently checked by the stdlib runner.
 
-Scope/limits: bounded experimental scalar in-process profiles and trusted providers, not sandboxing/authentication/production throughput; POSIX reference consumer only, no Windows/native installed acceptance. Custom X-001 registry is library-only; the stock CLI deliberately returns registry_unknown. Java/Go/Python workers, external provider loading, generalized portable state/workflow/snapshot/scheduling, accounting/backtest/simulation and installed Desk remain P2–P6. Desk/no manual customer runtime download remains the product destination. P1 completion requires evidence/closure bookkeeping below; no whole-project completion claim.
+Scope/limits: bounded experimental scalar in-process profiles and trusted providers, not sandboxing/authentication/production throughput; POSIX reference consumer only, no Windows/native installed acceptance. Custom X-001 registry is library-only; the stock CLI deliberately returns registry_unknown. Java/Go/Python workers, external provider loading, generalized portable state/workflow/snapshot/scheduling, accounting/backtest/simulation and installed Desk remain P2–P6. Desk/no manual customer runtime download remains the product destination. P1 completion is recorded by the evidence/closure below; no whole-project completion claim.
 
-All acceptance VERIFIED; evidence commit and three-document closure pending. Next eligible after closure is P2-01. Remote main independently read-confirmed0ac5d7b163e77bddb5f69689a1455e3560aad872; local-only delivery, no push requested/performed.
+Final staged diff/protected-path review PASS. Local implementation evidence committed as `949a286df391c5bc23eebd5b2e11dfb19268d390`. This status/plan/handoff-only closure records P1-11 COMPLETED, P1 phase gate passed and P2-01 READY. Twenty-four local commits including this closure remain unpushed. Remote main independently read-confirmed `0ac5d7b163e77bddb5f69689a1455e3560aad872`; no push requested/performed. Scope remains the experimental strategy foundation; downstream state/financial/Desk/language acceptance is incomplete.
