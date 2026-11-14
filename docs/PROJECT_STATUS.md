@@ -4,13 +4,13 @@
 
 ## Current position
 
-- Phase: **P1 and P2 COMPLETED**. Universal strategy and temporal/recovery gates passed. **P3-01..06 COMPLETED**; P3–P6 gates remain incomplete.
+- Phase: **P1, P2 and P3 COMPLETED**. Universal strategy, temporal/recovery and full bounded accounting/reproducibility gates passed. P4–P6 gates remain incomplete.
 - Completed: GOV-01/GOV-02/GOV-03 and P1-01 through P1-11; local evidence and closure records synchronized.
 - Previous implementation: **P2-03 — Time Windows, Timers & Instance Scheduling**, COMPLETED. Evidence `f73082c86622ce40311d7e9ec91eef08402d681f`; typed bound temporal windows, deterministic timers, bounded fair isolated workflow lanes and joint provider/rule/temporal rollback.215 Rust +23 external tests/11 process cases/full checks PASS. P2-02 evidence `daeeb181d99236094daa3272fd4efa3855ddca06`.
 - Previous implementation: **P2-04 — Snapshot / Restore**, COMPLETED; evidence `4dffdfe235eba1f698a34b3e0df6c2198a066ba3`, complete bounded reconstruction/atomic persistence;229 Rust/23 external/11 process cases PASS.
 - Previous implementation: **P2-05 — Replay & Debug Trace**, COMPLETED; evidence `8c2b39f83c03fbcb0794c18a5fef4d92e998a5ee`;238 Rust/23 external/11 process cases PASS.
 - Latest implementation: **P2-06 — Temporal Strategy Gate**, COMPLETED; evidence `d272c4d78445f984686d9025e7cb29c0de9fc544`;244 Rust/23 external/11 process/55 independent rows/full P2 gate PASS.
-- Next eligible implementation: **P3-07 — P3 Accounting & Reproducibility Gate**, VERIFIED. History/ledger/order/margin/backtest/optimizer closed; complete pipeline persistence/restore and full independent financial gate next. User authorizes continuing downstream work without routine confirmation; publishing is not requested.
+- Next eligible implementation: **P4-01 — Stable FFI / IPC Boundary**, READY. Full native financial gate closed; evaluate actual Flutter/Desk boundary and bundle feasibility before choosing. User authorizes continuing downstream work without routine confirmation; publishing is not requested.
 - P1-02 acceptance met: evaluated numeric policy/limits, strict type/unit/scale checks, unsupported-shape rejection, full binding matrix and tests. Evidence `a653c105fba5ea6ada15395abc22cc8f82cc4472` and local closure recorded below; publishing not requested.
 - Actual root: `/Users/george/Desktop/finger-quant-engine`; main tracking origin/main; remote `https://github.com/FingerTrader/finger-quant-engine.git`.
 - Rust source baseline / latest pre-governance commit: `342d8aa76b48d32fa9c9110609b371eac52b8d86` (foundation). Previous commit: `cbcebad`.
@@ -47,14 +47,15 @@
 | P3-04 | COMPLETED | Debt/margin/maintenance/liquidation/gap/insolvency profile;291 Rust/full gate and4-case18-row oracle PASS; evidence `cb23e74b1ae94c80b115ff50430bda7caad74db8` |
 | P3-05 | COMPLETED | Full pinned Event/Workflow→policy→financial report runner;304 Rust/full gate/9-case metrics/actual report PASS; evidence `201e226e78b627b6c703a3a34cc6dc29af802a9a` |
 | P3-06 | COMPLETED | Isolated typed grid/train-only ranking/separate validation;317 Rust/full gate/independent grid PASS; evidence `2dac73503bbce2ce06788b123b23162941f5796d` |
-| P3-07 | VERIFIED | Full financial acceptance, complete persisted pipeline restore parity/negative models and required checks |
-| P4-01, P4-02, P4-03, P4-04, P4-05 | NOT_STARTED | P3 gate first |
+| P3-07 | COMPLETED | Full P3 gate324 Rust/23 external/11 prior+2 financial process cases/all oracles/examples/pins/restore PASS; evidence `31dbc6e1024d9d16b5703e5bcf78b101ad2c7182` |
+| P4-01 | READY | Actual Dart/Desk FFI vs IPC evaluation, exact versioned boundary/capabilities/lifecycle/overhead/Sandbox-bundle feasibility |
+| P4-02, P4-03, P4-04, P4-05 | NOT_STARTED | P4 boundary/task dependencies first |
 | P5-01, P5-02, P5-03, P5-04, P5-05 | NOT_STARTED | P4 gate first; Python → Java → Go |
 | P5-05.01 | NOT_STARTED | Real unlisted-language onboarding after P5-04; prerequisite of parent P5-05 |
 | P6-01, P6-02, P6-03, P6-04, P6-05, P6-06 | NOT_STARTED | P5 gate first |
 | P6-03.01 | NOT_STARTED | Java-indicator/Go-predicate graph after P6-02; prerequisite of parent P6-03 |
 
-Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 23 COMPLETED, 1 VERIFIED, 18 NOT_STARTED. P3-07 is first eligible; none is BLOCKED. P1/P2 gates passed; P3–P6 gates remain open. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
+Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 24 COMPLETED, 1 READY, 17 NOT_STARTED. P4-01 is first eligible; none is BLOCKED. P1/P2/P3 gates passed; P4–P6 gates remain open. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
 
 ## Delivered baseline and limitations
 
@@ -457,3 +458,5 @@ Actual `PYTHONDONTWRITEBYTECODE=1 python3 scripts/check_p3_gate.py` PASS 2026-11
 Complete FinancialSession logical continuation uses explicit default-denied deterministic provider permits, full financial manifest/engine/cursor/whole-prefix identity, candidate reconstruction and previous-outcome validation; paused prefixes preserve pending orders/holds/partial fills/provider and module state/debt/risk. Seven new recovery tests cover8 Event/Workflow×cash/margin×full/partial variants/every cursor and protected liquidation pending at debt1000, then Liquidated/cash100/net−900; corrupt/unknown/version/forged prefix/full manifest mismatch/capability/lifecycle/failed-bar atomicity. Private atomic files retain original target through actual child exit73 before rename. Actual separate fresh child reads bar5 checkpoint with pending hold, advances6/7 and returns byte-identical uninterrupted final97/fees1 report. No old observations emitted as new advances. Auto-BuyIfFlat now records risk_disabled after margin breach; old cash behavior preserved. Original P2 checkpoint schema/validation remains separate.
 
 Contracts [P3 acceptance](P3_ACCEPTANCE.md)/[Financial recovery](FINANCIAL_RECOVERY.md)/ADR-033 own limits and verification. Bounded<=256-bar potentially quadratic reconstruction, native/experimental export only, trusted provider assertions/local directory, no compact migration/hostile isolation/external delivery ack/production-volume or optimizer-resume claim. Every supported native financial profile reconciles; unsupported restricted-short broker/other assets reject explicitly. No dependency/Cargo manifest/lock/toolchain/protected indicator/provider/old golden changes, installers, scanners/private uploads or Desk writes/execution; approved cached dependencies reused and no new advisory queries. Remote main read-confirmed0ac5d7b163e77bddb5f69689a1455e3560aad872. Evidence commit/closure pending; do not mark P3 COMPLETED until recorded/synchronized. P4 Desk boundary remains unimplemented, so no bundled Flutter/customer-delivery claim.
+
+P3-07/P3 closure: verified evidence `31dbc6e1024d9d16b5703e5bcf78b101ad2c7182` delivers complete financial gate/continuation/negative fixes and all required checks; artifacts/acceptance/tests/docs/evidence/status/handoff conditions met. P3-07 COMPLETED; P3 phase COMPLETED. P4-01 READY; actual Desk integration still unimplemented. Earlier pending/candidate statuses above are historical. Local delivery only; publishing not requested/no push attempted.
