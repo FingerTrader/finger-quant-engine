@@ -120,6 +120,7 @@ Commit `Cargo.lock` alongside dependency changes. The lockfile contains five wor
 - [Multi-market scheduler and alignment](docs/MARKET_SCHEDULER.md)
 - [Temporal windows and instance scheduling](docs/TEMPORAL_SCHEDULER.md)
 - [Bounded checkpoint and restore](docs/CHECKPOINT_RESTORE.md)
+- [Replay and bounded debug trace](docs/REPLAY_TRACE.md) — deterministic local replay and observational source/event diagnostics.
 - [Runtime](docs/RUNTIME.md)
 - [Local CLI execution](docs/CLI_EXECUTION.md)
 - [Independent external invocation](docs/EXTERNAL_INVOCATION.md)

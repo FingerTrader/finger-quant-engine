@@ -2,6 +2,14 @@
 use fqe_ir::model::ContentId;
 const SOURCES: &[(&str, &[u8])] = &[
     (
+        "crates/fqe-runtime/src/trace.rs",
+        include_bytes!("trace.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-runtime/src/replay.rs",
+        include_bytes!("replay.rs").as_slice(),
+    ),
+    (
         "crates/fqe-runtime/src/checkpoint_file.rs",
         include_bytes!("checkpoint_file.rs").as_slice(),
     ),

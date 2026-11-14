@@ -61,3 +61,7 @@ A failure before rename has `PersistenceError.committed=false`; the previous tar
 `cargo test --locked --offline -p fqe-runtime --test checkpoint_execution --test checkpoint_persistence` repeats the actual reconstruction/persistence acceptance. `cargo run --locked --offline -p fqe-runtime --example checkpoint` demonstrates in-memory continuation; an explicit path argument also saves the checkpoint. No new dependency, manifest, lockfile, toolchain, financial provider source or earlier golden changes are needed.
 
 P2-05 owns user-facing bounded replay/debug traces and divergence diagnostics; internal checkpoint reconstruction alone does not deliver that task. P2-06 owns the full G-006 MACD-cross → wait3 → RSI model/gate and every wait-point restore. Native long-history state codecs, migration, external runtime state exchange, financial ledgers/backtest/simulation and actual Desk/Flutter/SDK/worker packaging are not credited by this experimental checkpoint profile.
+
+## P2-05 observational replay and trace
+
+[Replay/trace](REPLAY_TRACE.md) owns the experimental bounded diagnostics/user replay profile. It observes existing computations, labels candidate vs committed/rejected boundaries and excludes diagnostic data from semantic receipts/manifests/checkpoints. Buffer exhaustion stops collection without changing execution; private restore stays trace-off. Missing/truncated diagnostics cannot prove unseen node equality or a hidden provider cause. Computational and checkpoint contracts retain authority.

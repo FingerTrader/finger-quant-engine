@@ -3,6 +3,7 @@ use crate::{
     events::{ExecutionError, InputEvent},
     schedule::{Alignment, MarketScheduler, ScheduledEvent},
     temporal::{TemporalBook, WindowNotice, WindowState},
+    trace::{self, TraceBuffer, TraceData, TraceEntry},
     workflow::{WorkflowManifest, WorkflowObservation, WorkflowRuntime, WorkflowState},
 };
 use fqe_ir::{
@@ -336,6 +337,9 @@ impl InstanceScheduler {
     }
     /// One bounded quantum. Existing same-time jobs precede new market records; timers come last.
     pub fn drive_one(&mut self) -> Result<Option<DispatchOutcome>> {
+        self.drive_one_traced(&mut TraceBuffer::off())
+    }
+    pub fn drive_one_traced(&mut self, trace: &mut TraceBuffer) -> Result<Option<DispatchOutcome>> {
         let watermark = self.market.watermark_ns();
         let mut candidates = Vec::new();
         for (id, lane) in &self.lanes {
@@ -371,11 +375,46 @@ impl InstanceScheduler {
         self.last_lane = Some(id.clone());
         let lane = self.lanes.get_mut(&id).expect("candidate lane");
         if let Some(window) = window {
+            let before = lane.book.as_ref().expect("timer book").active();
+            trace.push(|| TraceEntry {
+                context: trace::context(
+                    &lane.manifest.workflow.run,
+                    lane.manifest.workflow.execution_id,
+                    None,
+                    Some(time),
+                    vec![id.clone(), window.clone()],
+                    "$.temporal",
+                    vec![],
+                ),
+                phase: "timer-before",
+                data: TraceData::Windows {
+                    before: before.clone(),
+                    after: before.clone(),
+                    notices: vec![],
+                },
+            });
             let notice = lane
                 .book
                 .as_mut()
                 .expect("timer book")
                 .expire(time, &window)?;
+            trace.push(|| TraceEntry {
+                context: trace::context(
+                    &lane.manifest.workflow.run,
+                    lane.manifest.workflow.execution_id,
+                    None,
+                    Some(time),
+                    vec![id.clone(), window],
+                    "$.temporal",
+                    vec![],
+                ),
+                phase: "timer-committed",
+                data: TraceData::Windows {
+                    before: BTreeMap::new(),
+                    after: lane.book.as_ref().expect("timer book").active().clone(),
+                    notices: vec![notice.clone()],
+                },
+            });
             return Ok(Some(DispatchOutcome::Timer {
                 instance: id,
                 notice,
@@ -383,19 +422,78 @@ impl InstanceScheduler {
         }
         let delivery = lane.queue.front().expect("pending job");
         let alignment = Arc::clone(&delivery.alignment);
+        trace.push(|| TraceEntry {
+            context: trace::context(
+                &lane.manifest.workflow.run,
+                lane.manifest.workflow.execution_id,
+                Some(delivery.event.logical_sequence),
+                Some(delivery.event.timestamp_ns),
+                vec![id.clone()],
+                "$.delivery",
+                vec![],
+            ),
+            phase: "source-delivery",
+            data: TraceData::Delivery {
+                stream: delivery.event.stream.clone(),
+                dataset_id: delivery.event.dataset_id,
+                source_sequence: delivery.event.source_sequence,
+                alignment: delivery
+                    .alignment
+                    .streams()
+                    .iter()
+                    .map(|(stream, event)| {
+                        (
+                            stream.clone(),
+                            (
+                                event.source_sequence,
+                                event.logical_sequence,
+                                event.timestamp_ns,
+                            ),
+                        )
+                    })
+                    .collect(),
+            },
+        });
+
         // The immutable alignment snapshot is retained with this source event, never replaced by later ingress.
         debug_assert_eq!(
             delivery.alignment.timestamp_ns(),
             delivery.event.timestamp_ns
         );
         let staged = (|| {
-            let (runtime, observation) = lane.runtime.fork_step(delivery.event.event.clone())?;
+            let (runtime, observation) = lane
+                .runtime
+                .fork_step_traced(delivery.event.event.clone(), trace)?;
             let mut book = lane.book.clone();
             let windows = if let Some(book) = &mut book {
                 book.advance(&observation)?
             } else {
                 vec![]
             };
+            trace.push(|| TraceEntry {
+                context: trace::context(
+                    &lane.manifest.workflow.run,
+                    lane.manifest.workflow.execution_id,
+                    Some(observation.source_sequence),
+                    Some(observation.timestamp_ns),
+                    vec![id.clone()],
+                    "$.temporal",
+                    vec![],
+                ),
+                phase: "windows-candidate",
+                data: TraceData::Windows {
+                    before: lane
+                        .book
+                        .as_ref()
+                        .map(|b| b.active().clone())
+                        .unwrap_or_default(),
+                    after: book
+                        .as_ref()
+                        .map(|b| b.active().clone())
+                        .unwrap_or_default(),
+                    notices: windows.clone(),
+                },
+            });
             Ok::<_, ExecutionError>((runtime, book, observation, windows))
         })();
         match staged {
@@ -412,6 +510,19 @@ impl InstanceScheduler {
                 }))
             }
             Err(error) => {
+                trace.push(|| TraceEntry {
+                    context: trace::context(
+                        &lane.manifest.workflow.run,
+                        lane.manifest.workflow.execution_id,
+                        Some(delivery.event.logical_sequence),
+                        Some(delivery.event.timestamp_ns),
+                        vec![id.clone()],
+                        &error.path,
+                        vec![],
+                    ),
+                    phase: "lane-rejected",
+                    data: TraceData::Error(error.clone()),
+                });
                 lane.status = LaneStatus::Blocked;
                 Ok(Some(DispatchOutcome::Rejected {
                     instance: id,

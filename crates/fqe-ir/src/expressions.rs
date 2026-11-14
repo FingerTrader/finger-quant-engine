@@ -469,8 +469,26 @@ fn binary_value(op: BinaryOp, a: TypedValue, b: TypedValue, path: &str) -> Resul
         )
     })
 }
+/// Borrowed observations of calls/crossings already evaluated by the normal execution path.
+/// The trusted observer must not panic, mutate provider state or perform external effects.
+pub enum ExpressionObservation<'a> {
+    Call {
+        path: &'a str,
+        provider: &'a str,
+        call_sequence: u64,
+        outputs: &'a BTreeMap<String, Evaluation<TypedValue>>,
+    },
+    Crossing {
+        path: &'a str,
+        id: &'a str,
+        previous: Option<&'a (TypedValue, TypedValue)>,
+        current: Option<&'a (TypedValue, TypedValue)>,
+        output: &'a Evaluation<TypedValue>,
+    },
+}
 struct Evaluator<'a> {
     inputs: &'a BTreeMap<String, Evaluation<TypedValue>>,
+    observer: &'a mut dyn FnMut(ExpressionObservation<'_>),
     crosses: BTreeMap<String, Evaluation<TypedValue>>,
     context: CallContext,
 }
@@ -552,9 +570,16 @@ impl Evaluator<'_> {
                     .call_sequence
                     .checked_add(1)
                     .ok_or_else(|| numeric_error(NumericError::Overflow, path))?;
+                let call_sequence = context.call_sequence;
                 let result = call
                     .invoke(context, values)
                     .map_err(|e| ModelError::new(e.code, path, e.detail))?;
+                (self.observer)(ExpressionObservation::Call {
+                    path,
+                    provider: &call.descriptor().declaration().key.id,
+                    call_sequence,
+                    outputs: result.outputs(),
+                });
                 result
                     .outputs()
                     .get(output)
@@ -609,6 +634,14 @@ impl ExpressionInstance {
         sequence: u64,
         inputs: Vec<(String, Evaluation<TypedValue>)>,
     ) -> Result<ExpressionResult> {
+        self.evaluate_observed(sequence, inputs, &mut |_| {})
+    }
+    pub fn evaluate_observed(
+        &mut self,
+        sequence: u64,
+        inputs: Vec<(String, Evaluation<TypedValue>)>,
+        observer: &mut dyn FnMut(ExpressionObservation<'_>),
+    ) -> Result<ExpressionResult> {
         if sequence == 0 || self.last_sequence.is_some_and(|last| sequence <= last) {
             return Err(error(
                 "expression_sequence",
@@ -647,6 +680,7 @@ impl ExpressionInstance {
         }
         let mut evaluator = Evaluator {
             inputs: &map,
+            observer,
             crosses: BTreeMap::new(),
             context: CallContext {
                 run: self.run.clone(),
@@ -693,6 +727,13 @@ impl ExpressionInstance {
                 staged.insert(id.clone(), Some((left, right)));
                 Evaluation::Ready(boolean(crossed))
             };
+            (evaluator.observer)(ExpressionObservation::Crossing {
+                path: &path,
+                id,
+                previous: self.history.get(id).and_then(Option::as_ref),
+                current: staged.get(id).and_then(Option::as_ref),
+                output: &output,
+            });
             evaluator.crosses.insert(id.clone(), output);
         }
         let mut outputs = BTreeMap::new();

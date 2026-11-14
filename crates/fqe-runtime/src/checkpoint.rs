@@ -3,6 +3,7 @@ use crate::{
     events::{ExecutionError, InputEvent},
     instances::{DispatchOutcome, InstanceLimits, InstanceScheduler, LaneClosure},
     schedule::MarketScheduler,
+    trace::{self, TraceBuffer, TraceData, TraceEntry},
     workflow::WorkflowRuntime,
 };
 use fqe_ir::{
@@ -38,7 +39,7 @@ pub struct CheckpointSeed {
     pub lanes: Vec<LaneSeed>,
 }
 impl CheckpointSeed {
-    fn pins(&self) -> Result<SnapshotPins> {
+    pub(crate) fn pins(&self) -> Result<SnapshotPins> {
         identifier(&self.host_run, "$.host_run")?;
         // Validate limits without creating a strategy/provider instance.
         let market = MarketScheduler::new(Arc::clone(&self.schedule), self.host_run.clone())?;
@@ -264,6 +265,13 @@ impl CheckpointRuntime {
         Ok(self.document.to_bytes()?)
     }
     pub fn execute(&mut self, command: SnapshotCommand) -> Result<CommandReceipt> {
+        self.execute_traced(command, &mut TraceBuffer::off())
+    }
+    pub fn execute_traced(
+        &mut self,
+        command: SnapshotCommand,
+        trace: &mut TraceBuffer,
+    ) -> Result<CommandReceipt> {
         let cursor = self.output_cursor();
         let mut reserved = self.document.clone();
         reserved.entries.push(JournalEntry {
@@ -272,7 +280,9 @@ impl CheckpointRuntime {
             output_cursor: cursor + 1,
         });
         reserved.to_bytes()?;
-        let result = apply(&mut self.host, &command);
+        let index = self.document.entries.len() as u64 + 1;
+        trace.command(Some(index));
+        let result = apply(&mut self.host, &command, trace);
         let produced = matches!(
             &result,
             Ok(CommandValue::Dispatch(_) | CommandValue::Closed(_))
@@ -284,6 +294,33 @@ impl CheckpointRuntime {
             outcome_id,
             output_cursor,
         });
+        trace.push(|| {
+            let (outcome, failure) = match &result {
+                Ok(CommandValue::Dispatch(DispatchOutcome::Rejected { error, .. })) => {
+                    ("lane-rejected", Some(error))
+                }
+                Err(error) => ("command-rejected", Some(error)),
+                _ => ("accepted", None),
+            };
+            TraceEntry {
+                context: trace::context(
+                    &self.seed.host_run,
+                    self.seed.schedule.content_id(),
+                    None,
+                    None,
+                    vec![],
+                    failure.map_or("$.command", |e| &e.path),
+                    vec![],
+                ),
+                phase: "command-result",
+                data: TraceData::Command {
+                    index,
+                    output_sequence: produced.then_some(output_cursor),
+                    outcome,
+                },
+            }
+        });
+        trace.command(None);
         Ok(CommandReceipt {
             command_index: self.document.entries.len() as u64,
             output_cursor,
@@ -316,7 +353,11 @@ impl CheckpointRuntime {
         Ok(restored)
     }
 }
-fn apply(host: &mut InstanceScheduler, command: &SnapshotCommand) -> Result<CommandValue> {
+fn apply(
+    host: &mut InstanceScheduler,
+    command: &SnapshotCommand,
+    trace: &mut TraceBuffer,
+) -> Result<CommandValue> {
     match command {
         SnapshotCommand::Ingest { stream, record } => {
             let event = match record {
@@ -338,7 +379,7 @@ fn apply(host: &mut InstanceScheduler, command: &SnapshotCommand) -> Result<Comm
             Ok(CommandValue::Accepted)
         }
         SnapshotCommand::Drive => Ok(host
-            .drive_one()?
+            .drive_one_traced(trace)?
             .map_or(CommandValue::NoWork, CommandValue::Dispatch)),
         SnapshotCommand::Retry { instance } => {
             host.retry(instance)?;

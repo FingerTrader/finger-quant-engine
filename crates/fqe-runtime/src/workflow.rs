@@ -2,6 +2,7 @@
 use crate::{
     SignalRecord,
     events::{EventObservation, EventRuntime, ExecutionError, InputEvent},
+    trace::{self, TraceBuffer, TraceData, TraceEntry},
 };
 use fqe_core::{
     Signal,
@@ -69,19 +70,26 @@ fn error(code: &'static str, path: &str, detail: &str) -> ExecutionError {
 }
 fn evaluate(
     plan: &Arc<ExpressionPlan>,
-    run: &str,
-    sequence: u64,
+    context: &trace::TraceContext,
     slots: &Values,
-    path: &str,
+    trace: &mut TraceBuffer,
 ) -> Result<Values> {
-    let mut instance = ExpressionInstance::new(Arc::clone(plan), run, "workflow")?;
+    let mut instance = ExpressionInstance::new(Arc::clone(plan), &context.run, "workflow")?;
     instance
-        .evaluate(sequence, slots.clone().into_iter().collect())
+        .evaluate_observed(
+            context.sequence.expect("workflow sequence"),
+            slots.clone().into_iter().collect(),
+            &mut |observation| trace.expression(|| context.clone(), observation),
+        )
         .map(|r| r.outputs)
         .map_err(|e| {
             error(
                 e.code,
-                &format!("{path}{}", e.path.strip_prefix('$').unwrap_or(&e.path)),
+                &format!(
+                    "{}{}",
+                    context.source.definition,
+                    e.path.strip_prefix('$').unwrap_or(&e.path)
+                ),
                 &e.detail,
             )
         })
@@ -209,12 +217,33 @@ impl WorkflowRuntime {
     pub fn step(&mut self, event: InputEvent) -> Result<WorkflowObservation> {
         self.active()?;
         let (base, source) = self.base.as_ref().expect("active base").fork_step(event)?;
-        self.accept(base, source)
+        self.accept(base, source, &mut TraceBuffer::off())
+    }
+    pub fn step_traced(
+        &mut self,
+        event: InputEvent,
+        trace: &mut TraceBuffer,
+    ) -> Result<WorkflowObservation> {
+        self.active()?;
+        let (base, source) = self
+            .base
+            .as_ref()
+            .expect("active base")
+            .fork_step_traced(event, trace)?;
+        self.accept(base, source, trace)
     }
     /// Private candidate for a host transaction that also owns temporal state.
-    pub(crate) fn fork_step(&self, event: InputEvent) -> Result<(Self, WorkflowObservation)> {
+    pub(crate) fn fork_step_traced(
+        &self,
+        event: InputEvent,
+        trace: &mut TraceBuffer,
+    ) -> Result<(Self, WorkflowObservation)> {
         self.active()?;
-        let (base, source) = self.base.as_ref().expect("active base").fork_step(event)?;
+        let (base, source) = self
+            .base
+            .as_ref()
+            .expect("active base")
+            .fork_step_traced(event, trace)?;
         let mut candidate = Self {
             plan: Arc::clone(&self.plan),
             base: None,
@@ -222,13 +251,14 @@ impl WorkflowRuntime {
             state: self.state.clone(),
             values: self.values.clone(),
         };
-        let observation = candidate.accept(base, source)?;
+        let observation = candidate.accept(base, source, trace)?;
         Ok((candidate, observation))
     }
     fn accept(
         &mut self,
         base: EventRuntime,
         source: EventObservation,
+        trace: &mut TraceBuffer,
     ) -> Result<WorkflowObservation> {
         let mut staged = self.values.clone();
         let mut outputs = BTreeMap::<String, Values>::new();
@@ -263,6 +293,22 @@ impl WorkflowRuntime {
                         Evaluation::Ready(workflow::boolean(false)),
                     );
                 }
+                let context = |node: Vec<String>, path: &str| {
+                    trace::context(
+                        &self.manifest.run,
+                        self.plan.content_id(),
+                        Some(source.source_sequence),
+                        Some(source.timestamp_ns),
+                        node,
+                        path,
+                        vec![],
+                    )
+                };
+                trace.push(|| TraceEntry {
+                    context: context(vec![prepared.id.clone()], &prepared.path),
+                    phase: "workflow-inputs-candidate",
+                    data: TraceData::Values(slots.clone()),
+                });
                 let mut enabled = Vec::new();
                 for transition in &prepared.transitions {
                     if !transition.from.contains(&old.mode) {
@@ -270,11 +316,21 @@ impl WorkflowRuntime {
                     }
                     let guard = evaluate(
                         &transition.guard,
-                        &self.manifest.run,
-                        source.source_sequence,
+                        &context(
+                            vec![prepared.id.clone(), transition.id.clone()],
+                            &transition.path,
+                        ),
                         &slots,
-                        &transition.path,
+                        trace,
                     )?;
+                    trace.push(|| TraceEntry {
+                        context: context(
+                            vec![prepared.id.clone(), transition.id.clone()],
+                            &transition.path,
+                        ),
+                        phase: "guard-candidate",
+                        data: TraceData::Values(guard.clone()),
+                    });
                     match &guard["guard"] {
                         Evaluation::Ready(v) if v.value() == &ScalarValue::Bool(true) => {
                             enabled.push(transition)
@@ -304,13 +360,24 @@ impl WorkflowRuntime {
                         ));
                     }
                     if let Some(plan) = &transition.writes {
-                        for (name, value) in evaluate(
+                        let effects = evaluate(
                             plan,
-                            &self.manifest.run,
-                            source.source_sequence,
+                            &context(
+                                vec![prepared.id.clone(), transition.id.clone()],
+                                &transition.path,
+                            ),
                             &slots,
-                            &transition.path,
-                        )? {
+                            trace,
+                        )?;
+                        trace.push(|| TraceEntry {
+                            context: context(
+                                vec![prepared.id.clone(), transition.id.clone()],
+                                &transition.path,
+                            ),
+                            phase: "effects-candidate",
+                            data: TraceData::Values(effects.clone()),
+                        });
+                        for (name, value) in effects {
                             if writes.insert(name, value).is_some() {
                                 return Err(error(
                                     "workflow_write_conflict",
@@ -337,19 +404,30 @@ impl WorkflowRuntime {
                 if let Some(plan) = &prepared.delays {
                     next.delays = evaluate(
                         plan,
-                        &self.manifest.run,
-                        source.source_sequence,
+                        &context(vec![prepared.id.clone()], &prepared.path),
                         &slots,
-                        &prepared.path,
+                        trace,
                     )?;
                 }
                 let current = evaluate(
                     &prepared.outputs,
-                    &self.manifest.run,
-                    source.source_sequence,
+                    &context(vec![prepared.id.clone()], &prepared.path),
                     &slots,
-                    &prepared.path,
+                    trace,
                 )?;
+                trace.push(|| TraceEntry {
+                    context: context(vec![prepared.id.clone()], &prepared.path),
+                    phase: "workflow-outputs-candidate",
+                    data: TraceData::Values(current.clone()),
+                });
+                trace.push(|| TraceEntry {
+                    context: context(vec![prepared.id.clone()], &prepared.path),
+                    phase: "workflow-state-candidate",
+                    data: TraceData::State {
+                        before: old.clone(),
+                        after: next.clone(),
+                    },
+                });
                 warmup |= current.values().any(|v| !matches!(v, Evaluation::Ready(_)));
                 outputs.insert(prepared.id.clone(), current);
                 transitions.insert(

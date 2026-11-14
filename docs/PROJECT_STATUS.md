@@ -4,11 +4,11 @@
 
 ## Current position
 
-- Phase: **P1 — Universal Strategy Foundation, COMPLETED**. The P1 golden/generic-engine gate passed. **P2-01–P2-04 COMPLETED; P2-05 READY**; P2–P6 remain incomplete and no later phase gate has passed.
+- Phase: **P1 — Universal Strategy Foundation, COMPLETED**. The P1 golden/generic-engine gate passed. **P2-01–P2-04 COMPLETED; P2-05 VERIFIED**; P2–P6 remain incomplete and no later phase gate has passed.
 - Completed: GOV-01/GOV-02/GOV-03 and P1-01 through P1-11; local evidence and closure records synchronized.
 - Previous implementation: **P2-03 — Time Windows, Timers & Instance Scheduling**, COMPLETED. Evidence `f73082c86622ce40311d7e9ec91eef08402d681f`; typed bound temporal windows, deterministic timers, bounded fair isolated workflow lanes and joint provider/rule/temporal rollback.215 Rust +23 external tests/11 process cases/full checks PASS. P2-02 evidence `daeeb181d99236094daa3272fd4efa3855ddca06`.
 - Latest implementation: **P2-04 — Snapshot / Restore**, COMPLETED; evidence `4dffdfe235eba1f698a34b3e0df6c2198a066ba3`, complete bounded reconstruction/atomic persistence;229 Rust/23 external/11 process cases PASS.
-- Next eligible implementation: **P2-05 — Replay & Debug Trace**, READY. Deterministic replay, bounded source/event diagnostics and trace parity. User authorizes continuing downstream work without routine confirmation; publishing is not requested.
+- Next eligible implementation: **P2-05 — Replay & Debug Trace**, VERIFIED. Deterministic replay, bounded source/event diagnostics and trace parity. User authorizes continuing downstream work without routine confirmation; publishing is not requested.
 - P1-02 acceptance met: evaluated numeric policy/limits, strict type/unit/scale checks, unsupported-shape rejection, full binding matrix and tests. Evidence `a653c105fba5ea6ada15395abc22cc8f82cc4472` and local closure recorded below; publishing not requested.
 - Actual root: `/Users/george/Desktop/finger-quant-engine`; main tracking origin/main; remote `https://github.com/FingerTrader/finger-quant-engine.git`.
 - Rust source baseline / latest pre-governance commit: `342d8aa76b48d32fa9c9110609b371eac52b8d86` (foundation). Previous commit: `cbcebad`.
@@ -37,7 +37,7 @@
 | P2-02 | COMPLETED | Bounded fixed-UTC multi-market scheduler/watermarks/atomic as-of publication;205 Rust/23 external/11 process cases PASS; evidence `daeeb181d99236094daa3272fd4efa3855ddca06`; local closure |
 | P2-03 | COMPLETED | Typed temporal windows/timers, bounded fair isolated lanes, joint candidate rollback;215 Rust/23 external/11 process cases PASS; evidence `f73082c86622ce40311d7e9ec91eef08402d681f`; local closure |
 | P2-04 | COMPLETED | Bounded complete reconstruction/explicit capability/strict pins/output cursors/atomic persistence;229 Rust/23 external/11 process cases PASS; evidence `4dffdfe235eba1f698a34b3e0df6c2198a066ba3`; local closure |
-| P2-05 | READY | P2-04 complete; deterministic user replay/bounded trace/divergence diagnostics next |
+| P2-05 | VERIFIED | P2-04 complete; deterministic user replay/bounded trace/divergence diagnostics next |
 | P2-06 | NOT_STARTED | Prior P2 dependencies/gate first |
 | P3-01, P3-02, P3-03, P3-04, P3-05, P3-06, P3-07 | NOT_STARTED | P2 gate first |
 | P4-01, P4-02, P4-03, P4-04, P4-05 | NOT_STARTED | P3 gate first |
@@ -46,7 +46,7 @@
 | P6-01, P6-02, P6-03, P6-04, P6-05, P6-06 | NOT_STARTED | P5 gate first |
 | P6-03.01 | NOT_STARTED | Java-indicator/Go-predicate graph after P6-02; prerequisite of parent P6-03 |
 
-Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 15 COMPLETED, 1 READY, 26 NOT_STARTED. P2-05 is first eligible; none is BLOCKED. P1 gate passed; later phase gates remain open. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
+Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 15 COMPLETED, 1 VERIFIED, 26 NOT_STARTED. P2-05 is first eligible; none is BLOCKED. P1 gate passed; later phase gates remain open. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
 
 ## Delivered baseline and limitations
 
@@ -54,7 +54,7 @@ Five Rust crates preserve the initial foundation: validated domain values, exper
 
 An experimental P1-02 decimal/type/parameter layer exists in fqe-core/fqe-ir. P1-03 adds the separately versioned IR2 bounded JSON importer, immutable model declarations, exact numeric values, canonical/source identity and content-pinned prepared bindings. [Model loading](MODEL_LOADING.md) owns supported/unsupported semantics; [dependency review](P1_03_DEPENDENCY_REVIEW.md) records three direct libraries and all 21 resolved registry packages. Offline builds require previously cached toolchain and locked dependencies.
 
-The separate P1-05 expression/crossing layer and P1-06 registered indicators are implemented. P1-07 adds typed provider/module compilation, pure AST mapping and deferred incremental handles. P1-08 now implements [compiled event execution](EVENT_EXECUTION.md) with continuous closed bars, explicit roots and whole-event staged state. P1-09 adds [actual loaded CLI execution](CLI_EXECUTION.md), bounded typed file/results and actual-byte source hashes. P1-10 adds an [independent process consumer](EXTERNAL_INVOCATION.md) with exact versioned result/provenance validation and bounded POSIX supervision. A generalized state scheduler/snapshot, backtester/virtual ledger/optimizer, Desktop boundary, SDK adapter, language worker and plugin runtime remain unimplemented. Signals are observations, not orders/fills/performance. The `.proto` remains a draft, not a codec or transport. [Audit](BASELINE_AUDIT.md) records the dated pre-P1-02 foundation rather than current feature totals.
+The separate P1-05 expression/crossing layer and P1-06 registered indicators are implemented. P1-07 adds typed provider/module compilation, pure AST mapping and deferred incremental handles. P1-08 now implements [compiled event execution](EVENT_EXECUTION.md) with continuous closed bars, explicit roots and whole-event staged state. P1-09 adds [actual loaded CLI execution](CLI_EXECUTION.md), bounded typed file/results and actual-byte source hashes. P1-10 adds an [independent process consumer](EXTERNAL_INVOCATION.md) with exact versioned result/provenance validation and bounded POSIX supervision. Separate experimental P2 profiles now implement stateful workflows, multi-market/temporal coordination and bounded checkpoint reconstruction; their full temporal gate remains open. Backtester/virtual ledger/optimizer, Desktop boundary, SDK adapter, language worker and plugin runtime remain unimplemented. Signals are observations, not orders/fills/performance. The `.proto` remains a draft, not a codec or transport. [Audit](BASELINE_AUDIT.md) records the dated pre-P1-02 foundation rather than current feature totals.
 
 ## Historical baseline verification evidence
 
@@ -105,7 +105,7 @@ Delivery: evidence `5e9f770c01e513598478f4cbdd42a9a5278fb804` committed; this fo
 
 1. P1-02 implements the bounded decimal/type/parameter contract under ADR-013. Indicator work18/output12 policy and conditioning limits are selected in ADR-017; financial tick/lot/currency policy remains P3-01 work. The legacy evaluator remains positive-u64-only.
 2. ADR-014 selects experimental model JSON; Protobuf mapping/transport/generators remain P4-01/P5-01 choices with separate review.
-3. State workflow/snapshot semantics: P2; counters are not resumable strategy state.
+3. ADR-022–ADR-026 and their linked P2 contracts own bounded workflow/scheduler/checkpoint/trace semantics; standalone counters/state views remain non-restorable, native long-history codecs/migrations unsupported.
 4. Desktop FFI/IPC, worker transport, plugin execution/isolation: open tasks/experiments in ADR register, no selected mechanism claimed.
 5. Ledger realism, data leakage, exact financial results and real platform compatibility remain separate acceptance gates.
 6. No toolchain on default PATH; use the existing local exports rather than installing/replacing tools.
@@ -314,4 +314,16 @@ Full offline `python3 scripts/check_p1_gate.py` PASS at2026-11-14T10:54:07Z:229 
 
 No new dependency/manifest/lockfile/toolchain, installer, financial provider/golden changes or third-party scan/private upload. Explicit limits: trusted deterministic side-effect-free provider permits, strict same-engine source/outcome encoding, bounded history/reconstruction cost; no native compact long-history codec/migration or external client acknowledgement/exactly-once guarantee. Standalone checkpoint APIs remain unsupported. P2-05 user replay/debug and P2-06 complete temporal gate remain separate. Evidence commit and synchronized closure are next; continue automatically, no push authorization.
 
-Final intended/staged/protected-source diff review PASS. Evidence committed as `4dffdfe235eba1f698a34b3e0df6c2198a066ba3`. This three-document closure marks P2-04 COMPLETED/P2-05 READY. Remote main read-confirmed `0ac5d7b163e77bddb5f69689a1455e3560aad872`;32 local commits including closure unpushed. Publishing not requested/performed; continue automatically.
+Final intended/staged/protected-source diff review PASS. Evidence committed as `4dffdfe235eba1f698a34b3e0df6c2198a066ba3`. This three-document closure marks P2-04 COMPLETED/P2-05 VERIFIED. Remote main read-confirmed `0ac5d7b163e77bddb5f69689a1455e3560aad872`;32 local commits including closure unpushed. Publishing not requested/performed; continue automatically.
+
+## P2-05 active scope
+
+Add bounded observational trace collection shared by existing event/workflow/coordinator evaluation paths; observe already computed provider outputs, event roots, workflow old-state guards/effects/Delay/new-state and temporal candidates without extra provider evaluation or state mutation. Entries identify run/execution/event/source definition/scoped node/call sites and explicitly mark attempted stages plus final command acceptance/rejection. Configured entry/byte exhaustion drops further diagnostics without affecting execution, receipts, manifests or checkpoint bytes. Default remains off; no IO/callback dependency in evaluation. Public deterministic replay consumes strict existing checkpoints plus bounded optional reference traces, verifies same pins/outcomes/cursors, suppresses historical output publication and reports first divergent command/event/source when evidence permits. Intentional changed-history/reference tests must locate the first observed mismatch without inventing an opaque provider's hidden internals. Preserve native codec/long-history limitations and protected financial implementations/goldens. Test trace on/off and exhausted parity, repeat/restored continuation, real indicators/crossing/state/windows, error rollback and deliberate divergence. No new packages or transport/Desk scope.
+
+## P2-05 verification — 2026-11-14
+
+IMPLEMENTED → VERIFIED. [Replay/trace](REPLAY_TRACE.md)/ADR-026 observes existing incremental/pure calls/crossings/roots, rule guards/effects/old-next cells/Delay, source/alignment provenance and temporal candidates/timers without extra computation. Typed candidate/error/final-command markers distinguish attempted state from committed outcomes. Bounded collector seals/drops on entry/charged-byte exhaustion without changing execution or checkpoint bytes. Explicit user replay validates pinned commands in a separate candidate, suppresses historical receipts and optionally compares trusted bounded references; first observed differences identify run/event/node/source, digest-only differences never guess a node cause.
+
+Final full offline `python3 scripts/check_p1_gate.py` PASS at2026-11-14T11:09:31Z:238 Rust tests,23 external tests,11 process cases and source pins/fmt/check/test/strict all-target clippy/build/docs/diff. Nine new tests:8 runtime trace/replay plus1 counted-provider IR observer. Exact receipt/checkpoint parity for off/full/entry-limit/byte-limit; actual MACD/RSI/crossing/window repeat traces; every-command restored continuation without historical trace duplication; error rollback/independent lane progress; changed input event3/source outputs localization; truncated diagnostics still detect a deliberately wrong late outcome with command-only location; invalid config/reference rejection. Paired checkpoint-file/replay examples PASS:8 saved commands/cursor2/23 trace records/15656 charged bytes and complete repeat comparison. Docs42 Markdown/527 links/42 tasks PASS before this evidence entry. Same macOS ARM64/Rust1.99.0/Python3.14.6; no new dependency/manifest/lock/toolchain/financial provider/golden or scanner/private-upload changes.
+
+Limits remain explicit:4096 entries/4MiB charged diagnostic bytes; trusted provider/IR observer, native same-engine diagnostic DTOs, enclosing pure-expression source/call ordinal rather than every original inlined node or hidden provider memory; no IO/UI/portable wire/power-loss/external delivery guarantee. Checkpoint history1024 commands/262144 bytes and strict source compatibility remain unchanged. P2-06 full G-006/X-002 temporal gate still required. Record evidence commit/closure then continue automatically. Publishing not requested.

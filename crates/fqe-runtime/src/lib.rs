@@ -168,3 +168,9 @@ pub mod checkpoint;
 mod source_identity;
 
 pub mod checkpoint_file;
+
+/// Bounded observational diagnostics; independent of semantic outputs/checkpoints.
+pub mod trace;
+
+/// Deterministic user replay with bounded source diagnostics.
+pub mod replay;

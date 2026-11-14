@@ -798,3 +798,91 @@ fn total_node_text_and_collection_budgets_are_enforced() {
         "expression_limit"
     );
 }
+
+#[test]
+fn observers_read_existing_calls_and_crossings_without_changing_call_count_or_results() {
+    struct Count(Arc<AtomicUsize>);
+    impl Provider for Count {
+        fn invoke(&self, c: &ProviderCall<'_>) -> Result<NamedValues, ProviderFailure> {
+            self.0.fetch_add(1, Ordering::SeqCst);
+            Ok(vec![(
+                "result".into(),
+                Evaluation::Ready(c.input("value").unwrap().clone()),
+            )])
+        }
+    }
+    let count = Arc::new(AtomicUsize::new(0));
+    let mut draft = DescriptorDraft::pure(
+        EntryKey {
+            id: "test.trace.identity".into(),
+            version: "1".into(),
+        },
+        ContentId::from_bytes([9; 32]),
+        ParameterSchema::new(1, vec![]).unwrap(),
+        "Observed test identity",
+    );
+    draft
+        .inputs
+        .push(CallablePort::one("value", providers::u64_type()));
+    draft
+        .outputs
+        .push(CallablePort::one("result", providers::u64_type()));
+    let descriptor = Descriptor::new(draft).unwrap();
+    let pin = descriptor.requirement();
+    let mut builder = RegistryBuilder::new();
+    builder
+        .register(descriptor, Arc::new(Count(Arc::clone(&count))))
+        .unwrap();
+    let registry = builder.freeze().unwrap();
+    let call = Arc::new(registry.prepare(&pin, []).unwrap());
+    let p = plan(
+        vec![],
+        vec![Crossing {
+            id: "rise".into(),
+            direction: CrossDirection::Above,
+            left: Expr::Call {
+                call,
+                inputs: vec![("value".into(), lit(3))],
+                output: "result".into(),
+            },
+            right: lit(2),
+        }],
+        vec![("decision".into(), Expr::Cross("rise".into()))],
+    );
+    let mut plain = instance(Arc::clone(&p));
+    let mut observed = instance(p);
+    for seq in 1..=3 {
+        let expected = plain.evaluate(seq, vec![]).unwrap();
+        let before = count.load(Ordering::SeqCst);
+        let mut calls = 0;
+        let mut crosses = 0;
+        let actual = observed
+            .evaluate_observed(seq, vec![], &mut |observation| match observation {
+                ExpressionObservation::Call {
+                    call_sequence,
+                    outputs,
+                    ..
+                } => {
+                    calls += 1;
+                    assert_eq!(call_sequence, 1);
+                    assert_eq!(outputs["result"], ready(3));
+                }
+                ExpressionObservation::Crossing {
+                    previous,
+                    current,
+                    output,
+                    ..
+                } => {
+                    crosses += 1;
+                    assert_eq!(previous.is_some(), seq > 1);
+                    assert!(current.is_some());
+                    assert!(!read_bool(output));
+                }
+            })
+            .unwrap();
+        assert_eq!(actual, expected);
+        assert_eq!(calls, 1);
+        assert_eq!(crosses, 1);
+        assert_eq!(count.load(Ordering::SeqCst), before + 1);
+    }
+}

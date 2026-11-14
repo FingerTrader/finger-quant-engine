@@ -71,3 +71,7 @@ P2-03 adds lane-owned typed window/timer memory, immutable manifest/bindings, bo
 ## Bounded logical reconstruction checkpoints
 
 P2-04 adds a separate [bounded checkpoint representation](CHECKPOINT_RESTORE.md) that reconstructs every owned state domain from exact typed commands under explicit deterministic side-effect-free provider permits. Versioned pins bind engine/schema/artifacts/parameters/data and produced outputs; restore validates a separate candidate and suppresses historical receipts. This includes provider/crossing/rule memory and scheduler/lane/window state, not merely the inspection maps above. Native buffer import, long/unbounded-history checkpoints and migration remain unsupported; standalone state-view/checkpoint APIs keep their original scope.
+
+## P2-05 observational replay and trace
+
+[Replay/trace](REPLAY_TRACE.md) owns the experimental bounded diagnostics/user replay profile. It observes existing computations, labels candidate vs committed/rejected boundaries and excludes diagnostic data from semantic receipts/manifests/checkpoints. Buffer exhaustion stops collection without changing execution; private restore stays trace-off. Missing/truncated diagnostics cannot prove unseen node equality or a hidden provider cause. Computational and checkpoint contracts retain authority.

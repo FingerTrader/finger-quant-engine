@@ -65,3 +65,7 @@ P2-03 adds strict temporal-rule bindings and `instances::InstanceScheduler` over
 ## Checkpointed coordinator profile
 
 P2-04 adds `checkpoint::CheckpointRuntime` over immutable coordinator seeds, with bounded typed command journals, explicit provider replay capability, source/implementation/schema/data compatibility and private reconstruction. Its quotas are preflighted before command mutation; old standalone runtime lifecycles/limits remain unchanged. [Checkpoint/restore](CHECKPOINT_RESTORE.md) owns representation, output cursors, side-effect restrictions, same-engine digest encoding, atomic local persistence and performance/platform limits. Internal reconstruction does not complete P2-05 user-facing replay/debug traces.
+
+## P2-05 observational replay and trace
+
+[Replay/trace](REPLAY_TRACE.md) owns the experimental bounded diagnostics/user replay profile. It observes existing computations, labels candidate vs committed/rejected boundaries and excludes diagnostic data from semantic receipts/manifests/checkpoints. Buffer exhaustion stops collection without changing execution; private restore stays trace-off. Missing/truncated diagnostics cannot prove unseen node equality or a hidden provider cause. Computational and checkpoint contracts retain authority.

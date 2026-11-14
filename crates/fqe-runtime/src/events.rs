@@ -1,5 +1,8 @@
 //! Transactional in-process event runner for the explicit P1 scalar event profile.
-use crate::{RunState, RunStatus, SignalRecord};
+use crate::{
+    RunState, RunStatus, SignalRecord,
+    trace::{self, TraceBuffer, TraceData, TraceEntry},
+};
 use fqe_core::{
     Event, Signal,
     bars::{BarInput, ClosedBar},
@@ -147,6 +150,13 @@ impl EventRuntime {
     }
     /// Internal outer-transaction boundary. No persistence or public snapshot semantics.
     pub(crate) fn fork_step(&self, event: InputEvent) -> Result<(Self, EventObservation)> {
+        self.fork_step_traced(event, &mut TraceBuffer::off())
+    }
+    pub(crate) fn fork_step_traced(
+        &self,
+        event: InputEvent,
+        trace: &mut TraceBuffer,
+    ) -> Result<(Self, EventObservation)> {
         if self.state.status == RunStatus::Completed {
             return Err(error("event_lifecycle", "cannot step a completed run"));
         }
@@ -178,7 +188,7 @@ impl EventRuntime {
                 .collect::<std::result::Result<_, _>>()?,
             roots: self.roots.clone(),
         };
-        let observation = candidate.step(event)?;
+        let observation = candidate.step_traced(event, trace)?;
         Ok((candidate, observation))
     }
     pub fn finish(&mut self) -> Result<RunState> {
@@ -189,6 +199,13 @@ impl EventRuntime {
         Ok(self.state.clone())
     }
     pub fn step(&mut self, event: InputEvent) -> Result<EventObservation> {
+        self.step_traced(event, &mut TraceBuffer::off())
+    }
+    pub fn step_traced(
+        &mut self,
+        event: InputEvent,
+        trace: &mut TraceBuffer,
+    ) -> Result<EventObservation> {
         if self.state.status == RunStatus::Completed {
             return Err(error("event_lifecycle", "cannot step a completed run"));
         }
@@ -245,8 +262,28 @@ impl EventRuntime {
                             self.manifest.run.clone(),
                             format!("args{i}"),
                         )?;
-                        args.evaluate(sequence, slots.clone().into_iter().collect())?
-                            .outputs
+                        let node = &self.plan.graph().nodes()[stage.node_index];
+                        args.evaluate_observed(
+                            sequence,
+                            slots.clone().into_iter().collect(),
+                            &mut |observation| {
+                                trace.expression(
+                                    || {
+                                        trace::context(
+                                            &self.manifest.run,
+                                            self.plan.content_id(),
+                                            Some(sequence),
+                                            Some(timestamp),
+                                            node.path.clone(),
+                                            &node.source.definition,
+                                            node.source.call_sites.clone(),
+                                        )
+                                    },
+                                    observation,
+                                );
+                            },
+                        )?
+                        .outputs
                     } else {
                         BTreeMap::new()
                     };
@@ -263,6 +300,22 @@ impl EventRuntime {
                     ),
                     detail: e.detail,
                 })?;
+                trace.push(|| {
+                    let node = &self.plan.graph().nodes()[stage.node_index];
+                    TraceEntry {
+                        context: trace::context(
+                            &self.manifest.run,
+                            self.plan.content_id(),
+                            Some(sequence),
+                            Some(timestamp),
+                            node.path.clone(),
+                            &node.source.definition,
+                            node.source.call_sites.clone(),
+                        ),
+                        phase: "provider-candidate",
+                        data: TraceData::Values(evaluated.outputs().clone()),
+                    }
+                });
                 for (output, slot) in &stage.outputs {
                     let v = evaluated
                         .outputs()
@@ -274,8 +327,36 @@ impl EventRuntime {
                 }
             }
             observation.outputs = roots
-                .evaluate(sequence, slots.into_iter().collect())?
+                .evaluate_observed(sequence, slots.into_iter().collect(), &mut |observation| {
+                    trace.expression(
+                        || {
+                            trace::context(
+                                &self.manifest.run,
+                                self.plan.content_id(),
+                                Some(sequence),
+                                Some(timestamp),
+                                vec!["roots".into()],
+                                "$.outputs",
+                                vec![],
+                            )
+                        },
+                        observation,
+                    );
+                })?
                 .outputs;
+            trace.push(|| TraceEntry {
+                context: trace::context(
+                    &self.manifest.run,
+                    self.plan.content_id(),
+                    Some(sequence),
+                    Some(timestamp),
+                    vec!["roots".into()],
+                    "$.outputs",
+                    vec![],
+                ),
+                phase: "event-roots-candidate",
+                data: TraceData::Values(observation.outputs.clone()),
+            });
             observation.warmup = matched_events <= self.plan.warmup_samples() || !ready;
             if !observation.warmup {
                 for rule in self.plan.signals() {
