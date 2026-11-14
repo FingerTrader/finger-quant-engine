@@ -1,0 +1,11 @@
+{
+  "format": "fqe.invoke-request",
+  "schema_version": 1,
+  "request_id": "external-engine-error",
+  "operation": "run",
+  "model": "../../../crates/fqe-cli/tests/fixtures/tick-error-model.json",
+  "parameters": null,
+  "data": "../../../crates/fqe-cli/tests/fixtures/tick-error-data.json",
+  "run_id": "external-engine-error",
+  "timeout_ms": 5000
+}

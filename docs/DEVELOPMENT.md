@@ -78,11 +78,22 @@ cargo run --locked --offline -p fqe-cli -- --version
 
 No arguments display help. Unsupported arguments exit with code 2, a demo error exits with code 1, and success exits with code 0. P1-09 now adds model-file validate/run with typed parameter/data/result codecs and structured new-command exits3/4/5; [CLI execution](CLI_EXECUTION.md) is authoritative. Backtest accounting, simulation, worker and server commands remain planned.
 
+## Independent consumer
+
+After building the CLI with `cargo build --locked --offline -p fqe-cli`, run:
+
+```sh
+python3 examples/external/caller.py --engine target/debug/fqe --request examples/external/requests/g002.json
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests/external -v
+```
+
+The POSIX reference caller/tests use Python standard library only, verified with Python3.14.6 on macOS ARM64. The tests require an actual built binary; `FQE_ENGINE` can select another explicit local executable path. They fail if it is absent rather than silently skipping. Normal examples use existing synthetic files; fault-process tests create temporary trusted local scripts and remove their files. [External invocation](EXTERNAL_INVOCATION.md) owns request/results, exact source validation, process deadlines and cleanup limits. No third-party Python package or engine runtime dependency is introduced.
+
 ## Tests and scope
 
 Tests cover domain validation, strict price comparison, instrument matching, version rejection, repeatable runtime reports, input ordering, failed and terminal states, empty input, signal provenance, CLI output/exit codes, and protocol version-number compatibility.
 
-These checks validate the initial rule interpreter. They do not verify financial accounting, wire interoperability, worker isolation, Desktop integration, or production workload limits because those features are not implemented.
+Current tests also cover loaded graph/event/indicator execution and exact CLI/independent local-process JSON interoperability. They do not verify financial accounting, Protobuf/worker transport interoperability, worker isolation, Desktop integration, or production workload limits because those features are not implemented. Dated counts and acceptance evidence belong in [Project status](PROJECT_STATUS.md).
 
 ## Protocol schema
 

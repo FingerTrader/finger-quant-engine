@@ -1,0 +1,11 @@
+{
+  "format": "fqe.invoke-request",
+  "schema_version": 1,
+  "request_id": "external-g007",
+  "operation": "run",
+  "model": "../../../crates/fqe-ir/tests/fixtures/g007-events.json",
+  "parameters": null,
+  "data": "../../../crates/fqe-cli/tests/fixtures/g007-data.json",
+  "run_id": "external-g007",
+  "timeout_ms": 5000
+}

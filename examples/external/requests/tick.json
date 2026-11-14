@@ -1,0 +1,11 @@
+{
+  "format": "fqe.invoke-request",
+  "schema_version": 1,
+  "request_id": "external-tick",
+  "operation": "run",
+  "model": "../../../crates/fqe-cli/tests/fixtures/tick-model.json",
+  "parameters": null,
+  "data": "../../../crates/fqe-cli/tests/fixtures/tick-data.json",
+  "run_id": "external-tick",
+  "timeout_ms": 5000
+}

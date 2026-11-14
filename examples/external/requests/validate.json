@@ -1,0 +1,11 @@
+{
+  "format": "fqe.invoke-request",
+  "schema_version": 1,
+  "request_id": "external-validate",
+  "operation": "validate",
+  "model": "../../../crates/fqe-ir/tests/fixtures/g002-events.json",
+  "parameters": "../../../crates/fqe-cli/tests/fixtures/parameters-60.json",
+  "data": null,
+  "run_id": null,
+  "timeout_ms": 5000
+}

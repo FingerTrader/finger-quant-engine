@@ -41,9 +41,9 @@ The workspace adds reviewed pinned Serde/JSON/SHA libraries in fqe-ir for bounde
 
 ## Implemented data flow
 
-The CLI constructs a validated typed strategy and a synthetic event list. The runtime validates event order, evaluates the strategy, updates in-memory state, and returns a report of signals. There is no implicit clock, filesystem read, market-data subscription, or account lookup.
+The legacy CLI demo constructs a typed strategy and synthetic ticks. Loaded validate/run commands read bounded local model/parameter/data files through [CLI exchange](CLI_EXECUTION.md). The compiled EventRuntime handles ticks or continuous closed bars, stages registered indicator/crossing state and root evaluation, then commits a whole event and its signal observations. The shared runtime report adapter produces complete bounded batch results; the CLI owns file IO and process exits. No implicit clock, market-data subscription or account lookup is involved.
 
-The runtime's only current payload is a market tick. A comparison can emit a long or flat observation for each matching tick. These labels do not create or modify a position.
+An independent [POSIX reference consumer](EXTERNAL_INVOCATION.md) invokes the compiled executable through an argument vector and verifies complete versioned results, source identity and exact values. It owns bounded process IO/deadlines/cleanup and imports no Rust internals. This one-shot boundary does not select Desktop FFI/IPC or implement strategy language workers. Signals remain long/flat observations and do not create or modify a position.
 
 ## Planned architecture
 

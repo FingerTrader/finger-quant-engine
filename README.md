@@ -29,6 +29,7 @@ This repository contains the initial engineering foundation, version `0.1.0`. It
 | Typed IR: a single-instrument price comparison producing signals | Implemented, experimental API |
 | Synchronous, deterministic in-memory event runtime and run state | Implemented, experimental API |
 | Offline CLI demo and loaded model validate/run with structured exact results | Implemented, experimental P1-09; [CLI contract](docs/CLI_EXECUTION.md) |
+| Independent local subprocess caller with exact result validation and bounded cleanup | Implemented, experimental P1-10 POSIX/Python-stdlib reference; [contract](docs/EXTERNAL_INVOCATION.md) |
 | Protocol version-number negotiation helper | Implemented, experimental |
 | Protocol Buffers schema | Experimental draft; no codec, generated bindings, or transport |
 | Local backtesting, accounting, execution simulation, optimization | Planned |
@@ -40,6 +41,8 @@ This repository contains the initial engineering foundation, version `0.1.0`. It
 The legacy demonstration evaluates three synthetic price events and emits two signals. The compiled `cargo run --locked --offline -p fqe-runtime --example events` example loads MACD/RSI and SMA event artifacts and verifies each signal at bar5. Signals are observations, not orders, fills, positions, or investment performance.
 
 Run a loaded strategy using `cargo run --locked --offline -p fqe-cli -- run --model crates/fqe-ir/tests/fixtures/g002-events.json --data crates/fqe-cli/tests/fixtures/g002-data.json --params crates/fqe-cli/tests/fixtures/parameters-60.json`. Changing the parameter file to `parameters-90.json` changes the expected signal count from1 to0 without rebuilding the binary. See [CLI execution](docs/CLI_EXECUTION.md) for validate, exact input/results, limits and exits.
+
+After building the CLI, run `python3 examples/external/caller.py --engine target/debug/fqe --request examples/external/requests/g002.json` for an independent consumer. It checks the versioned complete result, source hashes and exact integer strings, and supervises a bounded local subprocess. Python belongs only to this optional reference consumer; Desk bundling and language workers remain later tasks. See [external invocation](docs/EXTERNAL_INVOCATION.md).
 
 ## Quick start
 
@@ -113,6 +116,8 @@ Commit `Cargo.lock` alongside dependency changes. The lockfile contains five wor
 - [Event contract](docs/EVENT_CONTRACT.md)
 - [State contract](docs/STATE_CONTRACT.md)
 - [Runtime](docs/RUNTIME.md)
+- [Local CLI execution](docs/CLI_EXECUTION.md)
+- [Independent external invocation](docs/EXTERNAL_INVOCATION.md)
 - [Backtesting](docs/BACKTESTING.md)
 - [Simulation](docs/SIMULATION.md)
 - [Language workers](docs/LANGUAGE_WORKERS.md)
