@@ -4,13 +4,13 @@
 
 ## Current position
 
-- Phase: **P1 and P2 COMPLETED**. Universal strategy and temporal/recovery gates passed. **P3-01..04 COMPLETED**; P3–P6 gates remain incomplete.
+- Phase: **P1 and P2 COMPLETED**. Universal strategy and temporal/recovery gates passed. **P3-01..05 COMPLETED**; P3–P6 gates remain incomplete.
 - Completed: GOV-01/GOV-02/GOV-03 and P1-01 through P1-11; local evidence and closure records synchronized.
 - Previous implementation: **P2-03 — Time Windows, Timers & Instance Scheduling**, COMPLETED. Evidence `f73082c86622ce40311d7e9ec91eef08402d681f`; typed bound temporal windows, deterministic timers, bounded fair isolated workflow lanes and joint provider/rule/temporal rollback.215 Rust +23 external tests/11 process cases/full checks PASS. P2-02 evidence `daeeb181d99236094daa3272fd4efa3855ddca06`.
 - Previous implementation: **P2-04 — Snapshot / Restore**, COMPLETED; evidence `4dffdfe235eba1f698a34b3e0df6c2198a066ba3`, complete bounded reconstruction/atomic persistence;229 Rust/23 external/11 process cases PASS.
 - Previous implementation: **P2-05 — Replay & Debug Trace**, COMPLETED; evidence `8c2b39f83c03fbcb0794c18a5fef4d92e998a5ee`;238 Rust/23 external/11 process cases PASS.
 - Latest implementation: **P2-06 — Temporal Strategy Gate**, COMPLETED; evidence `d272c4d78445f984686d9025e7cb29c0de9fc544`;244 Rust/23 external/11 process/55 independent rows/full P2 gate PASS.
-- Next eligible implementation: **P3-05 — Backtest Orchestration & Portfolio Reports**, VERIFIED. Financial history/ledger/orders/margin closed; full pinned local runner and authoritative reports next. User authorizes continuing downstream work without routine confirmation; publishing is not requested.
+- Next eligible implementation: **P3-06 — Local Parameter Optimization**, READY. Full pinned backtest runner/report verified and closed; bounded reproducible search/train-validation isolation next. User authorizes continuing downstream work without routine confirmation; publishing is not requested.
 - P1-02 acceptance met: evaluated numeric policy/limits, strict type/unit/scale checks, unsupported-shape rejection, full binding matrix and tests. Evidence `a653c105fba5ea6ada15395abc22cc8f82cc4472` and local closure recorded below; publishing not requested.
 - Actual root: `/Users/george/Desktop/finger-quant-engine`; main tracking origin/main; remote `https://github.com/FingerTrader/finger-quant-engine.git`.
 - Rust source baseline / latest pre-governance commit: `342d8aa76b48d32fa9c9110609b371eac52b8d86` (foundation). Previous commit: `cbcebad`.
@@ -45,15 +45,16 @@
 | P3-02 | COMPLETED | Bounded authoritative balanced ledger/holds/valuation/replay and independent5-case16-row comparisons;267 Rust/full gate PASS; evidence `954d08462eab2195fbb4d4ed27a60367df49ae4f` |
 | P3-03 | COMPLETED | Explicit orders/next-open prior-volume fills/costs/caps/lifecycle/replay;280 Rust/full gate PASS; evidence `e9d49881081c76e6b7afdf2a879e74d47ec36524` |
 | P3-04 | COMPLETED | Debt/margin/maintenance/liquidation/gap/insolvency profile;291 Rust/full gate and4-case18-row oracle PASS; evidence `cb23e74b1ae94c80b115ff50430bda7caad74db8` |
-| P3-05 | VERIFIED | Bounded history/Event-or-Workflow strategy/typed explicit policy/broker runner, full financial manifest/JSON report, equity/P&L/return/drawdown/provenance/cancel-prefix |
-| P3-06, P3-07 | NOT_STARTED | Prior P3 dependencies/gate first |
+| P3-05 | COMPLETED | Full pinned Event/Workflow→policy→financial report runner;304 Rust/full gate/9-case metrics/actual report PASS; evidence `201e226e78b627b6c703a3a34cc6dc29af802a9a` |
+| P3-06 | READY | Bounded parameter search/trial isolation, training-only ranking, separate validation/seed/manifests; P3-05 closed |
+| P3-07 | NOT_STARTED | P3-06 and full accounting/reproducibility gate first |
 | P4-01, P4-02, P4-03, P4-04, P4-05 | NOT_STARTED | P3 gate first |
 | P5-01, P5-02, P5-03, P5-04, P5-05 | NOT_STARTED | P4 gate first; Python → Java → Go |
 | P5-05.01 | NOT_STARTED | Real unlisted-language onboarding after P5-04; prerequisite of parent P5-05 |
 | P6-01, P6-02, P6-03, P6-04, P6-05, P6-06 | NOT_STARTED | P5 gate first |
 | P6-03.01 | NOT_STARTED | Java-indicator/Go-predicate graph after P6-02; prerequisite of parent P6-03 |
 
-Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 21 COMPLETED, 1 VERIFIED, 20 NOT_STARTED. P3-05 is first eligible; none is BLOCKED. P1/P2 gates passed; P3–P6 gates remain open. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
+Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 22 COMPLETED, 1 READY, 19 NOT_STARTED. P3-06 is first eligible; none is BLOCKED. P1/P2 gates passed; P3–P6 gates remain open. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
 
 ## Delivered baseline and limitations
 
@@ -426,3 +427,5 @@ Implemented candidate in backtest.rs/backtest_encoding.rs/portfolio.rs and IR fi
 Actual complete local history→Event-or-Workflow strategy→ordered explicit typed policy→broker→authoritative ledger→report is implemented, not a financial-input demo. Backtesting contract/ADR-031 own exact256-bar/16-binding, canonical262144-byte manifest/4MiB result, ratio12 half-even, close-sampling, stop/cancel/open-position and unsupported semantics. Report pins actual bound parameters (including workflow module parameters), source/strategy/engine/history/range/warmup/account/model/cost/risk/policy/seed/control and links decisions/order origin/fills/every balanced journal. Final independent ledger valuation reconciles sampled final equity/profit. Native broker restore evidence is not full persisted financial-pipeline recovery; P3-07 retains that acceptance.
 
 2026-11-14 macOS arm64/Rust1.99.0/Python3.14.6, locked/offline reviewed cached dependencies: full `scripts/check_p2_gate.py` PASS at 2026-11-14T12:29:46.479657+00:00;304 Rust/23 external/11 process cases, all required fmt/check/test/strict all-target Clippy/docs/diff and old source/golden/55-row temporal gate.13 new backtest tests pass actual Event/Workflow/Flat exclusion/parameters/no-trade/warmup/prefix/cancel/native splits/future trap/late failure/margin/source/quotas/exact encoding. Independent portfolio Fraction9 cases plus actual exported report canonical hash/balanced journal/fill/provenance PASS; ledger5-case16-row and margin4-case18-row oracles PASS. Actual example7 bars/2 fills: initial100, finalcash/equity97, zero debt/quantity/holds, fees1/net−3/return−0.03/maxDD3 and0.03. Golden authoring is explicit; checks never rewrite. No new dependency/manifest/lockfile/toolchain/protected provider/old golden/Desk changes, scanners/private uploads/installers. Existing reviewed caches reused; no new external advisory check performed. Residual scope is experimental single instrument/bounded batch, trusted providers, close-only metrics/no market realism, no durable full-pipeline continuation/optimizer/client bundle/workers/plugins/live trading. Remote main read-confirmed0ac5d7b163e77bddb5f69689a1455e3560aad872; local-only, publishing not requested. Evidence commit pending; keep VERIFIED until recorded, then continue P3-06 automatically.
+
+P3-05 closure: evidence `201e226e78b627b6c703a3a34cc6dc29af802a9a` records all delivered code/tests/contracts and successful verification; COMPLETED after synchronized status/plan/handoff. Next P3-06 READY. Publishing not requested; no push attempted. Historical candidate/proposed wording above records intermediate states and is superseded by this verified closure.
