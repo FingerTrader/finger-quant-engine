@@ -67,6 +67,8 @@ All compute boxes are local. A worker may evaluate a strategy in its own process
 
 The portable strategy target combines Typed Graph + Event Workflow + State Machine. Registered indicator functions feed universal expressions; explicit State/Delay mediates cross-event feedback. These are P1/P2 targets, not implemented baseline extensions. Language workers deliver Python, then Java, then Go in P5. Numeric representation, Protobuf codec, transport and plugin execution remain open choices in the ADR register.
 
+Open-ended extension support follows [Extensibility](EXTENSIBILITY_CONTRACT.md): engine clients, whole-strategy runners and graph-callable computation providers are distinct public roles. Shared descriptors connect generic compiler validation, worker/provider invocation and Desk presentation. P1 proves an unknown-name in-process provider; P2 proves state/recovery; P5 proves reference languages and a real unlisted adapter; P6 composes Java/Go external providers in one graph. The core retains event/financial authority and does not grow per-language/per-indicator dispatch branches for conforming additions.
+
 Future adapters must make external data access and execution authority explicit. Offline operations may use local data and stub adapters without login. Live connectivity can require network access and user credentials without changing offline engine eligibility.
 
 ## Cross-cutting decisions

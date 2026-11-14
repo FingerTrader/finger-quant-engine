@@ -4,12 +4,14 @@ Updated 2026-11-14 (Asia/Tokyo). This handoff is derived from [Project status](P
 
 ## Resume sequence
 
-1. Read PROJECT_STATUS, this file, [DELIVERY_PLAN](DELIVERY_PLAN.md), [ARCHITECTURE_DECISIONS](ARCHITECTURE_DECISIONS.md), then [P1 design](P1_STRATEGY_DESIGN.md), [Strategy contract](STRATEGY_CONTRACT.md), [Desk integration](DESK_INTEGRATION_PLAN.md) and [Baseline audit](BASELINE_AUDIT.md). Also read README, AGENTS and [Workflow](WORKFLOW.md).
+1. Read PROJECT_STATUS, this file, [DELIVERY_PLAN](DELIVERY_PLAN.md), [ARCHITECTURE_DECISIONS](ARCHITECTURE_DECISIONS.md), then [Extensibility](EXTENSIBILITY_CONTRACT.md), [P1 design](P1_STRATEGY_DESIGN.md), [Strategy contract](STRATEGY_CONTRACT.md), [Desk integration](DESK_INTEGRATION_PLAN.md) and [Baseline audit](BASELINE_AUDIT.md). Also read README, AGENTS and [Workflow](WORKFLOW.md).
 2. Verify cwd is the actual desktop checkout `/Users/george/Desktop/finger-quant-engine`; inspect Git status, branch/remotes and recent commits. Work on main; no second project/worktree/branch. Compare baseline `342d8aa76b48d32fa9c9110609b371eac52b8d86` and recorded governance evidence with actual history. `git log -1 --format=%H -- docs/PROJECT_STATUS.md` identifies latest status commit without a self-referential hash.
 3. Governance/audit evidence is committed as `f07fe8ccd4c12b46783b67ff0a2421172d05d5dc` and its normal GitHub main push was confirmed by remote SHA. Check current closure commit/remote status as well; if code/tests/history disagree with records, repair status/handoff from facts first. Never infer future push success from this historical receipt.
 4. P1-01 is COMPLETED and P1-02 is READY. For an implementation request, set P1-02 IN_PROGRESS in status and plan before scoped changes. A review/documentation request does not start that implementation. Do not repeat the completed audit as a new feature task unless facts have changed.
 
 ## Current documentation refinement and product target
+
+GOV-03 is VERIFIED: this owner-requested documentation slice defines open language/indicator/rule goals, canonical descriptors/provider semantics, adapter onboarding and native Desk acceptance. The plan now has 42 stage tasks (40 original parents plus P5-05.01 and P6-03.01); parent gates explicitly depend on these children. Early proofs are X-001 in P1, stateful X-002 in P2, generic discovery in P4, actual reference languages and fourth adapter in P5, external Java-indicator/Go-predicate graph and installed Desk in P6. Required checks and full intended diff review passed: 17 Rust tests, CLI demo, 25-document/188-link/42-task checker, seven negative cases, original-task/dependency preservation and independent X-005 specification arithmetic. Pending: recorded local evidence commit and closure. No extension capability is implemented or credited by this planning slice. Existing GOV-02 local commits remain preserved; publishing is not requested.
 
 GOV-02 is COMPLETED: owner-requested fixes for six review findings plus the actual Desk consumer assessment. Files: P1/event contracts, workflow/plan, charter/ADR-011, Desk integration and navigation/status/handoff. All four Rust checks (17 behavioral tests), CLI demo, 24-document/162-link/40-task checker, three negative controls, stage-dependency preservation and diff preservation passed. Independent G-007 rational values and G-006 boundary specification checks passed. Final diff reviewed; evidence `49282a0daf3d08145d2cfb5ab2f42a2184e2a900` committed, with a follow-up local closure record. Resolve its containing commit using the status-log command. These local commits are unpushed. No GitHub push was requested; no Desk source, Rust source, manifests or lockfile is to change in this documentation task.
 
@@ -21,7 +23,7 @@ Six corrections specify: gates exclude themselves; publishing needs session auth
 
 Inspected all five crates/manifests, lockfile, README, all 12 existing docs, tests and Git history. Reconfirmed 17 behavioral tests, formatting/check/strict Clippy and CLI baseline. Added charter, authority, ADR register, six-stage plan, P1 target design, status, handoff and workflow, plus audit evidence and a standard-library document checker. Updated old roadmap/navigation/transport wording and agent recovery entry points. No Rust source, dependencies, draft schema or license changed. P1 remains incomplete.
 
-The earlier GOV-01/P1-01 stop was completed with a confirmed GitHub evidence commit. Its closure record uses that existing evidence hash; resolve its containing commit from Git. The new GOV-02 refinement above has its own current state and must not inherit that historical push receipt. P1-02 remains READY; implementation has not begun. Exact current committed/delivery state is in PROJECT_STATUS and Git.
+The earlier GOV-01/P1-01 stop was completed with a confirmed GitHub evidence commit. Its closure record uses that existing evidence hash; resolve its containing commit from Git. GOV-02 and the current GOV-03 refinement above each have their own state and must not inherit that historical push receipt. P1-02 remains READY; implementation has not begun. Exact current committed/delivery state is in PROJECT_STATUS and Git.
 
 ## Next task: P1-02 — Universal Types & Parameter Schema
 
@@ -30,7 +32,7 @@ Deliver an evaluated numeric/type contract and a small executable validated doma
 Acceptance:
 
 - Compare viable numeric representations for price/ratio/indicator and future money; record precision/range/rounding/overflow and signed/zero-price decisions. Do not mark the final financial ledger implementation complete.
-- Define a versioned implemented type subset with explicit units/domain and Missing/Warmup/Error semantics; reject unsupported types/conversions rather than silently accepting them.
+- Define a versioned implemented type subset with explicit units/domain and Missing/Warmup/Error semantics, suitable for language-neutral descriptor ports/parameters. Evaluate scalar/multi-output/window needs without implementing all shapes; identify/reject unsupported required shapes, types and conversions rather than silently accepting them. Keep the generic provider implementation in P1-04 and external workers/loaders in P5/P6.
 - Implement the P1 design binding matrix: reject required+default schemas, preserve optional unbound distinctly from runtime readiness, reject explicit null/readiness inputs and implicit type/unit conversions, validate defaults/ranges/enums and duplicate/unknown keys. Instance bindings are immutable for a run. Wire-format duplicates are independently tested in P1-03.
 - Add meaningful boundary, overflow, invalid-schema/binding and regression tests. Four Rust checks and docs checker pass; contracts, plan, status, handoff and evidence commit updated.
 

@@ -8,6 +8,8 @@ Offline engine use does not require Flutter Desktop, a Finger Trader login, or a
 
 The primary consuming product is the existing **Desk** application (`finger_desk`). Project delivery requires FQE bundled into Desk for the first local backtest/simulation loop, while standalone engine use remains independent. Live trading has a separate acceptance scope. The [Desk integration contract](docs/DESK_INTEGRATION_PLAN.md) covers migration, native run/stop/results, packaging and final paired acceptance; this integration is planned, not implemented.
 
+Language and financial-function support are open-ended targets: Python/Java/Go and the first indicators are reference implementations. The [Extensibility contract](docs/EXTENSIBILITY_CONTRACT.md) defines adapter onboarding, callable indicator/predicate providers, rule modules and descriptor-driven Desk use. A new conforming extension within supported capabilities must not require per-name core/compiler/UI changes. These extension mechanisms remain planned and need their own execution/conformance evidence.
+
 ## Project status
 
 The unique progress ledger is [PROJECT_STATUS](docs/PROJECT_STATUS.md). New sessions recover from it, [NEXT_SESSION](docs/NEXT_SESSION.md), [DELIVERY_PLAN](docs/DELIVERY_PLAN.md), [ADRs](docs/ARCHITECTURE_DECISIONS.md), then the current task contracts. P1 remains incomplete; the current demo does not meet universal strategy acceptance.

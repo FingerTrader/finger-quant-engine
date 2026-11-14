@@ -2,11 +2,13 @@
 
 Status: planned. No Python, Java, or Go worker, launcher, language SDK, or language runtime bundle is included.
 
-The mandatory delivery order is **Python → Java → Go**, each independently accepted by P5-02/P5-03/P5-04 in [Delivery plan](DELIVERY_PLAN.md). A protocol placeholder or example alone is not worker support. See [ADR-003](ARCHITECTURE_DECISIONS.md#adr-003--isolated-language-workers).
+The reference delivery order is **Python → Java → Go**, each independently accepted by P5-02/P5-03/P5-04 in [Delivery plan](DELIVERY_PLAN.md). This is not a closed language list or a runtime dependency chain. P5-01 delivers generic adapter registration/onboarding; P5-05.01 proves a real fourth-language adapter against a frozen engine before the P5-05 gate. A protocol placeholder or example alone is not worker support. See [ADR-003](ARCHITECTURE_DECISIONS.md#adr-003--isolated-language-workers), [ADR-012](ARCHITECTURE_DECISIONS.md#adr-012--open-language-and-computation-extensions) and the canonical [Extensibility contract](EXTENSIBILITY_CONTRACT.md).
 
 ## Role
 
 Workers will let strategies authored in Python, Java, and Go participate in local FQE runs. All worker strategy computation executes on the user's device. The Rust host owns run lifecycle, logical event order, validation, and authority over downstream execution.
+
+Any further language can participate by implementing the public adapter contract and passing its capability/runtime/platform conformance, without a per-language engine branch. Engine invocation from a client, whole-strategy execution and a graph-callable indicator/predicate are separate roles. P5-01 maps both runner and computation-provider roles to the selected protocol; P6-03.01 proves actual foreign-language graph invocation. A language worker's existence alone does not make its functions available as graph nodes.
 
 Language-neutral does not mean arbitrary programs in different languages produce identical results. Portable behavior requires the same explicit contracts and a supported numerical and state model.
 
@@ -25,6 +27,7 @@ A future worker session needs:
 | --- | --- |
 | Handshake | Protocol version, worker identity/version, supported capabilities |
 | Load | Validated artifact identity, entrypoint, parameter schema, declared permissions |
+| Role negotiation and discovery | Explicit runner/provider roles, versioned entry descriptors and supported types/host services; missing required roles fail preflight |
 | Start | Run identity, deterministic configuration and initial declared state |
 | Event processing | Ordered input correlation, validated outputs, bounded response size |
 | State exchange | Versioned declared state with explicit ownership and checkpoint boundary |
@@ -42,6 +45,8 @@ Process isolation is not a sandbox. Python imports, JVM code, Go binaries, and n
 ## Distribution and conformance
 
 Users may initially supply their own language runtimes. Bundled runtime distribution, package installation, signed worker artifacts, and runtime version matrices remain open design work.
+
+P5-01 supplies a language-independent onboarding specification, reference adapter, manifest/registry, exact-value fixtures, lifecycle/fault conformance runner and packaging instructions. Launch descriptions are bounded structured data, not shell snippets; registration cannot install/download or execute arbitrary discovery code. Java/Go production execution must work with Python unavailable, even if a development conformance tool uses Python. Each language has native Desk selection/run/stop/reopen evidence for every claimed supported application combination. Engine compatibility and Desk customer-bundle support are reported separately; no unavailable runtime is claimed supported.
 
 Before claiming support for a language, provide a runnable reference worker, host integration, exact integer serialization tests, shared event/IR fixtures, lifecycle and failure tests, and installation documentation. No language support is released by the presence of these documents.
 

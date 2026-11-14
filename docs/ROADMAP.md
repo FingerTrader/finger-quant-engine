@@ -10,16 +10,16 @@ The original engineering foundation remains intact: five-crate Rust workspace, v
 
 | Stage | Task index | Required exit |
 | --- | --- | --- |
-| P1 Universal Strategy Foundation | P1-01–P1-11 | Loaded typed MACD/RSI model, generic expressions/compiled graph, independent goldens and minimal external invocation |
-| P2 Event Runtime & State Engine | P2-01–P2-06 | Multi-event strategy, correct ordering/isolation and snapshot/replay parity without future-data leakage |
+| P1 Universal Strategy Foundation | P1-01–P1-11 | Loaded typed MACD/RSI model, generic descriptors/provider interface, unknown-name function/predicate/rule proof X-001, independent goldens and minimal external invocation |
+| P2 Event Runtime & State Engine | P2-01–P2-06 | Multi-event strategy and stateful extensions X-002, correct ordering/isolation and portable snapshot/replay parity without future-data leakage |
 | P3 Backtesting & Local Simulation | P3-01–P3-07 | Historical data→orders→fills→ledger→report, local optimization and independent financial reconciliation |
-| P4 Desktop & External Integration | P4-01–P4-05 | Proven FFI/IPC boundary, actual CLI/Desktop/external parity and optional separate Trading SDK adapter |
-| P5 Language Workers | P5-01–P5-05 | Python, then Java, then Go independently accepted with real lifecycle/recovery/isolation tests |
-| P6 Plugin Ecosystem & Release | P6-01–P6-06 | Verified third-party load/execute/unload, enforced permissions/resources/fault isolation and Windows/macOS/Linux release evidence |
+| P4 Desktop & External Integration | P4-01–P4-05 | Proven FFI/IPC boundary, actual descriptor-driven Desk editor/run/result parity, reviewed unknown-name entry and optional separate Trading SDK adapter |
+| P5 Language Workers | P5-01–P5-05 | Open adapter/onboarding kit; Python, Java and Go actual runtime/Desk acceptance, then real fourth-language X-004 via child P5-05.01; lifecycle/recovery/isolation gates |
+| P6 Plugin Ecosystem & Release | P6-01–P6-06 | Java-indicator/Go-predicate graph X-005 via child P6-03.01; third-party lifecycle/isolation, Windows/macOS/Linux CLI releases and final installed Desk X-006 |
 
 Each stage depends on the preceding gate. Task descriptions, dependencies, deliverables, acceptance, tests and status live in DELIVERY_PLAN. No dates or feature availability promises follow from this roadmap.
 
-The required product outcome is the [Desk embedded backtest/simulation loop](DESK_INTEGRATION_PLAN.md). P4 delivers actual portable-model Desk integration; P5 integrates Python strategy workers; P6 revalidates the final installed Desk combination. Desk's independent historical P0–P6 numbering is not this engine's stage system. CLI correctness alone does not establish Desk delivery, and the first offline scope does not require live trading.
+The required product outcome is the [Desk embedded backtest/simulation loop](DESK_INTEGRATION_PLAN.md). P4 delivers actual portable-model Desk integration; P5 integrates Python, Java and Go strategy runners; P6 integrates external graph providers and revalidates the final installed Desk combination. The [Extensibility contract](EXTENSIBILITY_CONTRACT.md) defines open onboarding and callable providers separately from whole-strategy workers. The plan has 40 parent tasks and two child acceptance tasks; parents cannot close before their children. Desk's independent historical P0–P6 numbering is not this engine's stage system. CLI correctness alone does not establish Desk delivery, and the first offline scope does not require live trading.
 
 ## Superseded numbering migration
 

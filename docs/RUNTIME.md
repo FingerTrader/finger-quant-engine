@@ -38,4 +38,6 @@ The current interpreter retains every emitted signal in a Vec. Runtime memory gr
 
 The Rust host will own version negotiation, artifact validation, event ordering, lifecycle, capability permissions, supervision, resource budgets, and output validation. A future scheduler may route events to the IR interpreter or local workers while preserving one explicit logical ordering per run.
 
+The planned [Extensibility contract](EXTENSIBILITY_CONTRACT.md) separates whole-strategy runners from typed graph-callable providers. Host-owned instances, correlated event/call identities, validated candidate state/outputs and bounded resource policies apply independently of implementation language. Pure-graph atomicity and legacy durably committed host operations have distinct declared policies. These responsibilities do not exist in the experimental interpreter above.
+
 Before concurrent or service execution is supported, define cancellation and terminal-event delivery, backpressure, worker deadlines, crash handling, bounded logs, deterministic scheduling, and checkpoint semantics. No daemon, service port, runtime download manager, or remote compute service is part of this initialization.

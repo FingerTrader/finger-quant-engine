@@ -10,6 +10,8 @@ Flutter Desktop will be an optional presentation and orchestration client. It ma
 
 The concrete consumer is the existing `finger_desk` project. “Optional” describes the standalone engine dependency, not permission to omit Desk delivery. The owner-selected first scope is backtesting and local simulation; real-time/live trading is separately accepted. [Desk integration](DESK_INTEGRATION_PLAN.md) is the canonical contract for the observed consumer, migration, single-backend ownership, native user journey, bundle and paired-release evidence.
 
+P4 discovery and editing are descriptor-driven under the [Extensibility contract](EXTENSIBILITY_CONTRACT.md): built-in/reviewed test entries expose language/runtime capabilities, parameters, typed ports, diagnostics and output labels through a generic client API. P4 does not load P6 external code. P5 independently proves actual Python/Java/Go Desk journeys for supported runtime/platform combinations; P6 proves foreign-language indicator/predicate discovery and graph use in the final installed app. Per-name Desk page additions are not the supported extension mechanism.
+
 ## Intended boundary
 
 The required boundary is versioned; FFI and IPC are candidates to evaluate in P4-01 under [ADR-010](ARCHITECTURE_DECISIONS.md#adr-010--one-engine-optional-desktop-boundary). Protocol Buffers is the first cross-language encoding candidate, not a chosen transport. Framing, process discovery, lifecycle ownership, and authentication remain undecided. No port, executable download path, or service endpoint is reserved here.

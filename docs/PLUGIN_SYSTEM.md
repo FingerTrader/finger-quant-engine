@@ -4,15 +4,21 @@ Status: planned. No plugin loader, plugin API/ABI, registry, manifest parser, or
 
 [ADR-008](ARCHITECTURE_DECISIONS.md#adr-008--versioned-plugin-extensibility) fixes the versioned registry/extensibility direction. P6 in [Delivery plan](DELIVERY_PLAN.md) requires actual resolution, permission/resource enforcement, load/execute/unload and release evidence. Plugin execution remains undecided; marketplace availability must not gate local execution.
 
+The canonical [Extensibility contract](EXTENSIBILITY_CONTRACT.md) under ADR-012 defines shared provider descriptors, invocation/state semantics, rule forms and language neutrality. P1 proves reviewed in-process provider injection through this boundary; P2 proves stateful extension recovery. P6 adds external package resolution and execution, not the first generic function interface.
+
 ## Intended extension points
 
 Candidate plugins include local dataset readers, indicator/operator extensions, report exporters, simulation models, and the optional Trading SDK execution adapter. Add an extension point only when a concrete implementation justifies it.
+
+Callable indicators/predicates and whole strategies are distinct roles. External computation providers can be implemented in a supported language independently of their caller; graph conditions resolve typed entries through the common registry. P6-03.01 must run a Java rolling indicator and Go predicate together with built-ins/reusable rules in a loaded graph, including actual Desk discovery/use, state restore, failure and resource tests. Per-indicator engine/compiler branches or a parallel provider-owned ledger fail acceptance.
 
 Plugins must preserve local execution and the separation between domain semantics, transports, and optional clients. A plugin cannot make Flutter or Finger Trader login mandatory for offline core functionality.
 
 ## Planned plugin manifest
 
 A future manifest should declare a stable plugin ID and version, entrypoint/artifact identity, supported engine and plugin-contract versions, capabilities, resource requirements, and explicit filesystem/network/execution permissions. Artifact hashes or signatures require a distribution trust policy; a declared hash alone is not provenance.
+
+Manifest roles reference version-pinned entry descriptors and language-adapter/runtime requirements; formula/numeric/state-schema versions, data/port dependencies and content identities are pinned in the run. Descriptor display metadata supports generic Desk parameter/port/output presentation and cannot execute custom UI or grant permissions. New types/events/host services use negotiated versioned evolution; a generic payload must not bypass validation.
 
 Capability negotiation must fail closed on missing required features. Registration must not execute arbitrary package installation or download code implicitly.
 

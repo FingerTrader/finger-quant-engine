@@ -2,7 +2,7 @@
 
 Status: a small typed IR and evaluator are implemented experimentally. Serialized strategy ingestion, source compilers, and worker execution are planned.
 
-The universal target contract is [P1 strategy design](P1_STRATEGY_DESIGN.md): definition/instance separation, types/parameters, registered nodes/functions, typed graph, explicit workflow/state, modules and requirements. It does not change the current API below. Implementation gaps and owning tasks are in [Baseline audit](BASELINE_AUDIT.md); progress belongs to [Project status](PROJECT_STATUS.md).
+The universal target contract is [P1 strategy design](P1_STRATEGY_DESIGN.md): definition/instance separation, types/parameters, registered nodes/functions, typed graph, explicit workflow/state, modules and requirements. It does not change the current API below. The [Extensibility contract](EXTENSIBILITY_CONTRACT.md) defines the planned open descriptor/provider/rule boundary: new conforming names use generic signatures rather than new Rust enum variants; unsupported host types/events still require versioned evolution. Implementation gaps and owning tasks are in [Baseline audit](BASELINE_AUDIT.md); progress belongs to [Project status](PROJECT_STATUS.md).
 
 ## Current typed model
 
