@@ -1,5 +1,7 @@
 //! Single-threaded, in-memory event execution. No broker, filesystem, or worker transport.
 
+pub mod events;
+
 use std::fmt;
 
 use fqe_core::{Event, Signal};

@@ -17,7 +17,7 @@ For real datasets the intended timestamp convention is UTC Unix epoch nanosecond
 
 Instrument identifiers contain 1–128 ASCII letters, digits, or `:/._-`. They are opaque identifiers, not filesystem paths. Prices cannot be zero or negative in the initial subset. A caller must use one consistent price scale for each strategy instrument.
 
-## Runtime ordering
+## Legacy runtime ordering
 
 Input order is authoritative; the runtime does not sort events.
 
@@ -33,7 +33,7 @@ The runtime validates an event before evaluating its rule and updating state. An
 
 A `SignalRecord` contains `source_sequence`, the source `timestamp_ns`, and a typed signal with instrument and kind. It links a decision to the accepted input. The vector preserves input order.
 
-The current report has no run ID or independent output sequence. A signal is not an order, fill, execution report, or account mutation. On a runtime error, no report or partial signal vector is returned; the runtime's accepted-input state remains inspectable.
+The legacy report has no run ID or independent output sequence. A signal is not an order, fill, execution report, or account mutation. On a runtime error, no report or partial signal vector is returned; the runtime's accepted-input state remains inspectable.
 
 ## Experimental wire envelope
 
@@ -49,9 +49,9 @@ Timers, data gaps, worker lifecycle, order intents, execution reports, account u
 
 ## P1 closed-bar target
 
-Status: planned contract, implemented and verified by P1-08, consumed by P1-09/P1-11. It does not extend the current tick API by documentation alone. P1-03 reserves/validates declarations; P1-06 can use function-level close samples before runtime dispatch exists.
+Status: implemented experimentally by P1-08 in `fqe-core::bars` and the separate [compiled event runtime](EVENT_EXECUTION.md), consumed by P1-09/P1-11. The original tick API/demo is unchanged.
 
-- One bound instrument and fixed positive duration timeframe per P1 bar run. Each bar identifies the instrument, timeframe, open and close UTC Unix epoch nanoseconds, typed OHLC prices and volume with declared units/scales. Close time is exclusive and strictly greater than open time; the event timestamp equals close time. Numeric domains and zero-volume validity follow the P1-02 subset.
+- One bound instrument and fixed positive duration timeframe per P1 bar run. Each bar identifies the instrument, timeframe, open and close UTC Unix epoch nanoseconds, typed OHLC prices and volume with declared units/scales. Close time is exclusive and strictly greater than open time; the event timestamp equals close time. OHLC uses Decimal Price(instrument), scale0–12, absolute price ≤1e12, including zero/negative values; volume uses nonnegative Decimal Quantity(instrument), scale0–18.
 - A bar becomes visible only after it is closed. Indicators explicitly select the close field; an OHLC bar cannot be synthesized by silently relabeling a tick. Validate `low <= min(open, close) <= max(open, close) <= high`, nonnegative volume, domain and timeframe before evaluation. These validation rules are exercised with synthetic inputs before the P3 historical loader.
 - Sequences increase; bar intervals do not overlap and each next open equals the preceding close in this continuous P1 fixture subset. Duplicate intervals, gaps, decreasing times, unclosed bars, mixed instruments/timeframes and unsupported calendars fail before changing history. P1 does not construct bars from ticks or infer market closures.
 - Tick and bar modes declare distinct trigger families. A node advances only for its subscribed event domain. Existing legacy tick ordering/instrument filtering remains as documented above; it does not become mixed-domain scheduling.

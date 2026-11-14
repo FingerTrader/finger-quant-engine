@@ -1049,7 +1049,7 @@ impl CallResult {
     }
 }
 
-/// Single-node transaction only. Cross-node event transactions belong to P1-08.
+/// Single-node transaction; event hosts use `try_fork` to stage cross-node transactions.
 pub struct IncrementalInstance {
     descriptor: Arc<Descriptor>,
     provider: Arc<dyn IncrementalProvider>,
@@ -1063,6 +1063,22 @@ pub struct IncrementalInstance {
     registry_id: ContentId,
 }
 impl IncrementalInstance {
+    /// Deep candidate copy for host whole-event transactions; never creates fresh seed state.
+    pub fn try_fork(&self) -> Result<Self> {
+        let state = provider_result(catch_unwind(AssertUnwindSafe(|| Ok(self.state.fork()))))?;
+        Ok(Self {
+            descriptor: Arc::clone(&self.descriptor),
+            provider: Arc::clone(&self.provider),
+            parameters: self.parameters.clone(),
+            parameter_bytes: self.parameter_bytes,
+            state,
+            run: self.run.clone(),
+            instance: self.instance.clone(),
+            last_sequence: self.last_sequence,
+            accepted_steps: self.accepted_steps,
+            registry_id: self.registry_id,
+        })
+    }
     pub fn descriptor(&self) -> &Descriptor {
         &self.descriptor
     }

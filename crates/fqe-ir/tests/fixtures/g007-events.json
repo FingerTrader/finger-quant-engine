@@ -1,0 +1,222 @@
+{
+  "format": "fqe.event-plan",
+  "schema_version": 1,
+  "id": "g007.events",
+  "version": "1",
+  "requirements": [
+    "event.plan/1",
+    "expression.scalar/1"
+  ],
+  "graph": {
+    "format": "fqe.graph",
+    "schema_version": 1,
+    "ir_version": 2,
+    "id": "g007.indicators",
+    "version": "1",
+    "parameters": {
+      "version": 1,
+      "entries": []
+    },
+    "requirements": [
+      "model.typed-graph/1"
+    ],
+    "entries": [
+      {
+        "key": {
+          "id": "reference.sma",
+          "version": "1"
+        },
+        "descriptor_version": 1,
+        "role": "provider",
+        "artifact": "sha256:125c8a17228b1a0f92b99661d2d7a69024672672b86292b4cd91c78086b0a29e"
+      }
+    ],
+    "graph": {
+      "inputs": [
+        {
+          "name": "sample",
+          "type": {
+            "version": 1,
+            "shape": "scalar",
+            "kind": "decimal",
+            "scale": 12,
+            "unit": {
+              "kind": "price",
+              "instrument": "DEMO"
+            }
+          }
+        }
+      ],
+      "nodes": [
+        {
+          "id": "fast",
+          "target": {
+            "kind": "provider",
+            "key": {
+              "id": "reference.sma",
+              "version": "1"
+            }
+          },
+          "arguments": {
+            "period": {
+              "literal": {
+                "type": {
+                  "version": 1,
+                  "shape": "scalar",
+                  "kind": "u64"
+                },
+                "value": "2"
+              }
+            }
+          },
+          "inputs": [
+            {
+              "name": "close",
+              "source": {
+                "input": "sample"
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "name": "value",
+              "type": {
+                "version": 1,
+                "shape": "scalar",
+                "kind": "decimal",
+                "scale": 12,
+                "unit": {
+                  "kind": "price",
+                  "instrument": "DEMO"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "slow",
+          "target": {
+            "kind": "provider",
+            "key": {
+              "id": "reference.sma",
+              "version": "1"
+            }
+          },
+          "arguments": {
+            "period": {
+              "literal": {
+                "type": {
+                  "version": 1,
+                  "shape": "scalar",
+                  "kind": "u64"
+                },
+                "value": "3"
+              }
+            }
+          },
+          "inputs": [
+            {
+              "name": "close",
+              "source": {
+                "input": "sample"
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "name": "value",
+              "type": {
+                "version": 1,
+                "shape": "scalar",
+                "kind": "decimal",
+                "scale": 12,
+                "unit": {
+                  "kind": "price",
+                  "instrument": "DEMO"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "fast_value",
+          "type": {
+            "version": 1,
+            "shape": "scalar",
+            "kind": "decimal",
+            "scale": 12,
+            "unit": {
+              "kind": "price",
+              "instrument": "DEMO"
+            }
+          },
+          "source": {
+            "node": "fast",
+            "port": "value"
+          }
+        },
+        {
+          "name": "slow_value",
+          "type": {
+            "version": 1,
+            "shape": "scalar",
+            "kind": "decimal",
+            "scale": 12,
+            "unit": {
+              "kind": "price",
+              "instrument": "DEMO"
+            }
+          },
+          "source": {
+            "node": "slow",
+            "port": "value"
+          }
+        }
+      ]
+    },
+    "modules": [],
+    "metadata": {},
+    "workflow": {},
+    "state": [],
+    "dependencies": []
+  },
+  "trigger": {
+    "kind": "closed_bar",
+    "instrument": "DEMO",
+    "timeframe_ns": "1000",
+    "price_scale": 12,
+    "volume_scale": 0
+  },
+  "bindings": {
+    "sample": "close"
+  },
+  "warmup_samples": "0",
+  "crossings": [
+    {
+      "id": "up",
+      "direction": "above",
+      "left": {
+        "output": "fast_value"
+      },
+      "right": {
+        "output": "slow_value"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "name": "decision",
+      "expression": {
+        "cross": "up"
+      }
+    }
+  ],
+  "signals": [
+    {
+      "output": "decision",
+      "kind": "long"
+    }
+  ]
+}

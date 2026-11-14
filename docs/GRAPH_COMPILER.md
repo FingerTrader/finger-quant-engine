@@ -1,6 +1,6 @@
 # Typed Graph Compiler and Pure Modules — Contract 1
 
-**Implemented, experimental P1-07.** [Graph import](../crates/fqe-ir/src/graph.rs) and [compiler](../crates/fqe-ir/src/compiler.rs) produce immutable content-pinned plans from real artifacts. [Provider registry](PROVIDER_REGISTRY.md) owns callable validation, [expressions](EXPRESSION_CONTRACT.md) owns pure AST evaluation and [indicators](INDICATOR_CONTRACT.md) owns incremental single-node state. [Project status](PROJECT_STATUS.md) owns progress. This slice does not implement the P1-08 market event runtime, atomic multi-node state, CLI model runner, accounting or Desk integration.
+**Implemented, experimental P1-07.** [Graph import](../crates/fqe-ir/src/graph.rs) and [compiler](../crates/fqe-ir/src/compiler.rs) produce immutable content-pinned plans from real artifacts. [Provider registry](PROVIDER_REGISTRY.md) owns callable validation, [expressions](EXPRESSION_CONTRACT.md) owns pure AST evaluation and [indicators](INDICATOR_CONTRACT.md) owns incremental single-node state. [Project status](PROJECT_STATUS.md) owns progress. The separate [P1-08 event integration](EVENT_EXECUTION.md) now executes these plans with atomic multi-node state. CLI model execution, accounting and Desk integration remain downstream.
 
 ## Two explicit artifact formats
 
@@ -44,7 +44,7 @@ Compilation never calls Provider::invoke, IncrementalProvider::create or Increme
 
 The optional `CompiledPlan::pure_expressions` lowers provider-call DAG outputs into the existing P1-05 typed AST, with module aliases already resolved. It rejects **any** incremental entry rather than copying history into pure calls. Pure subgraphs may be duplicated in the AST and therefore invoked repeatedly; purity is a reviewed contract. It enforces P1-05's 32-depth/4096-AST-node ceilings while constructing the projection, so a shared exponential DAG cannot allocate an unbounded tree. A valid larger compiled graph can fail this optional projection and remain usable by a later graph runtime. Output-driven AST evaluation can skip unused pure nodes; all declarations were still validated/prepared at compile time. The [pure example driver](../crates/fqe-ir/examples/support/compiled.rs) uses this projection and the real expression evaluator, with no handwritten business-node wiring.
 
-This file format currently contains provider/module targets. It does not serialize standalone BinaryOp/NOT/cross AST nodes. Pure callable composition is mapped to P1-05; event roots/crossing subscriptions and any additional versioned expression encoding needed by the loaded MACD/RSI strategy must be integrated under P1-08 before CLI/golden acceptance. Do not treat the Rust AST as an implicit file codec. P1-08 must preserve short-circuit semantics and eager once-per-event stateful subscriptions, atomically commit all state/signals, and define actual closed-bar/root-input routing. A compiled incremental handle alone is not an executable market strategy.
+This graph format contains provider/module targets, preserving its original bytes. The separate [fqe.event-plan/1 wrapper](EVENT_EXECUTION.md) supplies the explicit bounded/versioned BinaryOp/NOT/cross codec, field bindings and signal roots, retaining short-circuit and atomic once-per-event stateful semantics. A compiled incremental handle alone remains insufficient to execute a market strategy without that profile.
 
 ## Limits and identities
 
@@ -77,4 +77,4 @@ cargo test -p fqe-ir --test compiler_contract --locked --offline
 cargo run --locked --offline -p fqe-ir --example compile
 ```
 
-P1-08 event evaluation, P1-09 loaded CLI execution, P1-10 external caller, P1-11 full X-001/indicator golden gate, P2 persistence and P4/P6 Desk distribution remain separate acceptance. No package or toolchain dependency is added.
+P1-08 event evaluation is delivered separately in the library. P1-09 loaded CLI execution, P1-10 external caller, P1-11 full X-001/indicator golden gate, P2 persistence and P4/P6 Desk distribution remain separate acceptance. No package or toolchain dependency is added.

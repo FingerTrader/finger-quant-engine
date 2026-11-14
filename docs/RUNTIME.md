@@ -1,8 +1,8 @@
 # Runtime
 
-Status: a synchronous in-memory interpreter is implemented experimentally. Process supervision, live services, asynchronous execution, persistence, and production resource controls are planned.
+Status: the legacy synchronous interpreter and P1-08 compiled streaming event runtime are implemented experimentally. [Compiled event execution](EVENT_EXECUTION.md) owns the new API, atomic state and retry policy. The sections below describe the preserved legacy API. Process supervision, live services, asynchronous execution, persistence, and production resource controls are planned.
 
-## Current execution
+## Legacy one-shot execution
 
 `Runtime::new(strategy)` starts in Ready. A single `run(events)` call consumes an `IntoIterator<Item = Event>`, validates ordering, evaluates the typed rule, and returns a `RunReport`. The interpreter runs in the calling thread.
 
@@ -41,3 +41,7 @@ The Rust host will own version negotiation, artifact validation, event ordering,
 The planned [Extensibility contract](EXTENSIBILITY_CONTRACT.md) separates whole-strategy runners from typed graph-callable providers. Host-owned instances, correlated event/call identities, validated candidate state/outputs and bounded resource policies apply independently of implementation language. Pure-graph atomicity and legacy durably committed host operations have distinct declared policies. These responsibilities do not exist in the experimental interpreter above.
 
 Before concurrent or service execution is supported, define cancellation and terminal-event delivery, backpressure, worker deadlines, crash handling, bounded logs, deterministic scheduling, and checkpoint semantics. No daemon, service port, runtime download manager, or remote compute service is part of this initialization.
+
+## Compiled streaming events
+
+`fqe_runtime::events::EventRuntime` consumes validated tick/closed-bar inputs from fqe.event-plan/1 compiled artifacts. Every stateful subscription and crossing advances once independently of root short-circuit. State/cursors/signals publish together after all outputs succeed. Rejected events leave prior state unchanged and allow explicit retry; `finish()` completes the run. It returns one observation at a time rather than accumulating a signal Vec. See [the normative contract](EVENT_EXECUTION.md) for formats, limits, warmup, manifest, source linkage and failure distinctions. The old one-shot runtime is unchanged.

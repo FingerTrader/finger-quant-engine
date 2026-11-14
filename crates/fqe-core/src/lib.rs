@@ -2,6 +2,7 @@
 
 use std::fmt;
 
+pub mod bars;
 pub mod numeric;
 pub mod types;
 

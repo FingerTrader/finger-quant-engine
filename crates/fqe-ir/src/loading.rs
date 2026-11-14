@@ -194,7 +194,11 @@ fn array(v: Value, p: &str) -> Result<Vec<Value>> {
         _ => Err(err("type", p, "expected array")),
     }
 }
-pub(crate) fn mapped<T>(v: Value, p: &str, f: impl Fn(Value, &str) -> Result<T>) -> Result<Vec<T>> {
+pub(crate) fn mapped<T>(
+    v: Value,
+    p: &str,
+    mut f: impl FnMut(Value, &str) -> Result<T>,
+) -> Result<Vec<T>> {
     array(v, p)?
         .into_iter()
         .enumerate()
@@ -249,7 +253,7 @@ pub(crate) fn descriptor(v: Value, p: &str) -> Result<TypeDescriptor> {
     o.end()?;
     convert(TypeDescriptor::new(version, ValueShape::Scalar, scalar), p)
 }
-fn integer<T: std::str::FromStr + ToString>(v: Value, p: &str) -> Result<T> {
+pub(crate) fn integer<T: std::str::FromStr + ToString>(v: Value, p: &str) -> Result<T> {
     let s = text(v, p)?;
     let n: T = s
         .parse()

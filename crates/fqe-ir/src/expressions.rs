@@ -1,5 +1,5 @@
 //! Bounded typed expressions and transactional crossing subscriptions.
-//! No serialized expression codec, whole-model compiler or market scheduler.
+//! The event_plan module supplies the versioned codec and compiled-event integration.
 use crate::{
     model::{MAX_PORTS, ModelError, Port, identifier},
     registry::{CallContext, PreparedCall},
@@ -564,6 +564,8 @@ impl Evaluator<'_> {
         }
     }
 }
+/// Clone deep-copies in-memory history; it is not a snapshot/restore codec.
+#[derive(Clone)]
 pub struct ExpressionInstance {
     plan: Arc<ExpressionPlan>,
     run: String,

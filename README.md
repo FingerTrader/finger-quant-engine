@@ -20,11 +20,12 @@ This repository contains the initial engineering foundation, version `0.1.0`. It
 | --- | --- |
 | Cargo Workspace and validated core types | Implemented |
 | Checked decimal values, scalar/unit descriptors and immutable parameter bindings | Implemented, experimental P1-02 subset; [contract](docs/TYPE_PARAMETER_CONTRACT.md) |
-| Bounded JSON model import, canonical content identity and pinned parameter preparation | Implemented, experimental P1-03 subset; [contract](docs/MODEL_LOADING.md); no graph execution |
+| Bounded JSON model import, canonical content identity and pinned parameter preparation | Implemented, experimental P1-03 subset; [contract](docs/MODEL_LOADING.md); old artifact syntax preserved |
 | Frozen callable descriptors, typed scalar provider invocation and independent unknown-name example | Implemented, experimental P1-04 subset; [contract](docs/PROVIDER_REGISTRY.md) |
 | Typed arithmetic/Boolean expressions and transactional crossing subscriptions | Implemented, experimental P1-05 subset; [contract](docs/EXPRESSION_CONTRACT.md) |
-| Registered SMA/EMA/MACD/RSI and instance-owned incremental scalar providers | Implemented, experimental P1-06 library slice; [contract](docs/INDICATOR_CONTRACT.md); no event scheduler |
+| Registered SMA/EMA/MACD/RSI and instance-owned incremental scalar providers | Implemented, experimental P1-06 library slice; [contract](docs/INDICATOR_CONTRACT.md); event integration below |
 | Descriptor-driven graph compiler, typed inputs and bounded pure rule modules | Implemented, experimental P1-07; [contract](docs/GRAPH_COMPILER.md); pure expression projection, deferred indicator state |
+| Compiled tick/continuous closed-bar execution with atomic indicator/crossing state and signals | Implemented, experimental P1-08; [contract](docs/EVENT_EXECUTION.md); streaming library/example |
 | Typed IR: a single-instrument price comparison producing signals | Implemented, experimental API |
 | Synchronous, deterministic in-memory event runtime and run state | Implemented, experimental API |
 | Offline CLI demonstration and behavioral tests | Implemented |
@@ -36,7 +37,7 @@ This repository contains the initial engineering foundation, version `0.1.0`. It
 
 **Implemented** means executable code is present and tested. **Experimental** means the API or schema can change and has no compatibility guarantee. **Planned** means design intent only. These labels can overlap: an experimental component may have implemented code.
 
-The demonstration evaluates three synthetic price events and emits two signals. Signals are observations, not orders, fills, positions, or investment performance.
+The legacy demonstration evaluates three synthetic price events and emits two signals. The compiled `cargo run --locked --offline -p fqe-runtime --example events` example loads MACD/RSI and SMA event artifacts and verifies each signal at bar5. Signals are observations, not orders, fills, positions, or investment performance.
 
 ## Quick start
 
