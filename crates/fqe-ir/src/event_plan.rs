@@ -396,6 +396,9 @@ impl LoadedEventPlan {
         result.content_id = digest(EVENT_PREFIX, &result.canonical);
         Ok(result)
     }
+    pub fn trigger(&self) -> &Trigger {
+        &self.trigger
+    }
     pub fn canonical_bytes(&self) -> &[u8] {
         &self.canonical
     }

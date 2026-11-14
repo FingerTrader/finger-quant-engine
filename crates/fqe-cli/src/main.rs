@@ -1,3 +1,5 @@
+mod commands;
+
 use std::{env, error::Error, process::ExitCode};
 
 use fqe_core::{Event, InstrumentId, MarketTick, PriceTicks, SignalKind};
@@ -8,6 +10,10 @@ use fqe_runtime::Runtime;
 const HELP: &str = "Finger Quant Engine (FQE) — experimental offline foundation
 
 Usage: fqe <command>
+  validate --model PATH [--params PATH]
+              Compile a local fqe.event-plan/1 model (JSON result)
+  run --model PATH --data PATH [--params PATH] [--run-id ID]
+              Execute local fqe.market-data/1 inputs (JSON result)
   demo        Run a deterministic in-memory signal example (no orders)
   --version   Show engine and draft protocol versions
   --help      Show this help
@@ -16,7 +22,22 @@ Backtesting, simulation, workers, plugins, and Desktop IPC are planned.
 No login, Flutter installation, network, or trading account is required.";
 
 fn main() -> ExitCode {
-    let args: Vec<String> = env::args().skip(1).collect();
+    let raw: Vec<_> = env::args_os().skip(1).take(17).collect();
+    if raw.first().is_some_and(|a| a == "validate" || a == "run") {
+        if raw.len() == 2 && (raw[1] == "--help" || raw[1] == "-h") {
+            println!("{HELP}");
+            return ExitCode::SUCCESS;
+        }
+        return commands::dispatch(&raw);
+    }
+    let Ok(args) = raw
+        .into_iter()
+        .map(|a| a.into_string())
+        .collect::<Result<Vec<_>, _>>()
+    else {
+        eprintln!("fqe: unsupported arguments\n\n{HELP}");
+        return ExitCode::from(2);
+    };
     match args.as_slice() {
         [] => {
             println!("{HELP}");

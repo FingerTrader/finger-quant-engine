@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "values": {
+    "threshold": {
+      "type": {
+        "version": 1,
+        "shape": "scalar",
+        "kind": "decimal",
+        "scale": 12,
+        "unit": {
+          "kind": "ratio"
+        }
+      },
+      "value": "60000000000000"
+    }
+  }
+}

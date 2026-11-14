@@ -76,7 +76,7 @@ cargo run --locked --offline -p fqe-cli -- --help
 cargo run --locked --offline -p fqe-cli -- --version
 ```
 
-No arguments display help. Unsupported arguments exit with code 2, a demo error exits with code 1, and success exits with code 0. The CLI currently has no strategy file loader or backtest, simulation, worker, or server command.
+No arguments display help. Unsupported arguments exit with code 2, a demo error exits with code 1, and success exits with code 0. P1-09 now adds model-file validate/run with typed parameter/data/result codecs and structured new-command exits3/4/5; [CLI execution](CLI_EXECUTION.md) is authoritative. Backtest accounting, simulation, worker and server commands remain planned.
 
 ## Tests and scope
 

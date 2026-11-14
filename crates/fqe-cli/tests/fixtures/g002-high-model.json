@@ -1,0 +1,359 @@
+{
+  "format": "fqe.event-plan",
+  "schema_version": 1,
+  "id": "g002.events",
+  "version": "1",
+  "requirements": [
+    "event.plan/1",
+    "expression.scalar/1"
+  ],
+  "graph": {
+    "format": "fqe.graph",
+    "schema_version": 1,
+    "ir_version": 2,
+    "id": "g002.indicators",
+    "version": "1",
+    "parameters": {
+      "version": 1,
+      "entries": [
+        {
+          "key": "threshold",
+          "type": {
+            "version": 1,
+            "shape": "scalar",
+            "kind": "decimal",
+            "scale": 12,
+            "unit": {
+              "kind": "ratio"
+            }
+          },
+          "required": false,
+          "default": {
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "decimal",
+              "scale": 12,
+              "unit": {
+                "kind": "ratio"
+              }
+            },
+            "value": "90000000000000"
+          },
+          "constraints": {},
+          "description": "RSI threshold"
+        }
+      ]
+    },
+    "requirements": [
+      "model.typed-graph/1"
+    ],
+    "entries": [
+      {
+        "key": {
+          "id": "reference.macd",
+          "version": "1"
+        },
+        "descriptor_version": 1,
+        "role": "provider",
+        "artifact": "sha256:125c8a17228b1a0f92b99661d2d7a69024672672b86292b4cd91c78086b0a29e"
+      },
+      {
+        "key": {
+          "id": "reference.rsi",
+          "version": "1"
+        },
+        "descriptor_version": 1,
+        "role": "provider",
+        "artifact": "sha256:125c8a17228b1a0f92b99661d2d7a69024672672b86292b4cd91c78086b0a29e"
+      }
+    ],
+    "graph": {
+      "inputs": [
+        {
+          "name": "sample",
+          "type": {
+            "version": 1,
+            "shape": "scalar",
+            "kind": "decimal",
+            "scale": 12,
+            "unit": {
+              "kind": "price",
+              "instrument": "DEMO"
+            }
+          }
+        }
+      ],
+      "nodes": [
+        {
+          "id": "macd",
+          "target": {
+            "kind": "provider",
+            "key": {
+              "id": "reference.macd",
+              "version": "1"
+            }
+          },
+          "arguments": {
+            "fast": {
+              "literal": {
+                "type": {
+                  "version": 1,
+                  "shape": "scalar",
+                  "kind": "u64"
+                },
+                "value": "2"
+              }
+            },
+            "slow": {
+              "literal": {
+                "type": {
+                  "version": 1,
+                  "shape": "scalar",
+                  "kind": "u64"
+                },
+                "value": "3"
+              }
+            },
+            "signal": {
+              "literal": {
+                "type": {
+                  "version": 1,
+                  "shape": "scalar",
+                  "kind": "u64"
+                },
+                "value": "2"
+              }
+            }
+          },
+          "inputs": [
+            {
+              "name": "close",
+              "source": {
+                "input": "sample"
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "name": "line",
+              "type": {
+                "version": 1,
+                "shape": "scalar",
+                "kind": "decimal",
+                "scale": 12,
+                "unit": {
+                  "kind": "price",
+                  "instrument": "DEMO"
+                }
+              }
+            },
+            {
+              "name": "signal",
+              "type": {
+                "version": 1,
+                "shape": "scalar",
+                "kind": "decimal",
+                "scale": 12,
+                "unit": {
+                  "kind": "price",
+                  "instrument": "DEMO"
+                }
+              }
+            },
+            {
+              "name": "histogram",
+              "type": {
+                "version": 1,
+                "shape": "scalar",
+                "kind": "decimal",
+                "scale": 12,
+                "unit": {
+                  "kind": "price",
+                  "instrument": "DEMO"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "rsi",
+          "target": {
+            "kind": "provider",
+            "key": {
+              "id": "reference.rsi",
+              "version": "1"
+            }
+          },
+          "arguments": {
+            "period": {
+              "literal": {
+                "type": {
+                  "version": 1,
+                  "shape": "scalar",
+                  "kind": "u64"
+                },
+                "value": "2"
+              }
+            }
+          },
+          "inputs": [
+            {
+              "name": "close",
+              "source": {
+                "input": "sample"
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "name": "value",
+              "type": {
+                "version": 1,
+                "shape": "scalar",
+                "kind": "decimal",
+                "scale": 12,
+                "unit": {
+                  "kind": "ratio"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "macd_line",
+          "type": {
+            "version": 1,
+            "shape": "scalar",
+            "kind": "decimal",
+            "scale": 12,
+            "unit": {
+              "kind": "price",
+              "instrument": "DEMO"
+            }
+          },
+          "source": {
+            "node": "macd",
+            "port": "line"
+          }
+        },
+        {
+          "name": "macd_signal",
+          "type": {
+            "version": 1,
+            "shape": "scalar",
+            "kind": "decimal",
+            "scale": 12,
+            "unit": {
+              "kind": "price",
+              "instrument": "DEMO"
+            }
+          },
+          "source": {
+            "node": "macd",
+            "port": "signal"
+          }
+        },
+        {
+          "name": "macd_histogram",
+          "type": {
+            "version": 1,
+            "shape": "scalar",
+            "kind": "decimal",
+            "scale": 12,
+            "unit": {
+              "kind": "price",
+              "instrument": "DEMO"
+            }
+          },
+          "source": {
+            "node": "macd",
+            "port": "histogram"
+          }
+        },
+        {
+          "name": "rsi_value",
+          "type": {
+            "version": 1,
+            "shape": "scalar",
+            "kind": "decimal",
+            "scale": 12,
+            "unit": {
+              "kind": "ratio"
+            }
+          },
+          "source": {
+            "node": "rsi",
+            "port": "value"
+          }
+        }
+      ]
+    },
+    "modules": [],
+    "metadata": {},
+    "workflow": {},
+    "state": [],
+    "dependencies": []
+  },
+  "trigger": {
+    "kind": "closed_bar",
+    "instrument": "DEMO",
+    "timeframe_ns": "1000",
+    "price_scale": 12,
+    "volume_scale": 0
+  },
+  "bindings": {
+    "sample": "close"
+  },
+  "warmup_samples": "0",
+  "crossings": [
+    {
+      "id": "up",
+      "direction": "above",
+      "left": {
+        "output": "macd_line"
+      },
+      "right": {
+        "output": "macd_signal"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "name": "decision",
+      "expression": {
+        "binary": {
+          "op": "and",
+          "left": {
+            "cross": "up"
+          },
+          "right": {
+            "binary": {
+              "op": "greater",
+              "left": {
+                "output": "rsi_value"
+              },
+              "right": {
+                "parameter": "threshold"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "rsi",
+      "expression": {
+        "output": "rsi_value"
+      }
+    }
+  ],
+  "signals": [
+    {
+      "output": "decision",
+      "kind": "long"
+    }
+  ]
+}

@@ -28,7 +28,7 @@ This repository contains the initial engineering foundation, version `0.1.0`. It
 | Compiled tick/continuous closed-bar execution with atomic indicator/crossing state and signals | Implemented, experimental P1-08; [contract](docs/EVENT_EXECUTION.md); streaming library/example |
 | Typed IR: a single-instrument price comparison producing signals | Implemented, experimental API |
 | Synchronous, deterministic in-memory event runtime and run state | Implemented, experimental API |
-| Offline CLI demonstration and behavioral tests | Implemented |
+| Offline CLI demo and loaded model validate/run with structured exact results | Implemented, experimental P1-09; [CLI contract](docs/CLI_EXECUTION.md) |
 | Protocol version-number negotiation helper | Implemented, experimental |
 | Protocol Buffers schema | Experimental draft; no codec, generated bindings, or transport |
 | Local backtesting, accounting, execution simulation, optimization | Planned |
@@ -38,6 +38,8 @@ This repository contains the initial engineering foundation, version `0.1.0`. It
 **Implemented** means executable code is present and tested. **Experimental** means the API or schema can change and has no compatibility guarantee. **Planned** means design intent only. These labels can overlap: an experimental component may have implemented code.
 
 The legacy demonstration evaluates three synthetic price events and emits two signals. The compiled `cargo run --locked --offline -p fqe-runtime --example events` example loads MACD/RSI and SMA event artifacts and verifies each signal at bar5. Signals are observations, not orders, fills, positions, or investment performance.
+
+Run a loaded strategy using `cargo run --locked --offline -p fqe-cli -- run --model crates/fqe-ir/tests/fixtures/g002-events.json --data crates/fqe-cli/tests/fixtures/g002-data.json --params crates/fqe-cli/tests/fixtures/parameters-60.json`. Changing the parameter file to `parameters-90.json` changes the expected signal count from1 to0 without rebuilding the binary. See [CLI execution](docs/CLI_EXECUTION.md) for validate, exact input/results, limits and exits.
 
 ## Quick start
 

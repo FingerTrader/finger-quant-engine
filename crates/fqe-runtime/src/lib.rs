@@ -1,6 +1,7 @@
 //! Single-threaded, in-memory event execution. No broker, filesystem, or worker transport.
 
 pub mod events;
+pub mod report;
 
 use std::fmt;
 

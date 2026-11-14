@@ -3,8 +3,10 @@
 use std::fmt;
 
 pub mod builtins;
+pub mod catalog;
 pub mod compiler;
 pub mod event_plan;
+pub mod exchange;
 pub mod expressions;
 pub mod graph;
 pub mod indicators;

@@ -45,3 +45,7 @@ Before concurrent or service execution is supported, define cancellation and ter
 ## Compiled streaming events
 
 `fqe_runtime::events::EventRuntime` consumes validated tick/closed-bar inputs from fqe.event-plan/1 compiled artifacts. Every stateful subscription and crossing advances once independently of root short-circuit. State/cursors/signals publish together after all outputs succeed. Rejected events leave prior state unchanged and allow explicit retry; `finish()` completes the run. It returns one observation at a time rather than accumulating a signal Vec. See [the normative contract](EVENT_EXECUTION.md) for formats, limits, warmup, manifest, source linkage and failure distinctions. The old one-shot runtime is unchanged.
+
+## Bounded local batch reporting
+
+P1-09 adds `report::run_report` over the same EventRuntime and fqe.market-data/1 decoded records. It never retries a rejected event and returns no partial report; a bounded4MiB writer serializes observations as execution progresses, publishing bytes only after finish. The CLI uses this public library adapter. [CLI exchange](CLI_EXECUTION.md) owns document shapes, local source digest, error stages/exits and stdout-write limitations. The in-process streaming retry policy above remains unchanged.

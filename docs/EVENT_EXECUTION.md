@@ -1,6 +1,6 @@
 # Compiled event execution
 
-Status: experimental P1-08 implementation. This contract owns `fqe.event-plan/1` and the in-process `EventRuntime`; [Graph compiler](GRAPH_COMPILER.md), [Expressions](EXPRESSION_CONTRACT.md), [Indicators](INDICATOR_CONTRACT.md) and [Events](EVENT_CONTRACT.md) retain their underlying semantics. The original IR1 `Runtime`/demo remains a separate, unchanged one-shot API. No CLI file runner, historical dataset loader, trading, ledger, worker, checkpoint or Desk integration is delivered by this slice.
+Status: experimental P1-08 implementation. This contract owns `fqe.event-plan/1` and the in-process `EventRuntime`; [Graph compiler](GRAPH_COMPILER.md), [Expressions](EXPRESSION_CONTRACT.md), [Indicators](INDICATOR_CONTRACT.md) and [Events](EVENT_CONTRACT.md) retain their underlying semantics. The original IR1 `Runtime`/demo remains a separate, unchanged one-shot API. The separate [P1-09 CLI slice](CLI_EXECUTION.md) now provides the bounded local file runner; historical datasets, trading, ledger, worker, checkpoint and Desk integration remain future work.
 
 ## Versioned event artifact
 
@@ -49,7 +49,7 @@ Canonical JSON uses compact sorted object keys, named graph declarations and wra
 
 ## Run ownership and processing
 
-`EventRuntime::new(Arc<CompiledEventPlan>, run, dataset_id)` validates the run identifier, then creates fresh per-node state and crossing memory. Reusing an immutable plan shares no mutable engine-owned history. The manifest records run, caller-supplied dataset ID, raw and canonical event artifact IDs, execution/graph/registry IDs, trigger, scales/duration via the trigger, interval convention and declared warmup samples. Dataset ID is a caller assertion; this API does not read/hash a data file or attest to its contents. P1-09 owns the local input codec; P3 owns persisted historical sources.
+`EventRuntime::new(Arc<CompiledEventPlan>, run, dataset_id)` validates the run identifier, then creates fresh per-node state and crossing memory. Reusing an immutable plan shares no mutable engine-owned history. The manifest records run, caller-supplied dataset ID, raw and canonical event artifact IDs, execution/graph/registry IDs, trigger, scales/duration via the trigger, interval convention and declared warmup samples. Dataset ID is a caller assertion; this API does not read/hash a data file or attest to its contents. [P1-09](CLI_EXECUTION.md) now hashes the actual local input bytes for its dataset ID; P3 owns persisted historical sources.
 
 `step(InputEvent)` processes a single event synchronously and returns an `EventObservation` with run/execution ID, accepted source sequence/time, matched/warmup flags, typed/readiness outputs and source-linked signal records. `InputEvent::from(BarInput)` boxes a raw bar; the runtime always validates it rather than trusting a caller's `closed` flag. No output backlog or iterator is retained by the runtime. The caller owns result storage and must handle rejected events explicitly.
 
@@ -76,4 +76,4 @@ cargo test --locked --offline -p fqe-runtime --test event_execution
 cargo run --locked --offline -p fqe-runtime --example events
 ```
 
-P1-09 must expose actual loaded CLI validation/run, bounded input/result codecs and diagnostics. P1-10 must prove an independent caller; P1-11 owns the complete P1 gate. P2 owns generalized scheduling/delays/cancellation/persistent state; P3 owns backtest accounting/local simulation; P4/P5/P6 own real Desk, language adapters, packaging and installed acceptance. This library path does not complete those milestones.
+[P1-09](CLI_EXECUTION.md) exposes actual loaded CLI validation/run, bounded input/result codecs and diagnostics. P1-10 must prove an independent caller; P1-11 owns the complete P1 gate. P2 owns generalized scheduling/delays/cancellation/persistent state; P3 owns backtest accounting/local simulation; P4/P5/P6 own real Desk, language adapters, packaging and installed acceptance. This library path does not complete those milestones.
