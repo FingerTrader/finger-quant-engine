@@ -1,0 +1,27 @@
+{
+  "format": "finger-desk.fqe-authoring-project-evidence/1",
+  "status": "passed",
+  "peer_sha256": "83ca265dde194744f60323f856aa551beab4dadec5e723ef871a2d312e2602b7",
+  "bridge_id": "sha256:1f9c3ba7ff463d4227c6b25318776487bca2eb370d7e647419639d304c408201",
+  "project_ids": [
+    "pfb283bb0e13fbe5f6998d3567cfe14dd",
+    "p7ed2126196e564f09bbbc1c1609a3f25"
+  ],
+  "checks": [
+    "empty-project-native-contextual-catalog",
+    "stable-project-id-independent-of-name",
+    "layout-and-caller-mutation-do-not-change-frozen-input",
+    "native-graph-text-roundtrip-and-stale-confirmation",
+    "open-project-restore-conflict-and-comment-only-identity",
+    "persist-invalid-buffer-and-explicit-recovery",
+    "actual-native-project-run-and-immutable-association",
+    "two-projects-parameters-and-historical-native-results",
+    "read-only-native-replay-phases-and-damaged-result-rejection",
+    "late-native-response-cannot-overwrite-new-text",
+    "post-preflight-change-rejected-before-native-start"
+  ],
+  "baseline_equity": "98.00",
+  "variant_equity": "100.00",
+  "baseline_result_id": "sha256:a6841892dd7f90830a8e199737bed088d51d8f43a48ccc81e3121674305e5954",
+  "store": "/var/folders/3y/ykztv5957hb8mlp2_8bwm9rc0000gn/T/fqe-authoring-project-cN9XJm"
+}

@@ -1,0 +1,1 @@
+{"format":"finger-desk.fqe-store-negatives/1","status":"passed","cases":["immutable","pending-write","symlink","disk-byte-quota","record-count-quota","actual-result-write-denied","cleanup","incompatible-bundle"]}
