@@ -4,7 +4,7 @@ Recover [status](PROJECT_STATUS.md), [plan](DELIVERY_PLAN.md), [ADRs](ARCHITECTU
 
 ## Current evidence
 
-P1-01–P1-11, P2-01 and P2-02 COMPLETED. P1 gate passed; P2-03 READY, P2 phase gate still open. Latest implementation evidence `daeeb181d99236094daa3272fd4efa3855ddca06`; previous P2-01 `52f6e9ea4a7bc2e4a687796eaf4af2752aee7c11`. Resolve HEAD/latest status commit from Git. Main28 commits ahead after closure; remote last read-confirmed `0ac5d7b163e77bddb5f69689a1455e3560aad872`. Recheck live before publishing; no push authorization.
+P1-01–P1-11, P2-01 and P2-02 COMPLETED. P1 gate passed; P2-03 VERIFIED, P2 phase gate still open. Latest implementation evidence `daeeb181d99236094daa3272fd4efa3855ddca06`; previous P2-01 `52f6e9ea4a7bc2e4a687796eaf4af2752aee7c11`. Resolve HEAD/latest status commit from Git. Main28 commits ahead after closure; remote last read-confirmed `0ac5d7b163e77bddb5f69689a1455e3560aad872`. Recheck live before publishing; no push authorization.
 
 P2-01 [workflow](WORKFLOW_EXECUTION.md)/ADR-022: fqe.workflow/1 parameterized typed stateful scalar rules, isolated mode/cells/one-event Delay, old-state guards/effects, equal-priority control/write conflict rejection, whole-event provider/crossing/rule/cursor commit, boundary stop/abort/finish and fresh restart. State inspection is explicitly non-restorable; checkpoint unsupported. Flat instances/single control region are explicit limits.
 
@@ -38,3 +38,9 @@ git diff --check
 ```
 
 Record real code/check/error/dirty state before interruption. Evidence commit while VERIFIED, then synchronized status/plan/handoff closure recording SHA. Continue next eligible task automatically. Only an authorized normal push and matching remote SHA establishes publishing.
+
+Active P2-03 checkpoint: scoped typed temporal bindings, per-lane count/event-time latching windows, deadline-after-market ordering and bounded fair coordinator selected. Implement IR temporal format/runtime windows+lanes; preserve workflow arithmetic and add private candidate-step reuse for combined rollback. P2-03 code now exists in IR temporal.rs and runtime temporal.rs/instances.rs, with private WorkflowRuntime candidate-step extraction and MarketScheduler next-timestamp metadata. Initial workspace compile PASS; focused IR/runtime temporal tests currently running. New temporal/count/time/overflow/bar-workflow/stream fixtures are uncommitted; no prior fixtures/providers/dependencies modified. Full checks/docs/ADR still pending.
+
+P2-03 focused checks PASS:2 temporal IR +7 coordinator tests +1 new real-provider combined rollback test (10 new tests). New typed bound-rule manifests/as-of outcome snapshots added; full workspace/P1 gate/docs/clippy after final edits pending. Docs/TEMPORAL_SCHEDULER.md and ADR-024 drafted. Still IN_PROGRESS, no task closure or snapshot delivery claimed.
+
+P2-03 IMPLEMENTED → VERIFIED checkpoint: full offline gate PASS215 Rust/23 external/11 process cases; all source pins/fmt/check/test/clippy/build/docs/diff PASS. Record evidence commit and three-document closure before continuing P2-04. ADR-024 accepted. No snapshot or complete temporal financial gate claimed.

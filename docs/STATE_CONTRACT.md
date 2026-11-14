@@ -63,3 +63,7 @@ P2-01 adds a separate experimental fqe.workflow/1 profile with host-owned typed/
 ## Scheduler ingress versus publication
 
 The P2-02 [market scheduler](MARKET_SCHEDULER.md) owns separate per-stream accepted ingress cursors/watermarks, a bounded pending queue and globally committed publication/alignment state. An invalid ingress changes none; a consumer error preserves the pending event, logical sequence and alignment. Accepted buffered ingress is not undone by a publication failure. No cursor/queue inspection is a restorable checkpoint; P2-04 must capture these alongside all strategy/provider/crossing state.
+
+## Temporal and lane ownership
+
+P2-03 adds lane-owned typed window/timer memory, immutable manifest/bindings, bounded pending FIFOs, status and round-robin control. Candidate workflow and temporal state publish together; rejected evaluation retains the pending head and all committed computational history while marking only that lane Blocked. Cancel clears its queue/windows and releases providers; EOF returns incomplete count windows rather than inventing bars. [Temporal scheduler](TEMPORAL_SCHEDULER.md) specifies exact semantics. None of these Rust views supplies snapshot import or complete provider serialization; P2-04 must capture all domains and output identities together.

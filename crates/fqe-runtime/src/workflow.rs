@@ -1,7 +1,7 @@
 //! Whole-event transactions over base providers/crossings and host-owned stateful rule modules.
 use crate::{
     SignalRecord,
-    events::{EventRuntime, ExecutionError, InputEvent},
+    events::{EventObservation, EventRuntime, ExecutionError, InputEvent},
 };
 use fqe_core::{
     Signal,
@@ -209,6 +209,27 @@ impl WorkflowRuntime {
     pub fn step(&mut self, event: InputEvent) -> Result<WorkflowObservation> {
         self.active()?;
         let (base, source) = self.base.as_ref().expect("active base").fork_step(event)?;
+        self.accept(base, source)
+    }
+    /// Private candidate for a host transaction that also owns temporal state.
+    pub(crate) fn fork_step(&self, event: InputEvent) -> Result<(Self, WorkflowObservation)> {
+        self.active()?;
+        let (base, source) = self.base.as_ref().expect("active base").fork_step(event)?;
+        let mut candidate = Self {
+            plan: Arc::clone(&self.plan),
+            base: None,
+            manifest: self.manifest.clone(),
+            state: self.state.clone(),
+            values: self.values.clone(),
+        };
+        let observation = candidate.accept(base, source)?;
+        Ok((candidate, observation))
+    }
+    fn accept(
+        &mut self,
+        base: EventRuntime,
+        source: EventObservation,
+    ) -> Result<WorkflowObservation> {
         let mut staged = self.values.clone();
         let mut outputs = BTreeMap::<String, Values>::new();
         let mut transitions = BTreeMap::new();

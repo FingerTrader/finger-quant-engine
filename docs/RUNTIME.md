@@ -57,3 +57,7 @@ P2-01 adds `workflow::WorkflowRuntime` over the existing compiled event runtime,
 ## Multi-market scheduling
 
 P2-02 adds a separate `schedule::MarketScheduler` over immutable fqe.schedule/1 definitions: bounded multi-symbol/timeframe ingress, inclusive source watermarks, stable total order and committed as-of views. Dispatch exposes only closed/published data and commits publication after a successful transactional consumer. Existing EventRuntime/WorkflowRuntime retain their single-trigger formats; explicit stream routing can feed them global logical sequences while ScheduledEvent preserves original source identity. [Market scheduler](MARKET_SCHEDULER.md) owns calendar/gap/late/duplicate/backpressure/tie rules and the callback transaction boundary. Timers/fair multi-instance scheduling remain P2-03.
+
+## Temporal instance coordinator
+
+P2-03 adds strict temporal-rule bindings and `instances::InstanceScheduler` over the existing market/workflow runtimes. The host owns per-lane latching count/event-time windows, watermark-complete timer phase, bounded atomic fanout and deterministic fair dispatch. Workflow/provider/crossing/temporal candidates commit together; a rejected lane is quarantined for explicit retry/cancel while other lanes progress. [Temporal scheduler](TEMPORAL_SCHEDULER.md) owns boundaries, manifest/alignment identity, overload, incomplete EOF and synchronous cancellation limits. Standalone event/workflow APIs and legacy error semantics are preserved.

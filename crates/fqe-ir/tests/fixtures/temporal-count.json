@@ -1,0 +1,25 @@
+{
+  "format": "fqe.temporal-rules",
+  "schema_version": 1,
+  "id": "independent.temporal-window",
+  "version": "1",
+  "requirements": [
+    "temporal.windows/1"
+  ],
+  "windows": [
+    {
+      "id": "wait",
+      "arm": {
+        "instance": "fast",
+        "output": "entry"
+      },
+      "predicate": {
+        "event": "decision"
+      },
+      "span": {
+        "kind": "closed-bar-count",
+        "bars": "3"
+      }
+    }
+  ]
+}

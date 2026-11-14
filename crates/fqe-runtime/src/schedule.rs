@@ -130,6 +130,9 @@ impl MarketScheduler {
     pub fn definition(&self) -> &ScheduleDefinition {
         &self.definition
     }
+    pub fn run(&self) -> &str {
+        &self.run
+    }
     pub fn state(&self) -> &SchedulerState {
         &self.state
     }
@@ -240,6 +243,14 @@ impl MarketScheduler {
         self.state.accepted_events = accepted;
         self.state.queued_events = self.queue.len();
         Ok(())
+    }
+    /// Earliest eligible market timestamp for a host that merges a later timer phase.
+    pub fn next_timestamp_ns(&self) -> Option<u64> {
+        let watermark = self.watermark_ns()?;
+        self.queue
+            .first_key_value()
+            .map(|(_, p)| p.timestamp_ns)
+            .filter(|t| *t <= watermark)
     }
     /// A failing consumer leaves the queued record, publication sequence and alignment unchanged.
     /// Consumer-owned effects must themselves be transactional; the scheduler cannot undo them.

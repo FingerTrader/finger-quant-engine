@@ -1,0 +1,24 @@
+{
+  "format": "fqe.temporal-rules",
+  "schema_version": 1,
+  "id": "independent.temporal-window",
+  "version": "1",
+  "requirements": [
+    "temporal.windows/1"
+  ],
+  "windows": [
+    {
+      "id": "wait",
+      "arm": {
+        "event": "crossing"
+      },
+      "predicate": {
+        "event": "crossing"
+      },
+      "span": {
+        "kind": "event-time",
+        "duration_ns": "18446744073709551615"
+      }
+    }
+  ]
+}

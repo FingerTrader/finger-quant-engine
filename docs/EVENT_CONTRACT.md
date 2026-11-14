@@ -58,3 +58,7 @@ Status: implemented experimentally by P1-08 in `fqe-core::bars` and the separate
 - A run manifest records the interval convention, timeframe, source identity, price/volume scales and warm-up boundary. Warm-up advances indicators but cannot emit trade intents or count toward financial performance. P1 indicator observations retain readiness and source-event provenance.
 
 P1-08 tests interval boundaries, timestamp mismatch, wrong units/OHLC, duplicate/gapped/unclosed bars, history rollback and source linkage. P2-02 implements a separate [fixed-UTC scheduler profile](MARKET_SCHEDULER.md), explicit bar gap policy/late rejection, deterministic multi-domain as-of alignment and inclusive watermarks. Exchange calendars remain unsupported; P3-01 adds persisted historical datasets. Desk adapters must explicitly convert their timestamp/decimal formats and reject unrepresentable values; [Desk integration](DESK_INTEGRATION_PLAN.md) owns that cross-project acceptance.
+
+## Temporal expiry observations
+
+P2-03 [temporal scheduling](TEMPORAL_SCHEDULER.md) implements a separate host WindowNotice, not a new InputEvent/protobuf transport variant: it identifies the window, opening logical source/time, inclusive expiry time, satisfied latch and closed-bar/watermark cause within a lane manifest. It does not impersonate a market bar, advance a financial account or count missing intervals. Count windows use admitted subscribed closed bars; event-time expiry follows watermark-complete market phases. Full G-006 decision/restore acceptance remains P2-06.

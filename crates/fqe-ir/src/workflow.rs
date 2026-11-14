@@ -316,7 +316,7 @@ fn key_checked(v: Value, p: &str) -> Result<EntryKey> {
     identifier(&k.version, p)?;
     Ok(k)
 }
-fn source(v: Value, p: &str) -> Result<Source> {
+pub(crate) fn source(v: Value, p: &str) -> Result<Source> {
     let mut o = Obj::new(v, p)?;
     let s = if let Some(v) = o.optional("event") {
         Source::Event(name(v, p)?)
@@ -329,7 +329,7 @@ fn source(v: Value, p: &str) -> Result<Source> {
     o.end()?;
     Ok(s)
 }
-fn source_json(s: &Source) -> Value {
+pub(crate) fn source_json(s: &Source) -> Value {
     match s {
         Source::Event(n) => json!({"event":n}),
         Source::Instance { instance, output } => json!({"instance":instance,"output":output}),

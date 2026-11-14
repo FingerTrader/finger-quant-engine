@@ -379,3 +379,73 @@ fn lifecycle_releases_owned_providers_validates_before_factories_and_restarts_fr
     }
     assert_eq!(m.creates.load(Ordering::Relaxed), 6);
 }
+#[test]
+fn temporal_failure_discards_candidate_provider_crossing_and_rule_state_together() {
+    use fqe_ir::{schedule::ScheduleDefinition, temporal::LoadedTemporalRules};
+    use fqe_runtime::{
+        instances::{DispatchOutcome, InstanceLimits, InstanceScheduler},
+        schedule::MarketScheduler,
+    };
+    let (plan, metrics) = memory_plan();
+    let rules = Arc::new(
+        LoadedTemporalRules::from_bytes(include_bytes!(
+            "../../fqe-ir/tests/fixtures/temporal-memory-overflow.json"
+        ))
+        .unwrap()
+        .bind(&plan)
+        .unwrap(),
+    );
+    let market = MarketScheduler::new(
+        Arc::new(
+            ScheduleDefinition::from_bytes(include_bytes!(
+                "../../fqe-ir/tests/fixtures/schedule-temporal-ticks.json"
+            ))
+            .unwrap(),
+        ),
+        "host",
+    )
+    .unwrap();
+    let mut host = InstanceScheduler::new(
+        market,
+        InstanceLimits {
+            instances: 1,
+            pending_total: 4,
+            pending_per_instance: 4,
+        },
+    )
+    .unwrap();
+    host.attach(
+        "memory",
+        "demo.ticks",
+        plan,
+        "temporal.rollback",
+        Some(rules),
+    )
+    .unwrap();
+    host.ingest("demo.ticks", tick(1, 11)).unwrap();
+    host.ingest("demo.ticks", tick(2, 12)).unwrap();
+    host.seal("demo.ticks").unwrap();
+    let mut rejected = false;
+    for _ in 0..10 {
+        match host.drive_one().unwrap() {
+            Some(DispatchOutcome::Rejected { error, .. }) => {
+                assert_eq!(error.code, "temporal_overflow");
+                rejected = true;
+            }
+            None => break,
+            _ => {}
+        }
+    }
+    assert!(rejected);
+    assert_eq!(count(host.runtime("memory").unwrap(), "fast", "count"), 1);
+    assert_eq!(metrics.live.load(Ordering::Relaxed), 1);
+    host.retry("memory").unwrap();
+    assert!(
+        matches!(host.drive_one().unwrap(),Some(DispatchOutcome::Rejected{error,..}) if error.code=="temporal_overflow"),
+        "retry must still cross from provider value1 to2; no candidate history leaked"
+    );
+    assert_eq!(metrics.steps.load(Ordering::Relaxed), 3);
+    assert_eq!(metrics.live.load(Ordering::Relaxed), 1);
+    host.cancel("memory").unwrap();
+    assert_eq!(metrics.live.load(Ordering::Relaxed), 0);
+}
