@@ -6,9 +6,11 @@ Updated 2026-11-14 (Asia/Tokyo); derived from [Project status](PROJECT_STATUS.md
 
 Read PROJECT_STATUS, DELIVERY_PLAN, ARCHITECTURE_DECISIONS, README, [Workflow](WORKFLOW.md), [authority](DOCUMENT_AUTHORITY.md), then current contracts. Verify Git status/main/upstream/history and real evidence; code/tests/Git override stale records. Main only, preserve unrelated work/history. User authorizes downstream implementation without routine confirmation; no publishing requested. Do not inherit old remote push receipts as authorization.
 
-P1-01–P1-08 COMPLETED; P1-09 VERIFIED awaiting evidence/closure. P1 gate and P2–P6 remain incomplete. Resolve actual HEAD with `git rev-parse HEAD`, latest status record with `git log -1 --format=%H -- docs/PROJECT_STATUS.md`. Reuse the existing pinned local toolchain; no install needed.
+P1-01–P1-09 COMPLETED; P1-10 READY. P1 gate and P2–P6 remain incomplete. Resolve actual HEAD with `git rev-parse HEAD`, latest status record with `git log -1 --format=%H -- docs/PROJECT_STATUS.md`. Reuse the existing pinned local toolchain; no install needed.
 
 ## Latest delivered behavior and checks
+
+P1-09 implementation evidence **9dbac2b14e85298c18131646219a178a4ef8ddea**; COMPLETED with synchronized status/plan/handoff closure. Local only; no push requested/performed.
 
 P1-09 [CLI execution](CLI_EXECUTION.md)/ADR-020: validate compiles loaded event plans/typed parameters without evaluating data; run reads a bounded fqe.market-data/1 file and delegates to the shared EventRuntime/report adapter. Strict fqe.validation-result/fqe.run-result/fqe.diagnostic schema1 JSON, full-width string integers, raw model/parameter/data SHA-256 provenance, explicit reference catalog and deterministic results. CLI code owns options/local regular-file IO/exits, not financial decisions. Whole batch result is buffered up to4MiB and withheld on any validation/execution/encoding failure. The underlying streaming retry API and legacy demo behavior remain unchanged.
 
@@ -18,7 +20,7 @@ No dependencies/manifests/lockfile/toolchain changes, no scanners/new public adv
 
 ## Next implementation: P1-10 — Minimal External Invocation
 
-First finish P1-09 evidence and status/plan/handoff closure; only then mark P1-10 READY/IN_PROGRESS. Read [CLI exchange](CLI_EXECUTION.md), [compiled events](EVENT_EXECUTION.md), [compiler](GRAPH_COMPILER.md), [events](EVENT_CONTRACT.md), plan acceptance, [ADRs](ARCHITECTURE_DECISIONS.md) and actual CLI/report sources.
+P1-09 is closed. Mark P1-10 IN_PROGRESS before implementation. Read [CLI exchange](CLI_EXECUTION.md), [compiled events](EVENT_EXECUTION.md), [compiler](GRAPH_COMPILER.md), [events](EVENT_CONTRACT.md), plan acceptance, [ADRs](ARCHITECTURE_DECISIONS.md) and actual CLI/report sources.
 
 - Deliver a separately runnable independent caller fixture that supplies model/parameter/data through the CLI process boundary and parses the versioned result. Existing P1-09 tests already spawn the executable; re-labeling them alone does not complete P1-10. A Python-stdlib reference caller is a possible implementation, with no third-party packages or runtime dependency for the Rust engine itself.
 - Define/document exact caller request/config and result/diagnostic validation, full-width integer handling, model/run/source identities and success criteria. Require exit0 plus a complete supported result, reject malformed/unknown-version/truncated/unexpected output and never interpret a partial prefix as successful execution. Do not add another financial evaluator.
@@ -60,3 +62,5 @@ git diff --check
 ```
 
 Record last actual partial state/check failures before interruption. Evidence commit first, then three-document closure with its SHA; no self-hash. Publishing only when authorized, normal push and confirmed remote SHA, never force-push. Last remote main read-confirmed `0ac5d7b163e77bddb5f69689a1455e3560aad872`; verify live before publishing.
+
+Local main is twenty commits ahead of last read-confirmed remote after this closure. Verify live Git state/count and any newer dirty work before proceeding.
