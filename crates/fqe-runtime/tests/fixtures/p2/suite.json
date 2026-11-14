@@ -1,0 +1,43 @@
+{
+  "format": "fqe.p2-golden-suite",
+  "schema_version": 1,
+  "cases": [
+    "early",
+    "expiry",
+    "late",
+    "arming-only",
+    "never",
+    "recross"
+  ],
+  "expected_rows": 55,
+  "minimum_rust_tests": 244,
+  "novel_names": [
+    "acceptance.latched_wait",
+    "acceptance.wait_cells"
+  ],
+  "source_ids": {
+    "crates/fqe-runtime/examples/temporal_strategy.rs": "sha256:81501e1bb4893be65e2ac51e3dbc530e51596f89a8beecd75d33df6f5e7cc72a",
+    "crates/fqe-runtime/tests/fixtures/p2/g006-arming-only-data.json": "sha256:1d62340523a4f946731651ecb1fe220b357d243a9d1db89511f6a78c9277fd15",
+    "crates/fqe-runtime/tests/fixtures/p2/g006-arming-only-schedule.json": "sha256:968f45e0d9b340468646eafc4474abfa27218f614750f8e6956cd0279c987a67",
+    "crates/fqe-runtime/tests/fixtures/p2/g006-cases.json": "sha256:a72b0837d400e640937897076ca85f1a93a091c55425bf349dca8448a3ef6fba",
+    "crates/fqe-runtime/tests/fixtures/p2/g006-early-data.json": "sha256:8d57c3d540a784f073ac2dc55ea4d941ae432a0feea035b034ece310092f7cd0",
+    "crates/fqe-runtime/tests/fixtures/p2/g006-early-schedule.json": "sha256:9f65218a3a08b49da7a6b5dbcd742b34cd1566cfd510b70fdd6dc1b3211554bf",
+    "crates/fqe-runtime/tests/fixtures/p2/g006-expiry-data.json": "sha256:7006cf24b178b60782e178151977f005741e1c4994e1699a755bb03c95797425",
+    "crates/fqe-runtime/tests/fixtures/p2/g006-expiry-schedule.json": "sha256:ed7790a9e561c562d980c6746c99dcb9ca1093349e002f83bec4fb2279e5c9a6",
+    "crates/fqe-runtime/tests/fixtures/p2/g006-late-data.json": "sha256:b6029d3690686d6df8225f5130fa2578c860766f919f2b94a04f93d4c95e4b01",
+    "crates/fqe-runtime/tests/fixtures/p2/g006-late-schedule.json": "sha256:ea0f7b5015a4317727cffe74c1907a0b025869833c696389dbf80de00251879c",
+    "crates/fqe-runtime/tests/fixtures/p2/g006-never-data.json": "sha256:7006cf24b178b60782e178151977f005741e1c4994e1699a755bb03c95797425",
+    "crates/fqe-runtime/tests/fixtures/p2/g006-never-schedule.json": "sha256:ed7790a9e561c562d980c6746c99dcb9ca1093349e002f83bec4fb2279e5c9a6",
+    "crates/fqe-runtime/tests/fixtures/p2/g006-recross-data.json": "sha256:a162c8761058f8a48bffc18f6c8f758097400a60200b3100f7b556da636f70d7",
+    "crates/fqe-runtime/tests/fixtures/p2/g006-recross-schedule.json": "sha256:9f2555b31931da8cc8386d6b8d9ff017cc8a38dcad10981f32304e3577f9c41e",
+    "crates/fqe-runtime/tests/fixtures/p2/g006-temporal.json": "sha256:2305c892007bb824b2f80d7e87af4261baf58b438e9a9ae05225c3d3f91d67b1",
+    "crates/fqe-runtime/tests/fixtures/p2/g006-workflow.json": "sha256:957586f42b28a9efab8f9f8e811d085bbccc7211e95ebb857c46e328fb09f6aa",
+    "crates/fqe-runtime/tests/fixtures/p2/g006.expected.tsv": "sha256:fedf52d15882da02b3dc722293d5146839e74d1ded19659e5c32252c9a5c320a",
+    "crates/fqe-runtime/tests/fixtures/p2/x002-shared-memory-workflow.json": "sha256:ce2dceba572d7ba9930c2728bef13dac190f16eae512756c6bebf8ff76cd7fb2",
+    "crates/fqe-runtime/tests/p2_gate.rs": "sha256:694a1f9e4502c61b05dac2b3ec79e1750692e25077c1b13287fb8b059f91853a",
+    "crates/fqe-runtime/tests/workflow_execution.rs": "sha256:93c06cc628c1df13bdd6783196eba62a91fd62d37655d5eb6f30881e835c6387",
+    "scripts/check_p2_gate.py": "sha256:143437931e6f678a49a10f6913bfd88cad725184c26b9631d9d1d21bbad9cb57",
+    "tests/p2_gate/test_runner.py": "sha256:d2b25ecf51be07d4661df9ac2857a5155a6290244a181f8005292500cf7f1fee",
+    "tests/reference/p2_temporal_oracle.py": "sha256:e9bf2aca5d262cce188972f8251b11095c0de70d2be70905bd01e1390ea85ee5"
+  }
+}

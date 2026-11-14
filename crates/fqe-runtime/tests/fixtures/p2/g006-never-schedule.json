@@ -1,0 +1,25 @@
+{
+  "format": "fqe.schedule",
+  "schema_version": 1,
+  "id": "g006.schedule",
+  "version": "1",
+  "requirements": [
+    "market.schedule/1"
+  ],
+  "calendar": "utc-epoch-fixed/1",
+  "queue_capacity": "32",
+  "streams": [
+    {
+      "id": "demo.bars",
+      "dataset_id": "sha256:7006cf24b178b60782e178151977f005741e1c4994e1699a755bb03c95797425",
+      "domain": {
+        "kind": "closed_bar",
+        "instrument": "DEMO",
+        "timeframe_ns": "1000",
+        "price_scale": 12,
+        "volume_scale": 0
+      },
+      "gap_policy": "reject"
+    }
+  ]
+}

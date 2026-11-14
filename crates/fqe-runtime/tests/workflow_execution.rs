@@ -273,6 +273,9 @@ fn memory_plan() -> (Arc<CompiledWorkflow>, Arc<Metrics>) {
     memory_plan_with_permit(false)
 }
 fn memory_plan_with_permit(replay: bool) -> (Arc<CompiledWorkflow>, Arc<Metrics>) {
+    memory_plan_source(replay, MEMORY)
+}
+fn memory_plan_source(replay: bool, source: &str) -> (Arc<CompiledWorkflow>, Arc<Metrics>) {
     let metrics = Arc::new(Metrics::default());
     let mut b = RegistryBuilder::new();
     let mut d = DescriptorDraft::pure(
@@ -304,7 +307,7 @@ fn memory_plan_with_permit(replay: bool) -> (Arc<CompiledWorkflow>, Arc<Metrics>
         .unwrap();
     }
     let registry = b.freeze().unwrap();
-    let loaded = LoadedWorkflow::from_bytes(MEMORY.as_bytes()).unwrap();
+    let loaded = LoadedWorkflow::from_bytes(source.as_bytes()).unwrap();
     let p = Arc::new(loaded.compile(&registry, vec![]).unwrap());
     assert_eq!(metrics.creates.load(Ordering::Relaxed), 0);
     (p, metrics)
@@ -539,5 +542,95 @@ fn checkpoint_requires_explicit_provider_capability_before_factory_and_restores_
     assert_eq!(metrics.live.load(Ordering::Relaxed), 2);
     drop(original);
     drop(restored);
+    assert_eq!(metrics.live.load(Ordering::Relaxed), 0);
+}
+
+#[test]
+fn p2_x002_custom_provider_and_parameterized_rule_instances_restore_every_command_without_shared_state()
+ {
+    use fqe_ir::{
+        checkpoint::SnapshotCommand, exchange::MarketRecord, schedule::ScheduleDefinition,
+    };
+    use fqe_runtime::{
+        checkpoint::{CheckpointRuntime, CheckpointSeed, CommandValue, LaneSeed},
+        instances::InstanceLimits,
+    };
+    let (workflow, metrics) = memory_plan_source(
+        true,
+        include_str!("fixtures/p2/x002-shared-memory-workflow.json"),
+    );
+    let seed = Arc::new(CheckpointSeed {
+        schedule: Arc::new(
+            ScheduleDefinition::from_bytes(include_bytes!(
+                "../../fqe-ir/tests/fixtures/schedule-temporal-ticks.json"
+            ))
+            .unwrap(),
+        ),
+        host_run: "x002-gate".into(),
+        limits: InstanceLimits {
+            instances: 2,
+            pending_total: 16,
+            pending_per_instance: 8,
+        },
+        lanes: (0..2)
+            .map(|i| LaneSeed {
+                id: format!("i{i}"),
+                stream: "demo.ticks".into(),
+                run: format!("x002.{i}"),
+                workflow: Arc::clone(&workflow),
+                temporal: None,
+            })
+            .collect(),
+    });
+    let mut original = CheckpointRuntime::new(Arc::clone(&seed)).unwrap();
+    let mut commands = vec![];
+    let mut expected = vec![];
+    for (seq, n) in [(1, 11), (2, 12), (3, 14)] {
+        let InputEvent::Tick(event) = tick(seq, n) else {
+            panic!()
+        };
+        let c = SnapshotCommand::Ingest {
+            stream: "demo.ticks".into(),
+            record: MarketRecord::Tick(event),
+        };
+        expected.push(original.execute(c.clone()).unwrap());
+        commands.push(c);
+    }
+    let c = SnapshotCommand::Seal {
+        stream: "demo.ticks".into(),
+    };
+    expected.push(original.execute(c.clone()).unwrap());
+    commands.push(c);
+    loop {
+        let r = original.execute(SnapshotCommand::Drive).unwrap();
+        let done = matches!(r.result, Ok(CommandValue::NoWork));
+        assert!(r.result.is_ok());
+        expected.push(r);
+        commands.push(SnapshotCommand::Drive);
+        if done {
+            break;
+        }
+    }
+    for id in ["i0", "i1"] {
+        assert_eq!(count(original.workflow(id).unwrap(), "fast", "count"), 3);
+        assert_eq!(count(original.workflow(id).unwrap(), "slow", "count"), 6);
+    }
+    let final_bytes = original.checkpoint().unwrap();
+    for split in 0..=commands.len() {
+        let mut prefix = CheckpointRuntime::new(Arc::clone(&seed)).unwrap();
+        for c in &commands[..split] {
+            prefix.execute(c.clone()).unwrap();
+        }
+        let mut resumed =
+            CheckpointRuntime::restore(Arc::clone(&seed), &prefix.checkpoint().unwrap()).unwrap();
+        drop(prefix);
+        for (c, r) in commands[split..].iter().zip(&expected[split..]) {
+            assert_eq!(&resumed.execute(c.clone()).unwrap(), r);
+        }
+        assert_eq!(resumed.checkpoint().unwrap(), final_bytes);
+        drop(resumed);
+        assert_eq!(metrics.live.load(Ordering::Relaxed), 2);
+    }
+    drop(original);
     assert_eq!(metrics.live.load(Ordering::Relaxed), 0);
 }

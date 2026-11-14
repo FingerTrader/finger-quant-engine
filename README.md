@@ -31,11 +31,14 @@ This repository contains the initial engineering foundation, version `0.1.0`. It
 | Offline CLI demo and loaded model validate/run with structured exact results | Implemented, experimental P1-09; [CLI contract](docs/CLI_EXECUTION.md) |
 | Independent local subprocess caller with exact result validation and bounded cleanup | Implemented, experimental P1-10 POSIX/Python-stdlib reference; [contract](docs/EXTERNAL_INVOCATION.md) |
 | Versioned P1 financial/unknown-name extension goldens and unified offline gate | Implemented, experimental P1-11 suite; [acceptance/evidence](docs/P1_ACCEPTANCE.md), task closure in PROJECT_STATUS |
+| Stateful typed rule modules, State/Delay, multi-market alignment and temporal instance scheduling | Implemented experimental P2 library profiles; [workflow](docs/WORKFLOW_EXECUTION.md), [scheduler](docs/TEMPORAL_SCHEDULER.md) |
+| Complete bounded checkpoint reconstruction, atomic local files and observational replay/trace | Implemented experimental P2 profiles with explicit capability/history limits; [checkpoint](docs/CHECKPOINT_RESTORE.md), [trace](docs/REPLAY_TRACE.md) |
+| Actual MACD-cross/wait3/RSI temporal signals and unified P2 gate | Implemented suite; [P2 acceptance](docs/P2_ACCEPTANCE.md); phase closure in PROJECT_STATUS |
 | Protocol version-number negotiation helper | Implemented, experimental |
 | Protocol Buffers schema | Experimental draft; no codec, generated bindings, or transport |
 | Local backtesting, accounting, execution simulation, optimization | Planned |
 | Python / Java / Go workers and source-language compilers | Planned |
-| Plugins, Desktop IPC, persistence, Trading SDK adapter | Planned |
+| Plugins, Desktop IPC, financial/history storage, Trading SDK adapter | Planned |
 
 **Implemented** means executable code is present and tested. **Experimental** means the API or schema can change and has no compatibility guarantee. **Planned** means design intent only. These labels can overlap: an experimental component may have implemented code.
 
@@ -121,6 +124,7 @@ Commit `Cargo.lock` alongside dependency changes. The lockfile contains five wor
 - [Temporal windows and instance scheduling](docs/TEMPORAL_SCHEDULER.md)
 - [Bounded checkpoint and restore](docs/CHECKPOINT_RESTORE.md)
 - [Replay and bounded debug trace](docs/REPLAY_TRACE.md) — deterministic local replay and observational source/event diagnostics.
+- [P2 temporal strategy acceptance](docs/P2_ACCEPTANCE.md) — actual MACD/wait3/RSI, independent boundary fixtures and full recovery gate.
 - [Runtime](docs/RUNTIME.md)
 - [Local CLI execution](docs/CLI_EXECUTION.md)
 - [Independent external invocation](docs/EXTERNAL_INVOCATION.md)

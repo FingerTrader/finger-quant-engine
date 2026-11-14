@@ -1,0 +1,681 @@
+{
+  "format": "fqe.market-data",
+  "schema_version": 1,
+  "events": [
+    {
+      "kind": "closed_bar",
+      "sequence": "1",
+      "timestamp_ns": "1000",
+      "instrument": "DEMO",
+      "timeframe_ns": "1000",
+      "open_ns": "0",
+      "close_ns": "1000",
+      "closed": true,
+      "open": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "1000000000000"
+      },
+      "high": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "1000000000000"
+      },
+      "low": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "1000000000000"
+      },
+      "close": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "1000000000000"
+      },
+      "volume": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 0,
+          "unit": {
+            "kind": "quantity",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "0"
+      }
+    },
+    {
+      "kind": "closed_bar",
+      "sequence": "2",
+      "timestamp_ns": "2000",
+      "instrument": "DEMO",
+      "timeframe_ns": "1000",
+      "open_ns": "1000",
+      "close_ns": "2000",
+      "closed": true,
+      "open": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "2000000000000"
+      },
+      "high": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "2000000000000"
+      },
+      "low": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "2000000000000"
+      },
+      "close": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "2000000000000"
+      },
+      "volume": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 0,
+          "unit": {
+            "kind": "quantity",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "0"
+      }
+    },
+    {
+      "kind": "closed_bar",
+      "sequence": "3",
+      "timestamp_ns": "3000",
+      "instrument": "DEMO",
+      "timeframe_ns": "1000",
+      "open_ns": "2000",
+      "close_ns": "3000",
+      "closed": true,
+      "open": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "3000000000000"
+      },
+      "high": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "3000000000000"
+      },
+      "low": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "3000000000000"
+      },
+      "close": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "3000000000000"
+      },
+      "volume": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 0,
+          "unit": {
+            "kind": "quantity",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "0"
+      }
+    },
+    {
+      "kind": "closed_bar",
+      "sequence": "4",
+      "timestamp_ns": "4000",
+      "instrument": "DEMO",
+      "timeframe_ns": "1000",
+      "open_ns": "3000",
+      "close_ns": "4000",
+      "closed": true,
+      "open": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "2000000000000"
+      },
+      "high": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "2000000000000"
+      },
+      "low": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "2000000000000"
+      },
+      "close": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "2000000000000"
+      },
+      "volume": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 0,
+          "unit": {
+            "kind": "quantity",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "0"
+      }
+    },
+    {
+      "kind": "closed_bar",
+      "sequence": "5",
+      "timestamp_ns": "5000",
+      "instrument": "DEMO",
+      "timeframe_ns": "1000",
+      "open_ns": "4000",
+      "close_ns": "5000",
+      "closed": true,
+      "open": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "4000000000000"
+      },
+      "high": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "4000000000000"
+      },
+      "low": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "4000000000000"
+      },
+      "close": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "4000000000000"
+      },
+      "volume": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 0,
+          "unit": {
+            "kind": "quantity",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "0"
+      }
+    },
+    {
+      "kind": "closed_bar",
+      "sequence": "6",
+      "timestamp_ns": "6000",
+      "instrument": "DEMO",
+      "timeframe_ns": "1000",
+      "open_ns": "5000",
+      "close_ns": "6000",
+      "closed": true,
+      "open": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "3000000000000"
+      },
+      "high": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "3000000000000"
+      },
+      "low": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "3000000000000"
+      },
+      "close": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "3000000000000"
+      },
+      "volume": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 0,
+          "unit": {
+            "kind": "quantity",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "0"
+      }
+    },
+    {
+      "kind": "closed_bar",
+      "sequence": "7",
+      "timestamp_ns": "7000",
+      "instrument": "DEMO",
+      "timeframe_ns": "1000",
+      "open_ns": "6000",
+      "close_ns": "7000",
+      "closed": true,
+      "open": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "2000000000000"
+      },
+      "high": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "2000000000000"
+      },
+      "low": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "2000000000000"
+      },
+      "close": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "2000000000000"
+      },
+      "volume": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 0,
+          "unit": {
+            "kind": "quantity",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "0"
+      }
+    },
+    {
+      "kind": "closed_bar",
+      "sequence": "8",
+      "timestamp_ns": "8000",
+      "instrument": "DEMO",
+      "timeframe_ns": "1000",
+      "open_ns": "7000",
+      "close_ns": "8000",
+      "closed": true,
+      "open": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "1000000000000"
+      },
+      "high": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "1000000000000"
+      },
+      "low": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "1000000000000"
+      },
+      "close": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "1000000000000"
+      },
+      "volume": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 0,
+          "unit": {
+            "kind": "quantity",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "0"
+      }
+    },
+    {
+      "kind": "closed_bar",
+      "sequence": "9",
+      "timestamp_ns": "9000",
+      "instrument": "DEMO",
+      "timeframe_ns": "1000",
+      "open_ns": "8000",
+      "close_ns": "9000",
+      "closed": true,
+      "open": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "10000000000000"
+      },
+      "high": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "10000000000000"
+      },
+      "low": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "10000000000000"
+      },
+      "close": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 12,
+          "unit": {
+            "kind": "price",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "10000000000000"
+      },
+      "volume": {
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "decimal",
+          "scale": 0,
+          "unit": {
+            "kind": "quantity",
+            "instrument": "DEMO"
+          }
+        },
+        "value": "0"
+      }
+    }
+  ]
+}

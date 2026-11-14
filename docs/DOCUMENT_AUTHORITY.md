@@ -13,7 +13,7 @@ Normative precedence, within scope:
 5. [Workflow](WORKFLOW.md): execution, verification, commit and handoff procedure, including the shared task-status vocabulary.
 6. README, [Architecture](ARCHITECTURE.md), [Roadmap](ROADMAP.md), [Development](DEVELOPMENT.md) and topic guides: navigation and scoped explanations. They must link to canonical definitions rather than introduce competing requirements.
 
-[Project status](PROJECT_STATUS.md) is the **only authoritative progress ledger**. Delivery-plan status cells are synchronized projections of it. [Next session](NEXT_SESSION.md) is an operational handoff derived from that ledger, not a second backlog. [Baseline audit](BASELINE_AUDIT.md) is dated evidence, not permanently current progress. Git is the source for exact commit identities and remote reachability.
+[Project status](PROJECT_STATUS.md) is the **only authoritative progress ledger**. Delivery-plan status cells are synchronized projections of it. [Next session](NEXT_SESSION.md) is an operational handoff derived from that ledger, not a second backlog. [P2 acceptance](P2_ACCEPTANCE.md) owns the executed temporal gate evidence mapping. [Baseline audit](BASELINE_AUDIT.md) is dated evidence, not permanently current progress. Git is the source for exact commit identities and remote reachability.
 
 Repository [agent instructions](../AGENTS.md) make the workflow discoverable to new sessions. They summarize operational rules without duplicating technical specifications. Direct authorized user instructions take precedence over repository workflow; record scoped departures and resulting evidence.
 

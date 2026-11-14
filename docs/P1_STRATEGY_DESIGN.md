@@ -105,7 +105,7 @@ Diagnostics require stable code, artifact/version, node/port/parameter path, exp
 
 ## Example strategies and golden fixtures
 
-These normative semantic fixture specifications are mapped to actual versioned artifacts/data/expected outputs and independent calculation notes in [P1 acceptance](P1_ACCEPTANCE.md). G-001–G-005/G-007 and X-001 have executable P1 coverage; G-006 remains assigned to P2-06. The [suite inventory](../crates/fqe-runtime/tests/fixtures/p1/suite.json) indexes the tracked evidence, while [Project status](PROJECT_STATUS.md) alone establishes verification/closure. A fixture specification or importer alone does not prove execution.
+These normative semantic fixture specifications are mapped to actual versioned artifacts/data/expected outputs and independent calculation notes in [P1 acceptance](P1_ACCEPTANCE.md). G-001–G-005/G-007 and X-001 have executable P1 coverage; G-006 is executed by the [P2 acceptance suite](P2_ACCEPTANCE.md); verification/closure remains owned by P2-06. The [suite inventory](../crates/fqe-runtime/tests/fixtures/p1/suite.json) indexes the tracked evidence, while [Project status](PROJECT_STATUS.md) alone establishes verification/closure. A fixture specification or importer alone does not prove execution.
 
 | Fixture ID | Model / data | Expected result | Gate |
 | --- | --- | --- | --- |

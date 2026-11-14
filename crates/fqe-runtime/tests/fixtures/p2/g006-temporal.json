@@ -1,0 +1,24 @@
+{
+  "format": "fqe.temporal-rules",
+  "schema_version": 1,
+  "id": "g006.window",
+  "version": "1",
+  "requirements": [
+    "temporal.windows/1"
+  ],
+  "windows": [
+    {
+      "id": "wait",
+      "arm": {
+        "event": "cross"
+      },
+      "predicate": {
+        "event": "rsi_ok"
+      },
+      "span": {
+        "kind": "closed-bar-count",
+        "bars": "3"
+      }
+    }
+  ]
+}

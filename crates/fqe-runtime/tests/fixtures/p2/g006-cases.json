@@ -1,0 +1,129 @@
+[
+  {
+    "name": "early",
+    "threshold": 90,
+    "closes": [
+      1,
+      2,
+      3,
+      2,
+      4,
+      6,
+      3,
+      2
+    ],
+    "signals": [
+      8
+    ],
+    "crosses": [
+      5
+    ]
+  },
+  {
+    "name": "expiry",
+    "threshold": 90,
+    "closes": [
+      1,
+      2,
+      3,
+      2,
+      4,
+      3,
+      4,
+      10
+    ],
+    "signals": [
+      8
+    ],
+    "crosses": [
+      5,
+      8
+    ]
+  },
+  {
+    "name": "late",
+    "threshold": 90,
+    "closes": [
+      1,
+      2,
+      3,
+      2,
+      4,
+      3,
+      2,
+      1,
+      10
+    ],
+    "signals": [],
+    "crosses": [
+      5,
+      9
+    ]
+  },
+  {
+    "name": "arming-only",
+    "threshold": 80,
+    "closes": [
+      1,
+      2,
+      3,
+      2,
+      4,
+      3,
+      2,
+      1
+    ],
+    "signals": [],
+    "crosses": [
+      5
+    ]
+  },
+  {
+    "name": "never",
+    "threshold": 100,
+    "closes": [
+      1,
+      2,
+      3,
+      2,
+      4,
+      3,
+      4,
+      10
+    ],
+    "signals": [],
+    "crosses": [
+      5,
+      8
+    ]
+  },
+  {
+    "name": "recross",
+    "threshold": 80,
+    "closes": [
+      1,
+      2,
+      3,
+      2,
+      4,
+      2,
+      1,
+      6,
+      6,
+      1,
+      10,
+      1,
+      1,
+      1
+    ],
+    "signals": [
+      8
+    ],
+    "crosses": [
+      5,
+      8,
+      11,
+      14
+    ]
+  }
+]
