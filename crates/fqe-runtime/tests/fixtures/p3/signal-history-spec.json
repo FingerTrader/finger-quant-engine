@@ -1,0 +1,40 @@
+{
+  "format": "fqe.history-spec",
+  "schema_version": 1,
+  "profile": "fqe.cash-long-history/1",
+  "instrument": {
+    "id": "DEMO",
+    "currency": "USD",
+    "price_scale": 2,
+    "quantity_scale": 3,
+    "money_scale": 2,
+    "price_step": "0.01",
+    "quantity_step": "0.001",
+    "money_step": "0.01",
+    "minimum_quantity": "0.001",
+    "minimum_notional": "0.00",
+    "price_policy": "nonnegative"
+  },
+  "timeframe": {
+    "id": "1m",
+    "duration_ns": "60000000000"
+  },
+  "calendar": {
+    "id": "utc-explicit-sessions/1",
+    "sessions": [
+      {
+        "open": "2024-01-02T00:00:00Z",
+        "close": "2024-01-02T00:06:00Z"
+      }
+    ]
+  },
+  "acquired_at": "2024-01-02T00:07:00Z",
+  "performance_start": "2024-01-02T00:00:00Z",
+  "adjustment": "raw-no-actions",
+  "volume_unit": "base_quantity",
+  "source": {
+    "label": "public.synthetic.explicit-order-policy.v1",
+    "revision": "1",
+    "parent": null
+  }
+}

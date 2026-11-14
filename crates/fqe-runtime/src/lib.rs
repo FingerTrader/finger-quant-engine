@@ -1,4 +1,4 @@
-//! Single-threaded, in-memory event execution. No broker, filesystem, or worker transport.
+//! Single-threaded in-memory event execution and explicitly scoped local financial profiles.
 
 pub mod events;
 pub mod report;
@@ -180,3 +180,6 @@ pub mod history;
 
 /// Authoritative bounded local accounting journal and derived views.
 pub mod ledger;
+
+/// Deterministic local simulated orders and fills; no live routing.
+pub mod simulator;

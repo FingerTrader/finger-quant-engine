@@ -38,7 +38,8 @@ This repository contains the initial engineering foundation, version `0.1.0`. It
 | Protocol Buffers schema | Experimental draft; no codec, generated bindings, or transport |
 | Exact financial units, bounded immutable historical CSV and pinned run inputs | Implemented experimental P3-01 library; [contract](docs/FINANCIAL_HISTORY.md); closure in PROJECT_STATUS |
 | Local virtual account, balanced journal, reservation/valuation and recompute replay | Implemented experimental P3-02 library; [contract](docs/LEDGER.md); closure in PROJECT_STATUS |
-| Local backtesting, execution simulation, optimization | Planned |
+| Explicit local cash-long orders, next-open/prior-volume fills, costs, lifecycle and replay | Implemented experimental P3-03 library; [contract](docs/ORDER_SIMULATION.md); closure in PROJECT_STATUS |
+| Full backtest/report/optimizer, broker margin/leverage | Planned |
 | Python / Java / Go workers and source-language compilers | Planned |
 | Plugins, Desktop IPC, persistent history storage, Trading SDK adapter | Planned |
 

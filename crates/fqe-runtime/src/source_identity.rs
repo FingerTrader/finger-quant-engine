@@ -2,6 +2,10 @@
 use fqe_ir::model::ContentId;
 const SOURCES: &[(&str, &[u8])] = &[
     (
+        "crates/fqe-runtime/src/simulator.rs",
+        include_bytes!("simulator.rs").as_slice(),
+    ),
+    (
         "crates/fqe-runtime/src/ledger.rs",
         include_bytes!("ledger.rs").as_slice(),
     ),
