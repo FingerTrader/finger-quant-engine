@@ -49,3 +49,7 @@ Before concurrent or service execution is supported, define cancellation and ter
 ## Bounded local batch reporting
 
 P1-09 adds `report::run_report` over the same EventRuntime and fqe.market-data/1 decoded records. It never retries a rejected event and returns no partial report; a bounded4MiB writer serializes observations as execution progresses, publishing bytes only after finish. The CLI uses this public library adapter. [CLI exchange](CLI_EXECUTION.md) owns document shapes, local source digest, error stages/exits and stdout-write limitations. The in-process streaming retry policy above remains unchanged.
+
+## Stateful workflows
+
+P2-01 adds `workflow::WorkflowRuntime` over the existing compiled event runtime, with fqe.workflow/1 reusable stateful scalar rules, per-instance typed cells/modes/Delay, whole-event commit and boundary stop/abort/fresh restart. Rejected events are retryable; terminal state release is in-process ownership, not asynchronous cancellation. The library and runnable workflow example use the same generic expression arithmetic and registry. [Workflow execution](WORKFLOW_EXECUTION.md) owns admission limits, phase order, signal origin, typed non-restorable state views and unsupported capabilities. The existing CLI and external process consumer continue to accept fqe.event-plan/1 only.

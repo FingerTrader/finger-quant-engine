@@ -145,6 +145,42 @@ impl EventRuntime {
     pub fn matched_events(&self) -> u64 {
         self.matched_events
     }
+    /// Internal outer-transaction boundary. No persistence or public snapshot semantics.
+    pub(crate) fn fork_step(&self, event: InputEvent) -> Result<(Self, EventObservation)> {
+        if self.state.status == RunStatus::Completed {
+            return Err(error("event_lifecycle", "cannot step a completed run"));
+        }
+        // Preserve input-validation precedence before invoking any trusted state fork.
+        let (seq, time, matched, _, _) = self.fields(event.clone())?;
+        if seq == 0 || self.state.last_sequence.is_some_and(|n| seq <= n) {
+            return Err(error("event_sequence", "sequence must strictly increase"));
+        }
+        if self.state.last_timestamp_ns.is_some_and(|n| time < n) {
+            return Err(error("event_timestamp", "timestamp moved backwards"));
+        }
+        self.state
+            .processed_events
+            .checked_add(1)
+            .ok_or_else(|| error("event_limit", "event counter overflow"))?;
+        self.matched_events
+            .checked_add(u64::from(matched))
+            .ok_or_else(|| error("event_limit", "matched counter overflow"))?;
+        let mut candidate = Self {
+            plan: Arc::clone(&self.plan),
+            manifest: self.manifest.clone(),
+            state: self.state.clone(),
+            matched_events: self.matched_events,
+            last_bar_close: self.last_bar_close,
+            instances: self
+                .instances
+                .iter()
+                .map(IncrementalInstance::try_fork)
+                .collect::<std::result::Result<_, _>>()?,
+            roots: self.roots.clone(),
+        };
+        let observation = candidate.step(event)?;
+        Ok((candidate, observation))
+    }
     pub fn finish(&mut self) -> Result<RunState> {
         if self.state.status == RunStatus::Completed {
             return Err(error("event_lifecycle", "run already completed"));

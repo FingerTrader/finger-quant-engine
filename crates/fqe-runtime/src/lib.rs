@@ -2,6 +2,7 @@
 
 pub mod events;
 pub mod report;
+pub mod workflow;
 
 use std::fmt;
 

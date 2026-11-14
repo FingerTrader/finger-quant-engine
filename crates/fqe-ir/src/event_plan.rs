@@ -116,7 +116,7 @@ fn trigger_json(t: &Trigger) -> Value {
     }
 }
 #[derive(Clone)]
-enum PortableExpr {
+pub(crate) enum PortableExpr {
     Literal(TypedValue),
     Parameter(String),
     Input(String),
@@ -155,7 +155,12 @@ fn operation(name: &str, rounding: Option<Value>, p: &str) -> Result<BinaryOp> {
         _ => Err(error("event_expression", p, "unknown binary operation")),
     }
 }
-fn expression(v: Value, p: &str, depth: usize, count: &mut usize) -> Result<PortableExpr> {
+pub(crate) fn expression(
+    v: Value,
+    p: &str,
+    depth: usize,
+    count: &mut usize,
+) -> Result<PortableExpr> {
     *count += 1;
     if depth > 32 || *count > 4096 {
         return Err(error("event_limit", p, "expression budget exceeded"));
@@ -221,7 +226,7 @@ fn op_json(op: BinaryOp) -> (&'static str, Option<&'static str>) {
         BinaryOp::Or => ("or", None),
     }
 }
-fn expr_json(e: &PortableExpr) -> Value {
+pub(crate) fn expr_json(e: &PortableExpr) -> Value {
     match e {
         PortableExpr::Literal(v) => json!({"literal":typed_json(v)}),
         PortableExpr::Parameter(n) => json!({"parameter":n}),

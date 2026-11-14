@@ -1,0 +1,7 @@
+# fqe.x002-workflow-golden/1
+sequence	fast_count	slow_count	lag	warmup	fast_mode_after	slow_mode_after	fast_entry	fast_exit	slow_entry	signals
+1	0	0	W	true	idle	idle	false	false	false	-
+2	1	2	90	false	armed	idle	true	false	false	fast.entry:long
+3	2	4	110	false	armed	idle	false	false	false	-
+4	3	6	120	false	idle	idle	false	true	false	fast.exit:flat
+5	4	8	80	false	armed	armed	true	false	true	fast.entry:long,slow.entry:long

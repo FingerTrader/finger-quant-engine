@@ -4,10 +4,10 @@
 
 ## Current position
 
-- Phase: **P1 — Universal Strategy Foundation, COMPLETED**. The P1 golden/generic-engine gate passed. **P2-01 READY**; P2–P6 remain incomplete and no later phase gate has passed.
+- Phase: **P1 — Universal Strategy Foundation, COMPLETED**. The P1 golden/generic-engine gate passed. **P2-01 VERIFIED**; P2–P6 remain incomplete and no later phase gate has passed.
 - Completed: GOV-01/GOV-02/GOV-03 and P1-01 through P1-11; local evidence and closure records synchronized.
 - Latest implementation: **P1-11 — Golden Suite & P1 Gate**, COMPLETED. Evidence `949a286df391c5bc23eebd5b2e11dfb19268d390`. Versioned independent financial/extension goldens, loaded generic function/predicate/reused rules, unified offline gate/report delivered.181 Rust +23 external tests/11 process cases/full checks/all examples PASS. Previous P1-10 evidence `5c7a7f6cdd1b0fe59bda7d740444da4f5299dcc3`.
-- Next eligible implementation: **P2-01 — Stateful Workflow & Lifecycle**, READY. Define typed strategy/extension state, workflow transitions and explicit lifecycle/State/Delay boundaries before scoped implementation. User authorizes continuing downstream work without routine confirmation; publishing is not requested.
+- Next eligible implementation: **P2-01 — Stateful Workflow & Lifecycle**, VERIFIED; evidence commit/closure pending. Typed workflow modules, atomic State/Delay and lifecycle delivered; next eligible after closure is P2-02. User authorizes continuing downstream work without routine confirmation; publishing is not requested.
 - P1-02 acceptance met: evaluated numeric policy/limits, strict type/unit/scale checks, unsupported-shape rejection, full binding matrix and tests. Evidence `a653c105fba5ea6ada15395abc22cc8f82cc4472` and local closure recorded below; publishing not requested.
 - Actual root: `/Users/george/Desktop/finger-quant-engine`; main tracking origin/main; remote `https://github.com/FingerTrader/finger-quant-engine.git`.
 - Rust source baseline / latest pre-governance commit: `342d8aa76b48d32fa9c9110609b371eac52b8d86` (foundation). Previous commit: `cbcebad`.
@@ -32,7 +32,7 @@
 | P1-09 | COMPLETED | Actual loaded validate/run, bounded exact file/results and library parity;175 tests/full checks/all examples/CLI acceptance PASS; evidence `9dbac2b14e85298c18131646219a178a4ef8ddea`, local closure |
 | P1-10 | COMPLETED | Independent caller/contract/seven requests;175 Rust +23 external tests/full checks PASS; evidence `5c7a7f6cdd1b0fe59bda7d740444da4f5299dcc3`, local closure |
 | P1-11 | COMPLETED | [P1 acceptance](P1_ACCEPTANCE.md);181 Rust +23 external tests/11 process cases/full checks PASS; evidence `949a286df391c5bc23eebd5b2e11dfb19268d390`, local closure |
-| P2-01 | READY | P1 gate closed; typed state/workflow/lifecycle/State/Delay and generic X-002 in-process state acceptance next |
+| P2-01 | VERIFIED | fqe.workflow/1, typed isolated State/Delay/rules, provider lifecycle and X-002 rollback; 195 Rust/23 external/11 process cases PASS; evidence commit/closure pending |
 | P2-02, P2-03, P2-04, P2-05, P2-06 | NOT_STARTED | Prior P2 dependencies/gate first |
 | P3-01, P3-02, P3-03, P3-04, P3-05, P3-06, P3-07 | NOT_STARTED | P2 gate first |
 | P4-01, P4-02, P4-03, P4-04, P4-05 | NOT_STARTED | P3 gate first |
@@ -41,7 +41,7 @@
 | P6-01, P6-02, P6-03, P6-04, P6-05, P6-06 | NOT_STARTED | P5 gate first |
 | P6-03.01 | NOT_STARTED | Java-indicator/Go-predicate graph after P6-02; prerequisite of parent P6-03 |
 
-Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 11 COMPLETED, 1 READY, 30 NOT_STARTED. P2-01 is first eligible; none is BLOCKED. P1 gate passed; later phase gates remain open. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
+Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 11 COMPLETED, 1 VERIFIED, 30 NOT_STARTED. P2-01 is first eligible; none is BLOCKED. P1 gate passed; later phase gates remain open. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
 
 ## Delivered baseline and limitations
 
@@ -252,3 +252,15 @@ No dependency/package/manifest/Cargo.lock/toolchain/LICENSE/production Rust chan
 Scope/limits: bounded experimental scalar in-process profiles and trusted providers, not sandboxing/authentication/production throughput; POSIX reference consumer only, no Windows/native installed acceptance. Custom X-001 registry is library-only; the stock CLI deliberately returns registry_unknown. Java/Go/Python workers, external provider loading, generalized portable state/workflow/snapshot/scheduling, accounting/backtest/simulation and installed Desk remain P2–P6. Desk/no manual customer runtime download remains the product destination. P1 completion is recorded by the evidence/closure below; no whole-project completion claim.
 
 Final staged diff/protected-path review PASS. Local implementation evidence committed as `949a286df391c5bc23eebd5b2e11dfb19268d390`. This status/plan/handoff-only closure records P1-11 COMPLETED, P1 phase gate passed and P2-01 READY. Twenty-four local commits including this closure remain unpushed. Remote main independently read-confirmed `0ac5d7b163e77bddb5f69689a1455e3560aad872`; no push requested/performed. Scope remains the experimental strategy foundation; downstream state/financial/Desk/language acceptance is incomplete.
+
+## P2-01 active implementation
+
+Owner now requests continuous downstream execution without per-task pauses. Publishing remains unrequested. Scope: new bounded fqe.workflow/1 artifact, shared typed expression compilation, parameterized stateful rule instances, committed State/one-event Delay, deterministic transitions/effects and atomic wrapper over existing EventRuntime; lifecycle stop/abort/fresh restart, typed non-restorable state inspection, X-002 isolation and rollback tests. Preserve old P1 artifacts/provider hashes and numeric evaluator. No dependency or Desk/SDK/external-runtime work. Durable complete provider/crossing snapshots remain P2-04; scheduler and timer semantics remain P2-02/P2-03. Acceptance/tests/docs/ADR and closure pending; proceed directly to next eligible task after closure unless genuinely blocked.
+
+## P2-01 verification — 2026-11-14
+
+Implemented then VERIFIED on macOS ARM64, pinned Rust1.99.0, Python3.14.6; no dependency/manifest/lockfile/toolchain changes. [Workflow contract](WORKFLOW_EXECUTION.md)/ADR-022 specify the bounded profile and [independent X-002 hand table](../crates/fqe-runtime/tests/fixtures/p2/x002.expected.tsv). New library modules, strict load/type/capability/budget tests, per-instance parameters/state/modes/Delay, atomic event wrapper and runnable workflow example delivered. Seven IR +seven workflow runtime tests add14 to181 preserved Rust tests. One-region equal-priority controls are explicit; full priority/regions/timers/snapshots are not silently accepted.
+
+`PYTHONDONTWRITEBYTECODE=1 python3 scripts/check_p1_gate.py` PASS (full checks, report status passed): fmt/check/test195/clippy strict/build, source pins/generic dispatch,23 external caller tests,11 actual process cases, docs and diff. Workflow example PASS:5 accepted events, final fast count5/slow10 and independently expected signals. IR checks include raw/canonical identities, malformed versions/fields/duplicate keys, wrong type/reference/mode/parameter, cycles, expanded-expression and64KiB initial state limits. Runtime tests prove independent old/new/Delay tables, isolated runs/instances, effects reading old state, conflict/unready/numeric rollback, inactive guards, unmatched events, late provider/crossing/rule/cursor rollback with corrected same-sequence retry, terminal provider release and fresh restart. The first clippy attempt caught style warnings; fixed and all-target strict clippy/full gate subsequently passed. No failure is being replaced by an earlier result.
+
+Scope/risks: trusted in-process providers, synchronous boundary stop, bounded scalar module composition, no hostile-code isolation or throughput promise. Cell state inspection is explicitly non-restorable and capped64KiB; checkpoint returns unsupported. Complete provider/crossing/cursor restore remains P2-04, multi-market scheduler P2-02, timers P2-03, replay trace P2-05 and full G-006/X-002 gate P2-06. No financial accounting, simulation, Desk/Flutter packaging or Java/Go worker delivery claimed. No network scanner/private upload/new package execution or installer; existing reviewed cached dependencies only. Evidence commit/three-document closure next; publishing not requested.

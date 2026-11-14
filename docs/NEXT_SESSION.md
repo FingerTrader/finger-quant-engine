@@ -4,9 +4,9 @@ Updated2026-11-14 (Asia/Tokyo); derived from [Project status](PROJECT_STATUS.md)
 
 ## Recover first
 
-Read PROJECT_STATUS, DELIVERY_PLAN, ARCHITECTURE_DECISIONS, README, [Workflow](WORKFLOW.md), [authority](DOCUMENT_AUTHORITY.md), then current contracts. Verify actual Git status/main/upstream/history/evidence; code/tests/Git override stale records. Main only, preserve unrelated work/history. User authorizes downstream implementation without routine confirmation; no publishing requested. Old push receipts are not authorization.
+Read PROJECT_STATUS, DELIVERY_PLAN, ARCHITECTURE_DECISIONS, README, [Workflow](WORKFLOW.md), [authority](DOCUMENT_AUTHORITY.md), then current contracts. Verify actual Git status/main/upstream/history/evidence; code/tests/Git override stale records. Main only, preserve unrelated work/history. User explicitly requests continuous downstream implementation without stopping for per-task confirmation; no publishing requested. Old push receipts are not authorization.
 
-P1-01–P1-11 COMPLETED; P1 phase gate passed; P2-01 READY. P2–P6 remain incomplete. Resolve HEAD with `git rev-parse HEAD` and latest status commit with `git log -1 --format=%H -- docs/PROJECT_STATUS.md`. Reuse the project-local pinned toolchain/cache; no installation needed.
+P1-01–P1-11 COMPLETED; P1 phase gate passed; P2-01 VERIFIED. P2–P6 remain incomplete. Resolve HEAD with `git rev-parse HEAD` and latest status commit with `git log -1 --format=%H -- docs/PROJECT_STATUS.md`. Reuse the project-local pinned toolchain/cache; no installation needed.
 
 ## Latest implementation and checks
 
@@ -28,7 +28,7 @@ P1-11 is closed. First eligible task is P2-01. Read [state](STATE_CONTRACT.md), 
 - Separate immutable definition from instance-owned state. Guards read committed old state and current event outputs; writes become visible only at successful event commit. Specify deterministic transition/guard/effect ordering and reject conflicting writes/types/cycles. Delay is an explicit prior-event boundary, never permission for an ordinary same-event cycle.
 - Implement generic in-process X-002 stateful extension/rule instance isolation and lifecycle. Make portable state-schema/version/identity and unsupported snapshot/restore capabilities explicit. P2-04 owns durable snapshot codecs/restore acceptance; do not claim persistence from deep-fork memory or arbitrary language-object serialization.
 - Verify exact guard/effect old/new behavior, stop/error/restart semantics, failed-event all-state/history/cursor rollback and isolated repeated instances. Preserve once-per-event subscriptions, numeric/readiness rules, source diagnostics and existing P1 goldens. Stop semantics need a contract; P1 finish is currently terminal and failed step retryable, while legacy run errors are terminal Failed.
-- Keep scheduler/multi-market alignment(P2-02), generalized graph/state execution(P2-03), durable snapshots(P2-04), metrics(P2-05) and G-006 temporal full-gate acceptance(P2-06) in their owning tasks. Scope/dependency overlaps should be made explicit before implementation, not bypassed or declared done from this handoff.
+- Keep scheduler/multi-market alignment(P2-02), event-time windows/timers/instance scheduling(P2-03), durable snapshots(P2-04), deterministic replay/debug trace(P2-05) and G-006 temporal full-gate acceptance(P2-06) in their owning tasks. Scope/dependency overlaps should be made explicit before implementation, not bypassed or declared done from this handoff.
 
 No speculative accounting, SDK, Desk UI, external language runtime/loader or new dependencies required by this handoff. If new wire/state capabilities are needed, version them and record actual decision/evidence. Preserve protected provider pins and old canonical/golden files unless a concrete defect requires reviewed identity changes.
 
@@ -46,3 +46,7 @@ git diff --check
 ```
 
 The full runner executes the four required Rust checks/build,23 external tests and11 actual process cases. `--skip-checks` reports partial only. It never rewrites expected files. Record actual failures/dirty work before interruption. Evidence first, then three-document closure with its SHA, no self-hash. Publishing requires authorization, normal push and confirmed remote SHA. Last remote main read-confirmed `0ac5d7b163e77bddb5f69689a1455e3560aad872`; latest implementation evidence `949a286df391c5bc23eebd5b2e11dfb19268d390`, main24 commits ahead after this closure. P1-11 work is committed locally; verify live HEAD/count/dirty work before action. Recheck live before action.
+
+Active P2-01 checkpoint: `fqe-ir/src/workflow.rs`, `fqe-runtime/src/workflow.rs` and private EventRuntime fork transaction implemented; six IR and seven runtime contract tests passed. Workflow format/typed modules/State-Delay/lifecycle contract and ADR-022 drafted; full gate/docs/clippy/example and final diff inspection pending. State inspection must explicitly be non-restorable; P2-04 owns complete snapshots. Continue downstream automatically after verified closure, no routine permission question or per-task final stop.
+
+Verification checkpoint: P2-01 IMPLEMENTED → VERIFIED. Full P1 gate now passes195 Rust/23 external/11 process cases; workflow example and docs/diff PASS. Record evidence commit, then closure synchronized across status/plan/handoff. Continue immediately to P2-02 after closure; no push authorization. ADR-022 accepted and bounded workflow contract updated.

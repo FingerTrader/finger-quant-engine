@@ -94,7 +94,7 @@ pub struct GraphDefinition {
     pub modules: Vec<Module>,
     pub metadata: BTreeMap<String, String>,
 }
-fn schema(v: Value, p: &str) -> Result<ParameterSchema> {
+pub(crate) fn schema(v: Value, p: &str) -> Result<ParameterSchema> {
     let mut o = Obj::new(v, p)?;
     if uint(o.take("version")?, p)? != 1 {
         return Err(error("graph_version", p, "unsupported parameter version"));
@@ -411,7 +411,7 @@ pub(crate) fn port_json(p: &Port) -> Value {
 fn key_json(k: &EntryKey) -> Value {
     json!({"id":k.id,"version":k.version})
 }
-fn schema_json(p: &ParameterSchema) -> Value {
+pub(crate) fn schema_json(p: &ParameterSchema) -> Value {
     json!({"version":1,"entries":p.specs().map(parameter_json).collect::<Vec<_>>()})
 }
 fn body_json(b: &Body) -> Value {

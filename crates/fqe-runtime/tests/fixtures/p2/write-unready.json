@@ -1,0 +1,375 @@
+{
+  "format": "fqe.workflow",
+  "schema_version": 1,
+  "id": "x002.accumulators",
+  "version": "1",
+  "requirements": [
+    "workflow.scalar/1",
+    "workflow.state/1",
+    "workflow.delay-one/1",
+    "workflow.rules/1",
+    "workflow.stop/1"
+  ],
+  "event_plan": {
+    "format": "fqe.event-plan",
+    "schema_version": 1,
+    "id": "tick.events",
+    "version": "1",
+    "requirements": [
+      "event.plan/1",
+      "expression.scalar/1"
+    ],
+    "graph": {
+      "format": "fqe.graph",
+      "schema_version": 1,
+      "ir_version": 2,
+      "id": "tick.events",
+      "version": "1",
+      "parameters": {
+        "version": 1,
+        "entries": []
+      },
+      "requirements": [
+        "model.typed-graph/1"
+      ],
+      "entries": [],
+      "graph": {
+        "inputs": [
+          {
+            "name": "sample",
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "u64"
+            }
+          }
+        ],
+        "nodes": [],
+        "outputs": [
+          {
+            "name": "price",
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "u64"
+            },
+            "source": {
+              "input": "sample"
+            }
+          }
+        ]
+      },
+      "modules": [],
+      "metadata": {},
+      "workflow": {},
+      "state": [],
+      "dependencies": []
+    },
+    "trigger": {
+      "kind": "tick",
+      "instrument": "DEMO"
+    },
+    "bindings": {
+      "sample": "price"
+    },
+    "warmup_samples": "0",
+    "crossings": [],
+    "outputs": [
+      {
+        "name": "decision",
+        "expression": {
+          "binary": {
+            "op": "greater",
+            "left": {
+              "output": "price"
+            },
+            "right": {
+              "literal": {
+                "type": {
+                  "version": 1,
+                  "shape": "scalar",
+                  "kind": "u64"
+                },
+                "value": "100"
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "price",
+        "expression": {
+          "output": "price"
+        }
+      }
+    ],
+    "signals": []
+  },
+  "modules": [
+    {
+      "schema_version": 1,
+      "key": {
+        "id": "independent.accumulator",
+        "version": "1"
+      },
+      "state_schema": {
+        "id": "independent.counter-cells",
+        "version": "1"
+      },
+      "parameters": {
+        "version": 1,
+        "entries": [
+          {
+            "key": "step",
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "u64"
+            },
+            "required": false,
+            "default": {
+              "type": {
+                "version": 1,
+                "shape": "scalar",
+                "kind": "u64"
+              },
+              "value": "1"
+            },
+            "constraints": {},
+            "description": "Exact rule parameter"
+          },
+          {
+            "key": "threshold",
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "u64"
+            },
+            "required": false,
+            "default": {
+              "type": {
+                "version": 1,
+                "shape": "scalar",
+                "kind": "u64"
+              },
+              "value": "100"
+            },
+            "constraints": {},
+            "description": "Exact rule parameter"
+          }
+        ]
+      },
+      "inputs": [
+        {
+          "name": "sample",
+          "type": {
+            "version": 1,
+            "shape": "scalar",
+            "kind": "u64"
+          }
+        }
+      ],
+      "state": [
+        {
+          "name": "count",
+          "type": {
+            "version": 1,
+            "shape": "scalar",
+            "kind": "u64"
+          },
+          "initial": {
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "u64"
+            },
+            "value": "0"
+          }
+        }
+      ],
+      "delays": [
+        {
+          "name": "lag",
+          "type": {
+            "version": 1,
+            "shape": "scalar",
+            "kind": "u64"
+          },
+          "initial": {
+            "status": "warmup"
+          },
+          "next": {
+            "input": "input.sample"
+          }
+        }
+      ],
+      "modes": [
+        "idle",
+        "armed"
+      ],
+      "initial_mode": "idle",
+      "transitions": [
+        {
+          "id": "increment",
+          "from": [
+            "idle",
+            "armed"
+          ],
+          "to": null,
+          "guard": {
+            "literal": {
+              "type": {
+                "version": 1,
+                "shape": "scalar",
+                "kind": "bool"
+              },
+              "value": true
+            }
+          },
+          "writes": {
+            "count": {
+              "input": "delay.lag"
+            }
+          }
+        },
+        {
+          "id": "arm",
+          "from": [
+            "idle"
+          ],
+          "to": "armed",
+          "guard": {
+            "binary": {
+              "op": "greater",
+              "left": {
+                "input": "input.sample"
+              },
+              "right": {
+                "parameter": "threshold"
+              }
+            }
+          },
+          "writes": {}
+        },
+        {
+          "id": "release",
+          "from": [
+            "armed"
+          ],
+          "to": "idle",
+          "guard": {
+            "binary": {
+              "op": "less_equal",
+              "left": {
+                "input": "input.sample"
+              },
+              "right": {
+                "parameter": "threshold"
+              }
+            }
+          },
+          "writes": {}
+        }
+      ],
+      "outputs": {
+        "count": {
+          "input": "state.count"
+        },
+        "lag": {
+          "input": "delay.lag"
+        },
+        "entry": {
+          "input": "fired.arm"
+        },
+        "exit": {
+          "input": "fired.release"
+        }
+      }
+    }
+  ],
+  "instances": [
+    {
+      "id": "fast",
+      "module": {
+        "id": "independent.accumulator",
+        "version": "1"
+      },
+      "parameters": {
+        "version": 1,
+        "values": {
+          "step": {
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "u64"
+            },
+            "value": "1"
+          },
+          "threshold": {
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "u64"
+            },
+            "value": "100"
+          }
+        }
+      },
+      "bindings": {
+        "sample": {
+          "event": "price"
+        }
+      }
+    },
+    {
+      "id": "slow",
+      "module": {
+        "id": "independent.accumulator",
+        "version": "1"
+      },
+      "parameters": {
+        "version": 1,
+        "values": {
+          "step": {
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "u64"
+            },
+            "value": "2"
+          },
+          "threshold": {
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "u64"
+            },
+            "value": "120"
+          }
+        }
+      },
+      "bindings": {
+        "sample": {
+          "event": "price"
+        }
+      }
+    }
+  ],
+  "signals": [
+    {
+      "instance": "fast",
+      "output": "entry",
+      "kind": "long"
+    },
+    {
+      "instance": "fast",
+      "output": "exit",
+      "kind": "flat"
+    },
+    {
+      "instance": "slow",
+      "output": "entry",
+      "kind": "long"
+    }
+  ]
+}

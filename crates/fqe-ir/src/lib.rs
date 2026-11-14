@@ -14,6 +14,7 @@ pub mod loading;
 pub mod model;
 pub mod parameters;
 pub mod registry;
+pub mod workflow;
 
 use fqe_core::{InstrumentId, MarketTick, PriceTicks, Signal, SignalKind};
 
