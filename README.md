@@ -1,12 +1,14 @@
 # Finger Quant Engine (FQE)
 
-Core Rust-based quantitative strategy engine for local execution, backtesting, optimization, and simulation.
+**Universal Local-First Quantitative Strategy Engine** — an independent Rust-based engine for local strategy development, execution, backtesting, optimization, and simulation.
 
-FQE is an independent, **Local-First, Language-Neutral** engine. All strategy computation runs on the user's own device. The Rust core owns validation and execution semantics; a typed Strategy Intermediate Representation (IR) defines a portable strategy subset. Protocol Buffers are the intended cross-language boundary.
+FQE is an independent, **Local-First, Language-Neutral** engine. All strategy computation runs on the user's own device or user-controlled server. The Rust core owns validation and execution semantics; a typed Strategy Intermediate Representation (IR) defines a portable strategy subset. A versioned cross-language protocol is required; Protocol Buffers is the first candidate to evaluate, not an implemented codec or selected transport.
 
 Offline engine use does not require Flutter Desktop, a Finger Trader login, or a trading account. Flutter Desktop is a planned optional client. Trading APIs belong to the independent **Finger Trader Trading SDK**; this repository does not implement that SDK.
 
 ## Project status
+
+The unique progress ledger is [PROJECT_STATUS](docs/PROJECT_STATUS.md). New sessions recover from it, [NEXT_SESSION](docs/NEXT_SESSION.md), [DELIVERY_PLAN](docs/DELIVERY_PLAN.md), [ADRs](docs/ARCHITECTURE_DECISIONS.md), then the current task contracts. P1 remains incomplete; the current demo does not meet universal strategy acceptance.
 
 This repository contains the initial engineering foundation, version `0.1.0`. It is not a production trading engine or a published SDK release.
 
@@ -70,9 +72,22 @@ cargo fmt --check
 cargo check --workspace
 cargo test --workspace
 cargo clippy --workspace --all-targets
+python3 scripts/check_docs.py
 ```
 
 Commit `Cargo.lock` alongside dependency changes. The current lockfile contains only these five workspace packages. See [Development](docs/DEVELOPMENT.md) for offline verification and dependency rules.
+
+## Governance and recovery
+
+- [Project charter: product goal and boundaries](docs/PROJECT_CHARTER.md)
+- [Document authority and conflict rules](docs/DOCUMENT_AUTHORITY.md)
+- [Architecture decisions and open experiments](docs/ARCHITECTURE_DECISIONS.md)
+- [Delivery plan: P1–P6 task/dependency/acceptance index](docs/DELIVERY_PLAN.md)
+- [P1 universal strategy design and golden specifications](docs/P1_STRATEGY_DESIGN.md)
+- [Project status: authoritative progress and actual evidence](docs/PROJECT_STATUS.md)
+- [Next session: independent handoff and next acceptance](docs/NEXT_SESSION.md)
+- [Workflow: recovery, development, verification, commit and push](docs/WORKFLOW.md)
+- [Baseline architecture and IR gap audit](docs/BASELINE_AUDIT.md)
 
 ## Architecture and contracts
 

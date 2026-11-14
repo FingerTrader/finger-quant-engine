@@ -1,63 +1,36 @@
 # Roadmap
 
-Status describes repository capabilities, not a release schedule. All computation in every phase remains local to the user's device.
+**The only active phase/task plan is [DELIVERY_PLAN](DELIVERY_PLAN.md).** Progress is recorded only in [PROJECT_STATUS](PROJECT_STATUS.md). This page is a navigation and migration guide, not a second backlog. The [Charter](PROJECT_CHARTER.md) defines product boundaries; all computation remains local.
 
-## Status vocabulary
+## Existing foundation
 
-- **Implemented:** code exists and can be exercised by the current build/tests.
-- **Experimental:** implementation or schema exists but its API/semantics are not stable.
-- **Planned:** no usable implementation is claimed.
+The original engineering foundation remains intact: five-crate Rust workspace, validated values, experimental price-only IR, one-shot event interpreter, CLI demo, draft protobuf and 17 baseline behavioral tests. See [Audit](BASELINE_AUDIT.md) for source and rerun evidence. This is not completion of Universal Strategy Foundation. Package 0.1.0 is not a stable SDK or published production release.
 
-An implemented component can also be experimental. The Cargo package version `0.1.0` does not imply a published binary, SDK, or production release.
+## Active six-stage route
 
-## Phase 0 — engineering foundation (implemented)
+| Stage | Task index | Required exit |
+| --- | --- | --- |
+| P1 Universal Strategy Foundation | P1-01–P1-11 | Loaded typed MACD/RSI model, generic expressions/compiled graph, independent goldens and minimal external invocation |
+| P2 Event Runtime & State Engine | P2-01–P2-06 | Multi-event strategy, correct ordering/isolation and snapshot/replay parity without future-data leakage |
+| P3 Backtesting & Local Simulation | P3-01–P3-07 | Historical data→orders→fills→ledger→report, local optimization and independent financial reconciliation |
+| P4 Desktop & External Integration | P4-01–P4-05 | Proven FFI/IPC boundary, actual CLI/Desktop/external parity and optional separate Trading SDK adapter |
+| P5 Language Workers | P5-01–P5-05 | Python, then Java, then Go independently accepted with real lifecycle/recovery/isolation tests |
+| P6 Plugin Ecosystem & Release | P6-01–P6-06 | Verified third-party load/execute/unload, enforced permissions/resources/fault isolation and Windows/macOS/Linux release evidence |
 
-- Independent repository on main, preserving original history and Apache-2.0 license.
-- Five-crate Cargo Workspace with no third-party Cargo dependencies.
-- Validated core types and a small experimental typed strategy IR.
-- Deterministic in-memory event loop, explicit run state, signal provenance.
-- Standalone offline CLI demonstration, help, and version commands.
-- Experimental Protocol Buffers schema and a version-number negotiation helper.
-- Architecture/contracts and behavioral tests.
+Each stage depends on the preceding gate. Task descriptions, dependencies, deliverables, acceptance, tests and status live in DELIVERY_PLAN. No dates or feature availability promises follow from this roadmap.
 
-The demo is not a backtest, a simulator, or a language worker. The schema has no generated bindings, codec, IPC, or stable compatibility guarantee.
+## Superseded numbering migration
 
-## Phase 1 — contract validation (planned; recommended next)
+The pre-governance “Phase 0–6” ordering is **Superseded on 2026-11-14** by P1–P6. Preserve its technical intent through this mapping; never interpret an old phase number as a new completion claim.
 
-Scope a single vertical slice for strategy/event wire conversion. Validate protobuf tooling and dependencies before introduction. Add bounded decode/validation, version and presence handling, exact u64 conformance, and shared fixtures that match the current Rust evaluator.
+| Former phase / intent | Active destination |
+| --- | --- |
+| Phase 0 engineering foundation | Historical baseline in BASELINE_AUDIT; prerequisites, not completed P1 |
+| Phase 1 contract/wire validation and price metadata | P1-02/P1-03/P1-11, with full external boundary validation P4-01/P5-01 |
+| Phase 2 local replay and accounting | P2 scheduling/replay and P3 data/ledger/fill/report tasks |
+| Phase 3 simulation, cancellation and persistence | P2-01/P2-03/P2-04 plus P3 simulation/profiles |
+| Phase 4 language workers | P5-01–P5-05; explicit Python → Java → Go order |
+| Phase 5 optimization and plugins | Optimization P3-06; plugin registry/isolation/packaging P6 |
+| Phase 6 clients and execution adapters | P4 Desktop/external integration and optional Trading SDK adapter |
 
-Specify instrument price-scale metadata and a reproducible run manifest before accepting real financial datasets. Decide whether to keep the initial positive-only price domain or revise it for explicitly supported instruments.
-
-Exit gate: one small offline strategy and event fixture round-trips through a real codec and produces the same validated result as the typed Rust model. A transport or service is not required to prove this first.
-
-## Phase 2 — local replay and accounting baseline (planned)
-
-Add a narrow local dataset format and deterministic replay. Define order intents, signal-to-order policy, one explicit execution model, and an exact ledger with manually calculated fixtures.
-
-Exit gate: a reproducible offline backtest with independently checkable fills, cash, positions, costs, and report provenance. No performance claim precedes this gate.
-
-## Phase 3 — simulation and host controls (planned)
-
-Introduce bounded resources, cancellation, observable lifecycle, fault handling, and a documented local simulation model. Define persistence/recovery requirements before claiming resumable runs.
-
-Exit gate: consistent event/accounting contracts across replay and simulation, with fault and reconciliation tests.
-
-## Phase 4 — language workers (planned)
-
-Build one reference worker first. Define process protocol, supervision, artifact handling, capability checks, declared state, and conformance. Expand to Python, Java, and Go based on validated implementation needs.
-
-Exit gate per language: runnable worker plus host integration, lifecycle/failure tests, distribution instructions, and shared exact-value fixtures. Do not claim all languages from one prototype.
-
-## Phase 5 — local optimization and plugins (planned)
-
-Add reproducible bounded parameter trials and out-of-sample evaluation. Introduce one proven plugin extension point before a general registry or loader.
-
-Exit gate: deterministic trial provenance and explicit plugin authority/failure semantics.
-
-## Phase 6 — optional clients and execution adapters (planned)
-
-Integrate Flutter Desktop over a defined local protocol without coupling the engine to Flutter or login. Add a separately authorized Trading SDK adapter only after execution, credential, and account boundaries are specified.
-
-Exit gate: end-to-end local client tests and explicit mode/permission controls. Offline engine capabilities remain independently usable.
-
-Phases may be refined as contracts become concrete. There are no dates or feature availability promises attached to this roadmap.
+The old suggestion to start solely with protobuf wire conversion is retired: next work follows the audited dependency order, starting with universal types/parameters after P1-01. Specific serialization, transport, numerical and plugin mechanisms remain evidence-gated decisions in [ADRs](ARCHITECTURE_DECISIONS.md).

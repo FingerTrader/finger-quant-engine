@@ -2,6 +2,8 @@
 
 Status: planned. The current event demo evaluates a rule; it is not a backtester and produces no trading performance.
 
+Implementation and local optimization are gated by P3-01–P3-07 in [Delivery plan](DELIVERY_PLAN.md). [Project status](PROJECT_STATUS.md) is the only progress authority; this guide describes requirements, not delivery claims.
+
 ## Scope and independence
 
 Backtesting will replay user-selected historical data on the user's device. Offline datasets and strategies must be usable without Flutter Desktop or a Finger Trader login. Data acquisition is a separate adapter concern; no dataset downloader is implemented.

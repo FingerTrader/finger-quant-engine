@@ -2,6 +2,8 @@
 
 Status: planned. No execution simulator, paper account, matching engine, or order-routing adapter is implemented.
 
+Product target: users create virtual accounts locally; FQE supplies local fills, cash/position ledgers, fees/slippage, margin/leverage and versioned broker simulation profiles. A Finger Trader backend simulated account is not required. [ADR-007](ARCHITECTURE_DECISIONS.md#adr-007--local-simulation) fixes this boundary; P3 in [Delivery plan](DELIVERY_PLAN.md) owns implementation and independent accounting acceptance.
+
 ## Meaning
 
 Simulation will run strategies on the user's device against an explicit virtual execution and account model. It may consume historical replay or a future live data adapter. Simulated fills are model outputs and must be labeled distinctly from live broker confirmations.

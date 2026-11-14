@@ -2,6 +2,8 @@
 
 Status: planned. No Python, Java, or Go worker, launcher, language SDK, or language runtime bundle is included.
 
+The mandatory delivery order is **Python → Java → Go**, each independently accepted by P5-02/P5-03/P5-04 in [Delivery plan](DELIVERY_PLAN.md). A protocol placeholder or example alone is not worker support. See [ADR-003](ARCHITECTURE_DECISIONS.md#adr-003--isolated-language-workers).
+
 ## Role
 
 Workers will let strategies authored in Python, Java, and Go participate in local FQE runs. All worker strategy computation executes on the user's device. The Rust host owns run lifecycle, logical event order, validation, and authority over downstream execution.

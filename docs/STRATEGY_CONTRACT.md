@@ -2,6 +2,8 @@
 
 Status: a small typed IR and evaluator are implemented experimentally. Serialized strategy ingestion, source compilers, and worker execution are planned.
 
+The universal target contract is [P1 strategy design](P1_STRATEGY_DESIGN.md): definition/instance separation, types/parameters, registered nodes/functions, typed graph, explicit workflow/state, modules and requirements. It does not change the current API below. Implementation gaps and owning tasks are in [Baseline audit](BASELINE_AUDIT.md); progress belongs to [Project status](PROJECT_STATUS.md).
+
 ## Current typed model
 
 `fqe-ir::Strategy::new` validates an explicit IR version, strategy ID, instrument, predicate, and output signal kind. Its private fields prevent bypassing constructor validation in safe Rust.

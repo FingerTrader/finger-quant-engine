@@ -10,11 +10,11 @@ Flutter Desktop will be an optional presentation and orchestration client. It ma
 
 ## Intended boundary
 
-The preferred architectural boundary is a versioned local process protocol using Protocol Buffers payloads. Transport selection, framing, process discovery, lifecycle ownership, and authentication are still undecided. No port, executable download path, or service endpoint is reserved here.
+The required boundary is versioned; FFI and IPC are candidates to evaluate in P4-01 under [ADR-010](ARCHITECTURE_DECISIONS.md#adr-010--one-engine-optional-desktop-boundary). Protocol Buffers is the first cross-language encoding candidate, not a chosen transport. Framing, process discovery, lifecycle ownership, and authentication remain undecided. No port, executable download path, or service endpoint is reserved here.
 
 A future integration must negotiate engine/protocol capabilities and distinguish ready, unsupported, failed, and disconnected states. The current version helper compares version numbers only; it does not establish a connection or validate a Desktop client.
 
-FFI can be evaluated later if necessary, but it must not bypass the domain contracts or tie engine releases to Flutter implementation details.
+The selected FFI/IPC mechanism must follow measured correctness, safety, lifecycle, overhead and packaging evidence. It must not bypass domain contracts or tie engine releases to Flutter implementation details. P1-10 proves minimal external invocation; P4 proves actual Desktop integration and CLI/Desktop parity with the same models, parameters and data.
 
 ## Client responsibilities
 

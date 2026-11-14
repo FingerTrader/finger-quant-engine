@@ -2,6 +2,8 @@
 
 Status: the Rust foundation is implemented; its IR and runtime APIs are experimental. Workers, external transports, plugins, and execution services are planned.
 
+Product authority: [Charter](PROJECT_CHARTER.md). Technical direction: [ADRs](ARCHITECTURE_DECISIONS.md). Current facts: [Audit](BASELINE_AUDIT.md) and [Project status](PROJECT_STATUS.md). Universal graph/workflow/state targets: [P1 design](P1_STRATEGY_DESIGN.md). This overview does not replace those scoped authorities.
+
 ## Product boundary
 
 Finger Quant Engine is an independent, language-neutral local engine. Strategy computation, replay, simulation, and parameter search belong on the user's device. Neither a hosted compute service nor a Finger Trader account is a prerequisite for offline use.
@@ -48,7 +50,7 @@ The intended boundary is:
 ```text
 CLI / optional Flutter Desktop / other local clients
                      |
-        versioned local protocol adapter
+        versioned local FFI / IPC boundary (to evaluate)
                      |
       Rust host: validation, event order, state
           |                  |
@@ -60,6 +62,8 @@ CLI / optional Flutter Desktop / other local clients
 ```
 
 All compute boxes are local. A worker may evaluate a strategy in its own process; the host remains responsible for sequencing and validating outputs. There are two prospective authoring paths: compile a supported declarative subset into typed IR, or execute an imperative strategy through a worker contract. Arbitrary Python/Java/Go programs cannot be assumed to translate into the IR or to be mutually deterministic.
+
+The portable strategy target combines Typed Graph + Event Workflow + State Machine. Registered indicator functions feed universal expressions; explicit State/Delay mediates cross-event feedback. These are P1/P2 targets, not implemented baseline extensions. Language workers deliver Python, then Java, then Go in P5. Numeric representation, Protobuf codec, transport and plugin execution remain open choices in the ADR register.
 
 Future adapters must make external data access and execution authority explicit. Offline operations may use local data and stub adapters without login. Live connectivity can require network access and user credentials without changing offline engine eligibility.
 

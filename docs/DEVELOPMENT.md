@@ -2,6 +2,8 @@
 
 Status: the commands below build and test the Rust foundation. Protocol generation, workers, packaging, and automated release pipelines are not configured.
 
+Start each session with [Project status](PROJECT_STATUS.md), [Next session](NEXT_SESSION.md) and [Delivery plan](DELIVERY_PLAN.md), then follow [Workflow](WORKFLOW.md). The initialization table below is historical evidence; current evidence belongs in PROJECT_STATUS and the dated [Baseline audit](BASELINE_AUDIT.md).
+
 ## Repository and toolchain
 
 This independent repository is the home for FQE core work. The initial development branch is `main`; do not create extra worktrees or branches for initialization. Preserve existing remote commits and never force-push.
@@ -35,6 +37,8 @@ cargo fmt --check
 cargo check --workspace
 cargo test --workspace
 cargo clippy --workspace --all-targets
+python3 scripts/check_docs.py
+git diff --check
 ```
 
 For reproducibility and to prohibit registry access, the Cargo build/test/lint commands also support:

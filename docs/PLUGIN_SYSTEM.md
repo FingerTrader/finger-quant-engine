@@ -2,6 +2,8 @@
 
 Status: planned. No plugin loader, plugin API/ABI, registry, manifest parser, or dynamic library support is implemented.
 
+[ADR-008](ARCHITECTURE_DECISIONS.md#adr-008--versioned-plugin-extensibility) fixes the versioned registry/extensibility direction. P6 in [Delivery plan](DELIVERY_PLAN.md) requires actual resolution, permission/resource enforcement, load/execute/unload and release evidence. Plugin execution remains undecided; marketplace availability must not gate local execution.
+
 ## Intended extension points
 
 Candidate plugins include local dataset readers, indicator/operator extensions, report exporters, simulation models, and the optional Trading SDK execution adapter. Add an extension point only when a concrete implementation justifies it.

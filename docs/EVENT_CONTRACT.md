@@ -41,7 +41,7 @@ The `fqe.v1alpha1.EventEnvelope` schema adds protocol version, run ID, stream se
 
 Input and output streams would each own their envelope sequence; `Signal.source_sequence` would retain the input link. The wire's run ID would prevent cross-run ambiguity. Incoming payload variants, enum values, message presence, length limits, u64 precision, and domain invariants require validation when a codec is introduced.
 
-Protocol Buffers are the intended wire format, not a commitment to gRPC. Framing, local transport, authentication, size limits, acknowledgements, backpressure, and reconnect behavior are undecided and unimplemented.
+Protocol Buffers is the first wire-format candidate to evaluate, not a commitment to a codec, gRPC or transport. See [ADR-009](ARCHITECTURE_DECISIONS.md#adr-009--versioned-public-contracts) and P1-03/P2 scheduling tasks in [Delivery plan](DELIVERY_PLAN.md). Framing, local transport, authentication, size limits, acknowledgements, backpressure, and reconnect behavior are undecided and unimplemented.
 
 ## Planned event families
 
