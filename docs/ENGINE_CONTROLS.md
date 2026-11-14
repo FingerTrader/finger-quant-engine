@@ -50,3 +50,7 @@ Final full `scripts/check_p3_gate.py` PASS2026-11-14T13:39:13.469005+00:00:340 R
 ## Consumer preflight extension (P4-03)
 
 `backtest.validate/1` is an additive optional capability. Method `backtest.validate` accepts the same exact input as `backtest.run`, prepares native model/history/account/policies and returns `manifest_id` plus the native `manifest`. It performs no strategy evaluation, job admission, order or fill. Invalid costs/range/types/legacy policies reject with native code/path before the Desk confirmation/start path. The P4-02 evidence commit remains historical; this new bridge source/artifact identity is tracked in the active P4-03 paired candidate. Financial source pins and financial engine identity are unchanged.
+
+## Contextual discovery extension (P4-03.01)
+
+Optional `catalog.describe/1` provides `catalog.describe {trigger}` without any model/bindings. [Unified authoring](DESK_UNIFIED_AUTHORING.md#contextual-reference-discovery-p4-0301) owns exact context, descriptors/registry identities and truthful exposed capability/limit flags. It does not change the model-based descriptor.list or model.inspect contract. No provider evaluation or external discovery occurs. Consumer bundle replacement and unified UI remain later children.

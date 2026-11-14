@@ -1,10 +1,15 @@
 # Next Session
 
+## Active owner-approved unified Desk implementation
+
+2026-11-15 user approved the review and implementation of Desk's unified product design. Recover [authoring contract](DESK_UNIFIED_AUTHORING.md), ADR-036, [plan](DELIVERY_PLAN.md), [status](PROJECT_STATUS.md), workflow and actual code before continuing. Seven P4-03 children are now required; P4-03.01 contextual catalog is VERIFIED (evidence commit/closure pending). Do not continue the old fixed-name visual mapping as the new product architecture. Desk pages are concurrently being edited: preserve all current changes, no native UI operation or shared-file overwrite until coordinated. First implement and verify the native contract/discovery/front-end in this repository, then bind the actual current consumer. Do not reuse historical test claims for changed source or replace the Desk bundle pin without matching new evidence. No new GitHub publish request.
+
+
 Recover [status](PROJECT_STATUS.md), [plan](DELIVERY_PLAN.md), [ADRs](ARCHITECTURE_DECISIONS.md), [workflow](WORKFLOW.md), README/current contracts and actual Git. Main only; no worktree/agents. Continue downstream automatically unless a real problem needs coordination. User explicitly authorized publishing the current engine checkpoints on 2026-11-15. Normal push and independent remote confirmation succeeded for69b5120; see the current delivery record in PROJECT_STATUS. This does not grant blanket authorization for future publishing.
 
 ## Current task
 
-P1/P2/P3, P4-01 and P4-02 COMPLETED. P4-02 evidence `1275b5cb1f9792f3c2540e62c00b5accebebb146`, closure `1be889a`. **P4-03 IN_PROGRESS**, partial checkpoint `ebdbbbf`, no closure or downstream P4-04. Read [P4-03 checkpoint](P4_03_PROGRESS.md) and its evidence before repeating work. Stage total26 COMPLETED/1 IN_PROGRESS/15 NOT_STARTED.
+P1/P2/P3, P4-01 and P4-02 COMPLETED. P4-02 evidence `1275b5cb1f9792f3c2540e62c00b5accebebb146`, closure `1be889a`. **P4-03 IN_PROGRESS**, partial checkpoint `ebdbbbf`, no closure or downstream P4-04. Read [P4-03 checkpoint](P4_03_PROGRESS.md) and its evidence before repeating work. Stage total26 COMPLETED/2 IN_PROGRESS/21 NOT_STARTED (49 tasks after approved refinement).
 
 Full P3 gate passed341 Rust/23 external at2026-11-14T14:00:06.133717+00:00, all old process/source/golden/financial checks and required Rust/docs/diff. No Rust changes since that pass. New bridge optional backtest.validate/1 uses native preparation without evaluation. Financial source64 pins/result4c14f944… unchanged. Reviewed binarySHA929bd690893a19a45ee8bf1a968db3b4a337a0c89ea03c5f0dc424e2a98ef93b, bridgef145203a… and noticesb114621f… pinned in consumer ci/fqe-engine.json.
 
@@ -45,3 +50,7 @@ Final continuation checks:20 actual native visual cases PASS;19 targeted Flutter
 Local editor checkpoint `6e10348` records the exact first-party consumer source snapshot, guarded integration deltas,20 native visual checks/19 Flutter regressions/analyzer and partial native observations. It is not task closure. P4-03 stays IN_PROGRESS; Desk files remain uncommitted, final native/UI coordination remains open; no push.
 
 Latest delivery supersedes earlier no-push notes: engine main through69b5120ff34b1b6f086d7bbce7d43e74fafbc164 was pushed and independently confirmed on GitHub2026-11-15. This delivery-record update is part of that same publishing request; compare current HEAD to remote for the final recorded SHA. Desk remains dirty/uncommitted and untouched by publishing. P4-03 remains IN_PROGRESS with native/UI acceptance pending.
+
+## Unified catalog verification 2026-11-15
+
+Current native source passed full344 Rust/23 external gate and actual framed catalog peer8 checks; evidence files unified-catalog-gate.json / unified-catalog-peer.json under docs/evidence/p4-03. Record local evidence commit, close child01 and begin child02. No Desk pin or UI changes; old bundle cannot advertise the new method. Next file scope: first-party authoring frontend under fqe-bridge/src (keeps old financial source identity), exact versioned syntax, semantic/print/source-map/invalid-buffer tests and independent SMA financial fixture. No additional packages. Do not publish without new authorization.

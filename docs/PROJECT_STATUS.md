@@ -10,7 +10,7 @@
 - Previous implementation: **P2-04 — Snapshot / Restore**, COMPLETED; evidence `4dffdfe235eba1f698a34b3e0df6c2198a066ba3`, complete bounded reconstruction/atomic persistence;229 Rust/23 external/11 process cases PASS.
 - Previous implementation: **P2-05 — Replay & Debug Trace**, COMPLETED; evidence `8c2b39f83c03fbcb0794c18a5fef4d92e998a5ee`;238 Rust/23 external/11 process cases PASS.
 - Latest implementation: **P2-06 — Temporal Strategy Gate**, COMPLETED; evidence `d272c4d78445f984686d9025e7cb29c0de9fc544`;244 Rust/23 external/11 process/55 independent rows/full P2 gate PASS.
-- Next eligible implementation: **P4-03 — Desktop Client & Local State**, IN_PROGRESS. P4-02 verified/closed; integrate actual Desk binding/editor/state and native offline journey. User authorizes continuing downstream work without routine confirmation; current engine checkpoints were explicitly authorized for GitHub publishing on 2026-11-15.
+- Next eligible implementation: **P4-03.01 — Contextual Catalog & Product Contract**, within **P4-03 — Desktop Client & Local State**, IN_PROGRESS. P4-02 verified/closed; integrate actual Desk binding/editor/state and native offline journey. User authorizes continuing downstream work without routine confirmation; current engine checkpoints were explicitly authorized for GitHub publishing on 2026-11-15.
 - P1-02 acceptance met: evaluated numeric policy/limits, strict type/unit/scale checks, unsupported-shape rejection, full binding matrix and tests. Evidence `a653c105fba5ea6ada15395abc22cc8f82cc4472` and local closure recorded below; publishing not requested.
 - Actual root: `/Users/george/Desktop/finger-quant-engine`; main tracking origin/main; remote `https://github.com/FingerTrader/finger-quant-engine.git`.
 - Rust source baseline / latest pre-governance commit: `342d8aa76b48d32fa9c9110609b371eac52b8d86` (foundation). Previous commit: `cbcebad`.
@@ -51,13 +51,20 @@
 | P4-01 | COMPLETED | [Boundary](DESKTOP_BOUNDARY.md)/[evidence](P4_01_ACCEPTANCE.md), actual pinned Dart/native Sandbox comparison;331 Rust/full P3 gate PASS; evidence `0d7da5275def9bf93a12823f5c0268a9d99d34de`; local closure, not pushed |
 | P4-02 | COMPLETED | [Managed controls](ENGINE_CONTROLS.md),340 Rust/full P3 gate, actual pinned Dart/13 native lifecycle/workload cases/old compatibility PASS; evidence `1275b5cb1f9792f3c2540e62c00b5accebebb146`; local closure, not pushed |
 | P4-03 | IN_PROGRESS | [Partial implementation/evidence](P4_03_PROGRESS.md):341 Rust/23 external,14 Flutter, actual native baseline; accepted existing-editor integration implemented; native no-login/current-candidate acceptance remain open |
+| P4-03.01 | VERIFIED | Contextual catalog/contract;344 Rust/23 external full gate,3 new Rust tests and actual framed peer8 checks; evidence commit pending |
+| P4-03.02 | NOT_STARTED | Unified authoring frontend; [new scope](DESK_UNIFIED_AUTHORING.md) |
+| P4-03.03 | NOT_STARTED | Desk project/run/replay; [new scope](DESK_UNIFIED_AUTHORING.md) |
+| P4-03.04 | NOT_STARTED | Stateful authoring/modules; [new scope](DESK_UNIFIED_AUTHORING.md) |
+| P4-03.05 | NOT_STARTED | Optimization bridge/Desk; [new scope](DESK_UNIFIED_AUTHORING.md) |
+| P4-03.06 | NOT_STARTED | Unified exchange/migration; [new scope](DESK_UNIFIED_AUTHORING.md) |
+| P4-03.07 | NOT_STARTED | Scalable history gate; [new scope](DESK_UNIFIED_AUTHORING.md) |
 | P4-04, P4-05 | NOT_STARTED | P4 consumer dependencies first |
 | P5-01, P5-02, P5-03, P5-04, P5-05 | NOT_STARTED | P4 gate first; Python → Java → Go |
 | P5-05.01 | NOT_STARTED | Real unlisted-language onboarding after P5-04; prerequisite of parent P5-05 |
 | P6-01, P6-02, P6-03, P6-04, P6-05, P6-06 | NOT_STARTED | P5 gate first |
 | P6-03.01 | NOT_STARTED | Java-indicator/Go-predicate graph after P6-02; prerequisite of parent P6-03 |
 
-Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 26 COMPLETED, 1 IN_PROGRESS, 15 NOT_STARTED. P4-03 is next eligible; none is BLOCKED. P1/P2/P3 gates passed; P4–P6 gates remain open. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
+Stage-task totals: **49 = 40 parent tasks + 9 child tasks**: 26 COMPLETED, 1 IN_PROGRESS, 1 VERIFIED, 21 NOT_STARTED. P4-03 is next eligible; none is BLOCKED. P1/P2/P3 gates passed; P4–P6 gates remain open. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
 
 ## Delivered baseline and limitations
 
@@ -525,3 +532,11 @@ Local editor checkpoint `6e10348` records the exact first-party consumer source 
 ## GitHub delivery 2026-11-15
 
 User explicitly requested publishing the current engine repository. Normal `git push origin main` succeeded from0ac5d7b to69b5120; an independent `git ls-remote origin refs/heads/main` confirmed `69b5120ff34b1b6f086d7bbce7d43e74fafbc164`, matching local HEAD, with a clean/synchronized checkout before this delivery record. The prior58 local commits are delivered. This documentation record is included in the same authorized publishing operation; verify latest HEAD/remote separately rather than using a self-referential SHA. Desk checkout files remain uncommitted and were not pushed. P4-03 stays IN_PROGRESS; publishing does not close pending native acceptance. Earlier no-publishing notes describe historical authorization only.
+
+## 2026-11-15 owner-approved unified Desk scope
+
+User approved executing the review of Desk `docs/quant/desk-fqe-product-integration-design.md` (discussion v1, 502 lines). New normative [authoring contract](DESK_UNIFIED_AUTHORING.md)/ADR-036 and seven P4-03 children replace fixed visual-name adaptation as the destination. Historical partial native evidence remains valid only for its dated source. P4-03 is not closed. Current first child P4-03.01 implements model-independent contextual discovery; remaining children must preserve original P4/P5/P6 prerequisites. No new publish request, Desk shared-file overwrite, dependency installation or old financial-golden rewrite is implied. Current Rust edits require fresh verification; previous341/23 pass is historical.
+
+### P4-03.01 verified contextual discovery
+
+2026-11-15: optional catalog.describe/1 accepts an exact native trigger without model/parameters, returns seven current closed-bar descriptors with registry/source pins and actual exposed profiles/limits. Tick catalog excludes bar indicators. Three new Rust cases cover domain identity, old method separation, negotiation and invalid/extra/missing/inexact context. Independent actual framed peer checks8 conditions over5 requests, including exact old model.inspect registry/descriptor parity and clean EOF exit. Full financial gate PASS at2026-11-14T16:05:59.024109+00:00:344 Rust/23 external, required fmt/check/test/strict all-target Clippy,64 preserved financial source pins, all old process/oracles/examples/fresh-child restore and docs/diff. Evidence: [gate](evidence/p4-03/unified-catalog-gate.json), [peer](evidence/p4-03/unified-catalog-peer.json). No registry dependencies, manifest/lock/toolchain or financial semantics changed; previous third-party review reused, no network scanner/upload. Desk pin/bundle remains the previous candidate until coordinated consumer replacement. This is child verification only; no actual new Desk UI acceptance or parent closure. Local evidence commit pending, no new publishing request.

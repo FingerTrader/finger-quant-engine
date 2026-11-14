@@ -1,0 +1,18 @@
+{
+  "format": "fqe.catalog-peer-evidence/1",
+  "status": "passed",
+  "peer_sha256": "58b76a94c1454bbe76afe77ef71178ed7a643d98ac8393ce6d9528910e2a4a8e",
+  "requests": 5,
+  "registry_id": "sha256:c60f6ee69a8a3c3163bae8a194befdbf0982280cf385949e49aed65bd8db0eb9",
+  "descriptor_count": 7,
+  "checks": [
+    "actual-framed-peer",
+    "capability-negotiation",
+    "model-independent-discovery",
+    "old-inspect-registry-parity",
+    "tick-domain-has-no-bar-indicators",
+    "extra-field-rejection",
+    "truthful-limits-and-unsupported-flags",
+    "clean-eof-exit"
+  ]
+}
