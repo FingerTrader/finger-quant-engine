@@ -4,12 +4,13 @@
 
 ## Current position
 
-- Phase: **P1 — Universal Strategy Foundation, COMPLETED**. The P1 golden/generic-engine gate passed. **P2-01–P2-05 COMPLETED; P2-06 VERIFIED**; P2–P6 remain incomplete and no later phase gate has passed.
+- Phase: **P1 and P2 COMPLETED**. Universal strategy and temporal/recovery gates passed. **P3-01 READY**; P3–P6 remain incomplete.
 - Completed: GOV-01/GOV-02/GOV-03 and P1-01 through P1-11; local evidence and closure records synchronized.
 - Previous implementation: **P2-03 — Time Windows, Timers & Instance Scheduling**, COMPLETED. Evidence `f73082c86622ce40311d7e9ec91eef08402d681f`; typed bound temporal windows, deterministic timers, bounded fair isolated workflow lanes and joint provider/rule/temporal rollback.215 Rust +23 external tests/11 process cases/full checks PASS. P2-02 evidence `daeeb181d99236094daa3272fd4efa3855ddca06`.
 - Previous implementation: **P2-04 — Snapshot / Restore**, COMPLETED; evidence `4dffdfe235eba1f698a34b3e0df6c2198a066ba3`, complete bounded reconstruction/atomic persistence;229 Rust/23 external/11 process cases PASS.
-- Latest implementation: **P2-05 — Replay & Debug Trace**, COMPLETED; evidence `8c2b39f83c03fbcb0794c18a5fef4d92e998a5ee`;238 Rust/23 external/11 process cases PASS.
-- Next eligible implementation: **P2-06 — P2 Temporal Strategy Gate**, VERIFIED. Complete actual G-006/X-002 temporal model, independent expectations and wait-point restore. User authorizes continuing downstream work without routine confirmation; publishing is not requested.
+- Previous implementation: **P2-05 — Replay & Debug Trace**, COMPLETED; evidence `8c2b39f83c03fbcb0794c18a5fef4d92e998a5ee`;238 Rust/23 external/11 process cases PASS.
+- Latest implementation: **P2-06 — Temporal Strategy Gate**, COMPLETED; evidence `d272c4d78445f984686d9025e7cb29c0de9fc544`;244 Rust/23 external/11 process/55 independent rows/full P2 gate PASS.
+- Next eligible implementation: **P3-01 — Financial Contract & Historical Data**, READY. Exact financial metadata, historical loader/manifest and Desk synthetic comparison baseline. User authorizes continuing downstream work without routine confirmation; publishing is not requested.
 - P1-02 acceptance met: evaluated numeric policy/limits, strict type/unit/scale checks, unsupported-shape rejection, full binding matrix and tests. Evidence `a653c105fba5ea6ada15395abc22cc8f82cc4472` and local closure recorded below; publishing not requested.
 - Actual root: `/Users/george/Desktop/finger-quant-engine`; main tracking origin/main; remote `https://github.com/FingerTrader/finger-quant-engine.git`.
 - Rust source baseline / latest pre-governance commit: `342d8aa76b48d32fa9c9110609b371eac52b8d86` (foundation). Previous commit: `cbcebad`.
@@ -39,15 +40,16 @@
 | P2-03 | COMPLETED | Typed temporal windows/timers, bounded fair isolated lanes, joint candidate rollback;215 Rust/23 external/11 process cases PASS; evidence `f73082c86622ce40311d7e9ec91eef08402d681f`; local closure |
 | P2-04 | COMPLETED | Bounded complete reconstruction/explicit capability/strict pins/output cursors/atomic persistence;229 Rust/23 external/11 process cases PASS; evidence `4dffdfe235eba1f698a34b3e0df6c2198a066ba3`; local closure |
 | P2-05 | COMPLETED | Bounded trace/replay/source divergence and off/full/exhausted parity;238 Rust/23 external/11 process PASS; evidence `8c2b39f83c03fbcb0794c18a5fef4d92e998a5ee`; local closure |
-| P2-06 | VERIFIED | All P2 implementation dependencies complete; actual G-006/X-002 full temporal gate next |
-| P3-01, P3-02, P3-03, P3-04, P3-05, P3-06, P3-07 | NOT_STARTED | P2 gate first |
+| P2-06 | COMPLETED | Actual G-006/X-002/55-row oracle/source pins and full P2 gate PASS;244 Rust/23 external/11 process cases; evidence `d272c4d78445f984686d9025e7cb29c0de9fc544`; local closure |
+| P3-01 | READY | P2 complete; exact financial/data/manifest/Desk synthetic baseline next |
+| P3-02, P3-03, P3-04, P3-05, P3-06, P3-07 | NOT_STARTED | Prior P3 dependencies/gate first |
 | P4-01, P4-02, P4-03, P4-04, P4-05 | NOT_STARTED | P3 gate first |
 | P5-01, P5-02, P5-03, P5-04, P5-05 | NOT_STARTED | P4 gate first; Python → Java → Go |
 | P5-05.01 | NOT_STARTED | Real unlisted-language onboarding after P5-04; prerequisite of parent P5-05 |
 | P6-01, P6-02, P6-03, P6-04, P6-05, P6-06 | NOT_STARTED | P5 gate first |
 | P6-03.01 | NOT_STARTED | Java-indicator/Go-predicate graph after P6-02; prerequisite of parent P6-03 |
 
-Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 16 COMPLETED, 1 VERIFIED, 25 NOT_STARTED. P2-06 is first eligible; none is BLOCKED. P1 gate passed; later phase gates remain open. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
+Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 17 COMPLETED, 1 READY, 24 NOT_STARTED. P3-01 is first eligible; none is BLOCKED. P1/P2 gates passed; P3–P6 gates remain open. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
 
 ## Delivered baseline and limitations
 
@@ -55,7 +57,7 @@ Five Rust crates preserve the initial foundation: validated domain values, exper
 
 An experimental P1-02 decimal/type/parameter layer exists in fqe-core/fqe-ir. P1-03 adds the separately versioned IR2 bounded JSON importer, immutable model declarations, exact numeric values, canonical/source identity and content-pinned prepared bindings. [Model loading](MODEL_LOADING.md) owns supported/unsupported semantics; [dependency review](P1_03_DEPENDENCY_REVIEW.md) records three direct libraries and all 21 resolved registry packages. Offline builds require previously cached toolchain and locked dependencies.
 
-The separate P1-05 expression/crossing layer and P1-06 registered indicators are implemented. P1-07 adds typed provider/module compilation, pure AST mapping and deferred incremental handles. P1-08 now implements [compiled event execution](EVENT_EXECUTION.md) with continuous closed bars, explicit roots and whole-event staged state. P1-09 adds [actual loaded CLI execution](CLI_EXECUTION.md), bounded typed file/results and actual-byte source hashes. P1-10 adds an [independent process consumer](EXTERNAL_INVOCATION.md) with exact versioned result/provenance validation and bounded POSIX supervision. Separate experimental P2 profiles now implement stateful workflows, multi-market/temporal coordination and bounded checkpoint reconstruction; their full temporal gate remains open. Backtester/virtual ledger/optimizer, Desktop boundary, SDK adapter, language worker and plugin runtime remain unimplemented. Signals are observations, not orders/fills/performance. The `.proto` remains a draft, not a codec or transport. [Audit](BASELINE_AUDIT.md) records the dated pre-P1-02 foundation rather than current feature totals.
+The separate P1-05 expression/crossing layer and P1-06 registered indicators are implemented. P1-07 adds typed provider/module compilation, pure AST mapping and deferred incremental handles. P1-08 now implements [compiled event execution](EVENT_EXECUTION.md) with continuous closed bars, explicit roots and whole-event staged state. P1-09 adds [actual loaded CLI execution](CLI_EXECUTION.md), bounded typed file/results and actual-byte source hashes. P1-10 adds an [independent process consumer](EXTERNAL_INVOCATION.md) with exact versioned result/provenance validation and bounded POSIX supervision. Separate experimental P2 profiles now implement stateful workflows, multi-market/temporal coordination and bounded checkpoint reconstruction; their full temporal gate passed under P2-06. Backtester/virtual ledger/optimizer, Desktop boundary, SDK adapter, language worker and plugin runtime remain unimplemented. Signals are observations, not orders/fills/performance. The `.proto` remains a draft, not a codec or transport. [Audit](BASELINE_AUDIT.md) records the dated pre-P1-02 foundation rather than current feature totals.
 
 ## Historical baseline verification evidence
 
@@ -344,3 +346,5 @@ Full `PYTHONDONTWRITEBYTECODE=1 python3 scripts/check_p2_gate.py` PASS completed
 Six added Rust tests:5 G-006 cases/state/numeric/window/repeat/isolation/prefix/ordering/restore tests plus1 custom-provider X-002 two-lane/two-rule every-command restoration test. Every wait/expiry point of all G-006 cases and every command of expiry case reproduce suffix receipts/cursors/state/windows/final checkpoint bytes; late incomplete wait atEOF is reported rather than fabricated. Actual shared financial lanes reproduce full traces/outputs independently. Unrelated stream cannot count a wait bar, stalls on missing watermark, maps originalbar8 to logical9 and retains only published alignment. Duplicate/backward ingress and future-queued/prefix invariance PASS. Existing full workspace covers same-time higher-frame traps, absent timers, overload, quarantine/retry/cancel, actual custom-provider/crossing/rule error rollback and crash persistence. Custom provider new split test ends counts3/6 per lane and releases all state. Initial test-only tick gap-policy and nonexistent slow-instance expectations were corrected using the actual contract and a new two-rule artifact; no financial computation was changed to fit expectations.
 
 No new dependency/manifest/lock/toolchain, protected financial source or old golden changes, installer, scanner or private upload. Explicit bounded/trusted/same-engine limitations in acceptance/contracts remain; no production-volume/other-platform, accounting/backtest/simulation/Desk/Flutter/SDK/language completion credited. P2 gate is VERIFIED pending evidence commit and synchronized closure; only then P3-01 becomes READY. Continue automatically; publishing not requested.
+
+Final intended/staged/production-source/golden preservation review PASS. Evidence `d272c4d78445f984686d9025e7cb29c0de9fc544` committed. This three-document closure marks P2-06 and P2 COMPLETED/P3-01 READY. Remote main read-confirmed `0ac5d7b163e77bddb5f69689a1455e3560aad872`;36 local commits including closure unpushed. No publication requested/performed; continue automatically.
