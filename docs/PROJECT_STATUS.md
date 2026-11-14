@@ -4,13 +4,13 @@
 
 ## Current position
 
-- Phase: **P1 and P2 COMPLETED**. Universal strategy and temporal/recovery gates passed. **P3-01 VERIFIED**; P3–P6 remain incomplete.
+- Phase: **P1 and P2 COMPLETED**. Universal strategy and temporal/recovery gates passed. **P3-01 COMPLETED**; P3–P6 remain incomplete.
 - Completed: GOV-01/GOV-02/GOV-03 and P1-01 through P1-11; local evidence and closure records synchronized.
 - Previous implementation: **P2-03 — Time Windows, Timers & Instance Scheduling**, COMPLETED. Evidence `f73082c86622ce40311d7e9ec91eef08402d681f`; typed bound temporal windows, deterministic timers, bounded fair isolated workflow lanes and joint provider/rule/temporal rollback.215 Rust +23 external tests/11 process cases/full checks PASS. P2-02 evidence `daeeb181d99236094daa3272fd4efa3855ddca06`.
 - Previous implementation: **P2-04 — Snapshot / Restore**, COMPLETED; evidence `4dffdfe235eba1f698a34b3e0df6c2198a066ba3`, complete bounded reconstruction/atomic persistence;229 Rust/23 external/11 process cases PASS.
 - Previous implementation: **P2-05 — Replay & Debug Trace**, COMPLETED; evidence `8c2b39f83c03fbcb0794c18a5fef4d92e998a5ee`;238 Rust/23 external/11 process cases PASS.
 - Latest implementation: **P2-06 — Temporal Strategy Gate**, COMPLETED; evidence `d272c4d78445f984686d9025e7cb29c0de9fc544`;244 Rust/23 external/11 process/55 independent rows/full P2 gate PASS.
-- Next eligible implementation: **P3-01 — Financial Contract & Historical Data**, VERIFIED. Exact financial metadata, historical loader/manifest and Desk synthetic comparison baseline. User authorizes continuing downstream work without routine confirmation; publishing is not requested.
+- Next eligible implementation: **P3-02 — Virtual Accounts & Ledger**, READY. P3-01 exact financial/history inputs completed; balanced journal/reservations/P&L/replay and independent cash-long/short comparison next. User authorizes continuing downstream work without routine confirmation; publishing is not requested.
 - P1-02 acceptance met: evaluated numeric policy/limits, strict type/unit/scale checks, unsupported-shape rejection, full binding matrix and tests. Evidence `a653c105fba5ea6ada15395abc22cc8f82cc4472` and local closure recorded below; publishing not requested.
 - Actual root: `/Users/george/Desktop/finger-quant-engine`; main tracking origin/main; remote `https://github.com/FingerTrader/finger-quant-engine.git`.
 - Rust source baseline / latest pre-governance commit: `342d8aa76b48d32fa9c9110609b371eac52b8d86` (foundation). Previous commit: `cbcebad`.
@@ -41,15 +41,16 @@
 | P2-04 | COMPLETED | Bounded complete reconstruction/explicit capability/strict pins/output cursors/atomic persistence;229 Rust/23 external/11 process cases PASS; evidence `4dffdfe235eba1f698a34b3e0df6c2198a066ba3`; local closure |
 | P2-05 | COMPLETED | Bounded trace/replay/source divergence and off/full/exhausted parity;238 Rust/23 external/11 process PASS; evidence `8c2b39f83c03fbcb0794c18a5fef4d92e998a5ee`; local closure |
 | P2-06 | COMPLETED | Actual G-006/X-002/55-row oracle/source pins and full P2 gate PASS;244 Rust/23 external/11 process cases; evidence `d272c4d78445f984686d9025e7cb29c0de9fc544`; local closure |
-| P3-01 | VERIFIED | Exact finance/UTC/history/selection/manifest/cursor and synthetic baseline; full257 Rust/23 external/11 process checks PASS; evidence commit pending |
-| P3-02, P3-03, P3-04, P3-05, P3-06, P3-07 | NOT_STARTED | Prior P3 dependencies/gate first |
+| P3-01 | COMPLETED | Exact financial/history/input profile;257 Rust/23 external/11 process/full P2 gate PASS; evidence `f7d87ed730a74664cb6dc4182fbc6cac62c007e6`; local closure |
+| P3-02 | READY | P3-01 closed; independent authoritative ledger next |
+| P3-03, P3-04, P3-05, P3-06, P3-07 | NOT_STARTED | Prior P3 dependencies/gate first |
 | P4-01, P4-02, P4-03, P4-04, P4-05 | NOT_STARTED | P3 gate first |
 | P5-01, P5-02, P5-03, P5-04, P5-05 | NOT_STARTED | P4 gate first; Python → Java → Go |
 | P5-05.01 | NOT_STARTED | Real unlisted-language onboarding after P5-04; prerequisite of parent P5-05 |
 | P6-01, P6-02, P6-03, P6-04, P6-05, P6-06 | NOT_STARTED | P5 gate first |
 | P6-03.01 | NOT_STARTED | Java-indicator/Go-predicate graph after P6-02; prerequisite of parent P6-03 |
 
-Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 17 COMPLETED, 1 VERIFIED, 24 NOT_STARTED. P3-01 is first eligible; none is BLOCKED. P1/P2 gates passed; P3–P6 gates remain open. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
+Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 18 COMPLETED, 1 READY, 23 NOT_STARTED. P3-02 is first eligible; none is BLOCKED. P1/P2 gates passed; P3–P6 gates remain open. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
 
 ## Delivered baseline and limitations
 
@@ -358,3 +359,5 @@ Implement an exact bounded financial/history foundation, not accounts or fills: 
 2026-11-14T11:34:47Z full `PYTHONDONTWRITEBYTECODE=1 python3 scripts/check_p2_gate.py` PASS using pinned cached Rust1.99.0/macOS ARM64/Python3.14.6:257 Rust tests (13 new financial/history tests),23 external tests/11 process cases, original independent6 temporal cases/55 rows/3 gate controls/23 P2 source pins and all old P1 source/numeric goldens preserved. Required fmt/check/test/strict all-target Clippy/docs/diff PASS;44 Markdown/569 local links/42 tasks. Actual historical_inputs example PASS:4 CSV bars,1 warmup,0 signals, no financial execution, exact frozen manifest. Fixture dataset `sha256:54467f946e9eaa03fd5bcf1c769acd900cbb0b10189673bcbb7e234616d03008`, selection `sha256:d754fa120fe3870c87aacee77b1d86af0e1cc19642692619e8bea00dfa93e0a7`.
 
 [Financial/history](FINANCIAL_HISTORY.md)/ADR-027 own checked exact units/step rounding/signed data/time policies, bounded strict host CSV/spec/session/revision/range/identity, frozen compiled-plan input manifest and no-future cursor. Independent identities came from Python stdlib, never regenerated by tests; public cash-long comparison baseline freezes final1019/net19 for P3-02. Desk actual dirty source identities/mapping differences recorded after read-only inspection; no Desk edits/packages/tests/app execution or parity claim. Runtime rejects selected gaps; cursor availability assumes trusted host; input manifest explicitly excludes ledger/fees/fills. No dependency/manifest/lockfile/toolchain/protected provider/old golden changes, installs, scanners or private uploads. Evidence commit/closure pending; continue automatically to P3-02 after closure.
+
+P3-01 intended/staged diff and protected source/lockfile preservation reviewed. Evidence `f7d87ed730a74664cb6dc4182fbc6cac62c007e6` committed; this closure marks P3-01 COMPLETED/P3-02 READY. Remote main remains0ac5d7b163e77bddb5f69689a1455e3560aad872;38 local commits including closure, no publication requested. Continue automatically.
