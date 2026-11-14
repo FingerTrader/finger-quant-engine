@@ -5,9 +5,9 @@
 ## Current position
 
 - Phase: **P1 — Universal Strategy Foundation, incomplete**. P2–P6 NOT_STARTED. No functional phase gate has passed.
-- Completed: GOV-01/GOV-02/GOV-03 and P1-01 through P1-06; local evidence and closure records synchronized.
-- Latest implementation: **P1-07 — Strategy Compiler & Typed Graph**, VERIFIED. Loaded scalar/typed graphs, bounded pure modules, deterministic pinned plans/source maps, pure AST projection and deferred indicator preparation delivered; 119 tests/full checks/all examples PASS. Evidence commit pending.
-- Active closure: P1-07 VERIFIED; P1-08 becomes READY after evidence closure. User authorized continuing downstream work without routine confirmation; publishing is not requested.
+- Completed: GOV-01/GOV-02/GOV-03 and P1-01 through P1-07; local evidence and closure records synchronized.
+- Latest implementation: **P1-07 — Strategy Compiler & Typed Graph**, COMPLETED. Loaded scalar/typed graphs, bounded pure modules, deterministic pinned plans/source maps, pure AST projection and deferred indicator preparation delivered; 119 tests/full checks/all examples PASS. Evidence `c9a097e9a98ef91c3dd5c0f15df9639a72748260`.
+- Next eligible implementation: **P1-08 — Basic Universal Event Evaluation**, READY. Compiled market-event execution and atomic subscriptions follow this compiler slice. User authorized continuing downstream work without routine confirmation; publishing is not requested.
 - P1-02 acceptance met: evaluated numeric policy/limits, strict type/unit/scale checks, unsupported-shape rejection, full binding matrix and tests. Evidence `a653c105fba5ea6ada15395abc22cc8f82cc4472` and local closure recorded below; publishing not requested.
 - Actual root: `/Users/george/Desktop/finger-quant-engine`; main tracking origin/main; remote `https://github.com/FingerTrader/finger-quant-engine.git`.
 - Rust source baseline / latest pre-governance commit: `342d8aa76b48d32fa9c9110609b371eac52b8d86` (foundation). Previous commit: `cbcebad`.
@@ -27,8 +27,9 @@
 | P1-04 | COMPLETED | Pure registry/invocation/model-node preparation, two independent X-001 compositions, 69 tests/full checks; evidence `d0382d365815d233e4f28773995e2ef688f2a656`, local closure |
 | P1-05 | COMPLETED | Typed expressions/calls and transactional crossings; 86 tests/full checks/all examples PASS; evidence `424aacb9faf5d081b72bf0a82f26ef396de16c78`, local closure |
 | P1-06 | COMPLETED | Registered indicators/owned staged state/ADR-017; 96 tests/full checks/all examples PASS; evidence `e772bf0a44f35a5b457cbe10c02eb8cc16689003`, local closure |
-| P1-07 | VERIFIED | Generic compiler/pure modules/source maps/deferred incremental handles/ADR-018; 119 tests/full checks/all examples PASS; evidence commit pending |
-| P1-08, P1-09, P1-10, P1-11 | NOT_STARTED | Dependencies in DELIVERY_PLAN |
+| P1-07 | COMPLETED | Compiler/pure modules/source maps/ADR-018; 119 tests/full checks/all examples PASS; evidence `c9a097e9a98ef91c3dd5c0f15df9639a72748260`, local closure |
+| P1-08 | READY | P1-07 closed; compiled event runtime, closed-bar validation, eager subscriptions/atomic state/signals, see NEXT_SESSION |
+| P1-09, P1-10, P1-11 | NOT_STARTED | Dependencies in DELIVERY_PLAN |
 | P2-01, P2-02, P2-03, P2-04, P2-05, P2-06 | NOT_STARTED | P1 gate first |
 | P3-01, P3-02, P3-03, P3-04, P3-05, P3-06, P3-07 | NOT_STARTED | P2 gate first |
 | P4-01, P4-02, P4-03, P4-04, P4-05 | NOT_STARTED | P3 gate first |
@@ -37,7 +38,7 @@
 | P6-01, P6-02, P6-03, P6-04, P6-05, P6-06 | NOT_STARTED | P5 gate first |
 | P6-03.01 | NOT_STARTED | Java-indicator/Go-predicate graph after P6-02; prerequisite of parent P6-03 |
 
-Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 6 COMPLETED, 1 VERIFIED, 35 NOT_STARTED. P1-07 awaits evidence closure; none is BLOCKED. No functional phase gate has passed. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
+Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 7 COMPLETED, 1 READY, 34 NOT_STARTED. P1-08 is next; none is IN_PROGRESS or BLOCKED. No functional phase gate has passed. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
 
 ## Delivered baseline and limitations
 
@@ -185,4 +186,4 @@ Local implementation evidence committed as `e772bf0a44f35a5b457cbe10c02eb8cc1668
 - Independent Python stdlib json/hashlib generator imports no engine; tracked graph canonical content ID `sha256:e249358f3bd44864456663cd3084f6e5ba4b2e4d7c7b500e0041340872234227`, raw canonical SHA `64a0fc4d525e3bd84a2d0763e9e039fd660277d52c8e20501ccf3a7686388054`. Canonical graph fixture is 6385 bytes. Tests do not regenerate fixtures. Initial unused helper warning was removed before final strict checks; no final warning/error remains.
 - Document checker PASS: 33 Markdown files/42 stage tasks; local links and status/dependency projections checked. Full intended diff, whitespace and protected-path review PASS. No dependency/manifests/lockfile/toolchain/LICENSE change, new advisory query/scanner/private upload or external Desk/SDK repository action. Existing approved pinned dependencies used offline. Core/runtime/CLI/protocol/model declarations/pure built-ins/indicator/expression implementations and independent provider source remain unchanged.
 
-Local evidence commit pending; task remains VERIFIED until recorded. Remote main read-confirmed `0ac5d7b163e77bddb5f69689a1455e3560aad872`; no push requested/attempted. P1-08 must deliver actual closed-bar dispatch, once-per-event state subscriptions, expression/cross roots and atomic all-node/signal commit; pure example execution does not close that gate. P1-09–P1-11/Desk/backtest/simulation remain open.
+Local implementation evidence committed as `c9a097e9a98ef91c3dd5c0f15df9639a72748260`. This follow-up synchronizes COMPLETED closure and P1-08 READY; resolve its SHA through the status-log command above. Sixteen local commits including this closure remain unpushed. Remote main read-confirmed `0ac5d7b163e77bddb5f69689a1455e3560aad872`; no push requested/attempted. P1-08 must deliver actual closed-bar dispatch, once-per-event state subscriptions, expression/cross roots and atomic all-node/signal commit; pure example execution does not close that gate. P1-09–P1-11/Desk/backtest/simulation remain open.
