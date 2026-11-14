@@ -1,0 +1,109 @@
+# Development
+
+Status: the commands below build and test the Rust foundation. Protocol generation, workers, packaging, and automated release pipelines are not configured.
+
+## Repository and toolchain
+
+This independent repository is the home for FQE core work. The initial development branch is `main`; do not create extra worktrees or branches for initialization. Preserve existing remote commits and never force-push.
+
+Rust is pinned to `1.99.0` in `rust-toolchain.toml`, with the minimal profile, rustfmt, and Clippy. Package metadata declares Rust 1.99 and edition 2024. The initial machine uses macOS ARM64 and an existing Xcode linker. Other operating systems have not yet been validated.
+
+The toolchain pin favors a reproducible baseline. Review security advisories and platform support before upgrading it; update the pin and validation evidence together.
+
+## Project-local toolchain
+
+Initialization installs the approved official toolchain inside the Git-ignored `.local-toolchain/`. From the repository root, activate it in the current shell:
+
+```sh
+export CARGO_HOME="$PWD/.local-toolchain/cargo"
+export RUSTUP_HOME="$PWD/.local-toolchain/rustup"
+export PATH="$CARGO_HOME/bin:$PATH"
+cargo --version
+rustc --version
+```
+
+These exports affect the current shell only. No global toolchain or shell startup configuration is required. Do not commit or copy this machine-specific directory to GitHub. On another computer with a normal Rust installation, rustup can use the repository's pin directly after installing its components.
+
+Toolchain installation is an explicit setup step; offline builds assume it has already completed.
+
+## Required checks
+
+Run from the repository root:
+
+```sh
+cargo fmt --check
+cargo check --workspace
+cargo test --workspace
+cargo clippy --workspace --all-targets
+```
+
+For reproducibility and to prohibit registry access, the Cargo build/test/lint commands also support:
+
+```sh
+cargo check --workspace --locked --offline
+cargo test --workspace --locked --offline
+cargo clippy --workspace --all-targets --locked --offline -- -D warnings
+```
+
+Use `cargo fmt` to fix formatting, then rerun `cargo fmt --check`. Fix code and behavior on test failures; do not remove tests to obtain a passing result.
+
+## Initialization verification baseline
+
+The initialization baseline was verified on macOS ARM64 with Rust 1.99.0:
+
+| Check | Result |
+| --- | --- |
+| cargo fmt --check | Passed |
+| cargo check --workspace | Passed |
+| cargo test --workspace | Passed: 17 behavioral tests, none failed or ignored |
+| cargo clippy --workspace --all-targets | Passed without warnings |
+| Clippy with --locked --offline -- -D warnings | Passed |
+| Offline CLI demo | Completed: 3 events, 2 signals |
+
+The toolchain installer came from the official Rust distribution host and its SHA-256 matched the host's checksum. Public Rust/Rustup metadata, licenses, and GitHub advisories were reviewed; the returned Rust advisories describe versions older than this pin. The Cargo lockfile contains only five local workspace packages. No private dependency data was uploaded to external scanning services.
+
+A local secret-pattern review found no matches in commit candidates, and relative document links were checked. These checks are limited evidence, not an exhaustive security audit. Other operating systems, protobuf interoperability, financial accounting, worker isolation, and production workloads remain unverified.
+
+## Run the CLI
+
+```sh
+cargo run --locked --offline -p fqe-cli -- demo
+cargo run --locked --offline -p fqe-cli -- --help
+cargo run --locked --offline -p fqe-cli -- --version
+```
+
+No arguments display help. Unsupported arguments exit with code 2, a demo error exits with code 1, and success exits with code 0. The CLI currently has no strategy file loader or backtest, simulation, worker, or server command.
+
+## Tests and scope
+
+Tests cover domain validation, strict price comparison, instrument matching, version rejection, repeatable runtime reports, input ordering, failed and terminal states, empty input, signal provenance, CLI output/exit codes, and protocol version-number compatibility.
+
+These checks validate the initial rule interpreter. They do not verify financial accounting, wire interoperability, worker isolation, Desktop integration, or production workload limits because those features are not implemented.
+
+## Protocol schema
+
+The experimental source is `crates/fqe-protocol/proto/fqe/v1alpha1/engine.proto`. It is embedded as text by the Rust protocol crate. Cargo does not run protoc or generate bindings.
+
+An already installed protoc may check schema syntax separately:
+
+```sh
+protoc --proto_path=crates/fqe-protocol/proto \
+  --descriptor_set_out=/tmp/fqe-engine-descriptor.pb \
+  fqe/v1alpha1/engine.proto
+```
+
+This is optional and proves syntax only. It does not implement or test encoding/decoding, wire/domain conversion, an RPC service, or cross-language support. Review and approve any new compiler or generation tool before installation/execution.
+
+## Dependency and supply-chain rules
+
+The initial Cargo manifests use only workspace path dependencies and the Rust standard library. There are no registry dependencies, build.rs files, install hooks, or generated bindings. `Cargo.lock` must remain committed, including for this CLI workspace.
+
+Before adding a dependency, establish need, inspect public package metadata, maintainers/repository, release age, license, scripts/native/code-generation behavior, and known advisory signals. Follow supply-chain review requirements before running unfamiliar installers or generators. Keep manifests and lockfile aligned.
+
+Do not upload private source, manifests, package names, dependency graphs, or local scanner reports to third-party services without approval. Public advisory checks are evidence, not proof of absence of vulnerabilities. Record residual risk when dependencies or tools change.
+
+## Data, secrets, and publication
+
+`target/`, `.local-toolchain/`, `data/`, `runs/`, environment files, and private key extensions are ignored. Use synthetic fixtures in tracked tests; keep datasets, credentials, accounts, and private reports out of commits.
+
+Before pushing, inspect `git diff --check`, all intended staged files, the lockfile, secret-like content, and the remote branch tip. Fetch and preserve new remote commits; use a normal fast-forward push to main. Keep existing README intent and repository license. No registry publishing or GitHub release automation is configured.

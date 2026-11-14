@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package fqe.v1alpha1;
+
+// EXPERIMENTAL: schema design only. No generated bindings or transport yet.
+// uint64 values must remain exact in every consumer (including Dart and JSON).
+message ProtocolVersion {
+  uint32 major = 1;
+  uint32 minor = 2;
+}
+
+message StrategyDefinition {
+  uint32 ir_version = 1;
+  string strategy_id = 2;
+  string instrument = 3;
+  PriceGreaterThan condition = 4;
+  SignalKind signal = 5;
+}
+
+message CurrentPrice {}
+
+message PriceExpression {
+  oneof expression {
+    CurrentPrice current = 1;
+    uint64 literal_ticks = 2;
+  }
+}
+
+message PriceGreaterThan {
+  PriceExpression left = 1;
+  PriceExpression right = 2;
+}
+
+enum SignalKind {
+  SIGNAL_KIND_UNSPECIFIED = 0;
+  SIGNAL_KIND_LONG = 1;
+  SIGNAL_KIND_FLAT = 2;
+}
+
+message MarketTick {
+  string instrument = 1;
+  uint64 price_ticks = 2;
+}
+
+message Signal {
+  string instrument = 1;
+  SignalKind kind = 2;
+  uint64 source_sequence = 3;
+}
+
+// sequence is per envelope stream; source_sequence identifies the input event.
+// A run ID and protocol version exist on the wire draft, not the Rust Event model.
+message EventEnvelope {
+  ProtocolVersion protocol_version = 1;
+  string run_id = 2;
+  uint64 sequence = 3;
+  uint64 timestamp_ns = 4;
+  oneof payload {
+    MarketTick market_tick = 10;
+    Signal signal = 11;
+  }
+}

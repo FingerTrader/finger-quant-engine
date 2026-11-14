@@ -1,0 +1,9 @@
+/target/
+/.local-toolchain/
+/data/
+/runs/
+.DS_Store
+.env
+.env.*
+*.pem
+*.key
