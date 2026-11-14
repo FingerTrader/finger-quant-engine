@@ -6,8 +6,8 @@
 
 - Phase: **P1 — Universal Strategy Foundation, incomplete**. P2–P6 NOT_STARTED. No functional phase gate has passed.
 - Completed: GOV-01 architecture governance, GOV-02 Desk planning, GOV-03 extensibility planning, P1-01 baseline audit and P1-02 type/parameter implementation. P1-03 is now COMPLETED with local evidence recorded below.
-- Latest implementation: **P1-03 — Versioned Definition & Model Loading**, COMPLETED. Immutable declarations, strict bounded IR2 JSON import, exact values, canonical/source identities and content-pinned parameter preparation delivered; no graph execution or Flutter integration.
-- Active implementation: **P1-04 — Node, Function & Provider Registries**, VERIFIED after P1-03 closure. Scope: immutable scalar callable descriptors, frozen registry/content pins, validated pure in-process invocation and model-node preparation, built-ins and independent X-001 provider tests. P1-03 evidence `b4b7707fc786c5ea5b68dd7f19fb03cb10f5b45d` records verified artifacts; publishing not requested.
+- Latest implementation: **P1-04 — Node, Function & Provider Registries**, COMPLETED. Frozen typed pure scalar registries, generic validated invocation and local model-node preparation, independent loaded X-001 compositions delivered.
+- Next eligible implementation: **P1-05 — Universal Expression Engine**, READY. P1-04 evidence `d0382d365815d233e4f28773995e2ef688f2a656`; no P1-05 code begun at this closure. User authorized continuing downstream tasks without repeated confirmation.
 - P1-02 acceptance met: evaluated numeric policy/limits, strict type/unit/scale checks, unsupported-shape rejection, full binding matrix and tests. Evidence `a653c105fba5ea6ada15395abc22cc8f82cc4472` and local closure recorded below; publishing not requested.
 - Actual root: `/Users/george/Desktop/finger-quant-engine`; main tracking origin/main; remote `https://github.com/FingerTrader/finger-quant-engine.git`.
 - Rust source baseline / latest pre-governance commit: `342d8aa76b48d32fa9c9110609b371eac52b8d86` (foundation). Previous commit: `cbcebad`.
@@ -24,8 +24,9 @@
 | P1-01 | COMPLETED | [Baseline audit](BASELINE_AUDIT.md): all crate/contract inventory, 17 tests, gap/task mapping and document checks; evidence `f07fe8ccd4c12b46783b67ff0a2421172d05d5dc` |
 | P1-02 | COMPLETED | Checked decimal/type/parameter APIs, contract/ADR and 36 tests/full checks/two examples; evidence `a653c105fba5ea6ada15395abc22cc8f82cc4472`; local closure, not pushed |
 | P1-03 | COMPLETED | Strict bounded import/identity/binding/compatibility contract; 56 tests/full checks; evidence `b4b7707fc786c5ea5b68dd7f19fb03cb10f5b45d`; local closure, not pushed |
-| P1-04 | VERIFIED | Pure registry/invocation/model-node preparation, independent X-001 compositions, 69 tests/full checks; evidence/closure pending |
-| P1-05, P1-06, P1-07, P1-08, P1-09, P1-10, P1-11 | NOT_STARTED | Dependencies in DELIVERY_PLAN |
+| P1-04 | COMPLETED | Pure registry/invocation/model-node preparation, two independent X-001 compositions, 69 tests/full checks; evidence `d0382d365815d233e4f28773995e2ef688f2a656`, local closure |
+| P1-05 | READY | P1-04 completed; typed expressions/crossing/readiness/history acceptance in NEXT_SESSION |
+| P1-06, P1-07, P1-08, P1-09, P1-10, P1-11 | NOT_STARTED | Dependencies in DELIVERY_PLAN |
 | P2-01, P2-02, P2-03, P2-04, P2-05, P2-06 | NOT_STARTED | P1 gate first |
 | P3-01, P3-02, P3-03, P3-04, P3-05, P3-06, P3-07 | NOT_STARTED | P2 gate first |
 | P4-01, P4-02, P4-03, P4-04, P4-05 | NOT_STARTED | P3 gate first |
@@ -34,7 +35,7 @@
 | P6-01, P6-02, P6-03, P6-04, P6-05, P6-06 | NOT_STARTED | P5 gate first |
 | P6-03.01 | NOT_STARTED | Java-indicator/Go-predicate graph after P6-02; prerequisite of parent P6-03 |
 
-Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 3 COMPLETED (audit, types/parameters and model import), 1 VERIFIED, 38 NOT_STARTED. P1-04 is active; none is BLOCKED. No functional phase gate has passed. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
+Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 4 COMPLETED, 1 READY, 37 NOT_STARTED. P1-05 is next; none is IN_PROGRESS or BLOCKED. No functional phase gate has passed. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
 
 ## Delivered baseline and limitations
 
@@ -129,14 +130,16 @@ Delivery: implementation/test/contract evidence committed as `a653c105fba5ea6ada
 
 ## Next implementation acceptance — P1-04
 
-P1-03 is closed; P1-04 is VERIFIED pending evidence/closure. Implement shared versioned node/function/provider descriptors and deterministic registries. Resolve namespaced ID/version/signature, typed named ports and parameter contracts generically. Prove X-001 unknown-name function and predicate injection through the same in-process interface as built-ins; reject duplicate/version/type/arity/capability/unsupported-shape failures and cover multi-input/output signatures and deterministic registry identity. No per-name compiler branch or external artifact loader. Detailed scope is [Next session](NEXT_SESSION.md); remain within [Extensibility](EXTENSIBILITY_CONTRACT.md) and the 42-task dependency plan.
+P1-04 is closed with verified evidence below. Implement shared versioned node/function/provider descriptors and deterministic registries. Resolve namespaced ID/version/signature, typed named ports and parameter contracts generically. Prove X-001 unknown-name function and predicate injection through the same in-process interface as built-ins; reject duplicate/version/type/arity/capability/unsupported-shape failures and cover multi-input/output signatures and deterministic registry identity. No per-name compiler branch or external artifact loader. Detailed scope is [Next session](NEXT_SESSION.md); remain within [Extensibility](EXTENSIBILITY_CONTRACT.md) and the 42-task dependency plan.
 
 ## P1-04 execution scope
 
 Started 2026-11-14 from clean main f187a17e1cd7db3bdfca0b89189690171d794af8. Implement fqe-ir registry/provider/built-in modules, shared canonical descriptor helpers and independent example/test fixtures. Acceptance: exact namespaced/version/artifact resolution, typed named ports/parameters, duplicate/arity/unit/capability rejection, deterministic descriptor/registry identity, checked output validation and two manually driven X-001 compositions through the same interface. Scalar pure synchronous calls only; unsupported shapes/state/host services/external loading fail explicitly. Graph compilation/event scheduling and foreign-language execution remain later tasks. Reuse existing reviewed dependencies and pinned offline toolchain; no dependency changes planned. Required Rust/docs checks, prior examples and new provider example/tests must pass before closure.
 
-## P1-04 implementation evidence in progress
+## P1-04 registry verification
 
-Implemented registry.rs and builtins.rs, independent examples/support/providers.rs, providers example, registry_contract tests and tracked source-pinned models/canonical descriptor fixtures. Loader changes expose only crate-private canonical type/parameter helpers; IR2 encoding/goldens and legacy APIs are unchanged. Targeted registry tests PASS: 13 cases. Provider example PASS: 200/50 numeric outputs, true/false then false/true decisions from two different loaded artifacts. Registry identity eff2b19c3e3a8405db8828ec8dc14a394b206d0b0255983f692064c3c3d130af. Full final Rust/document checks PASS: 69 behavioral tests (56 previous + 13 registry), zero failed/ignored and zero doc tests; fmt/check/strict all-target Clippy, all four examples/demo, document checker 29 Markdown/267 local links/42 tasks and diff checks PASS. Evidence/closure commit pending. Current code remains experimental; no compiler/event runtime, indicator state, external loading or Desk change. No dependency/manifests/lockfile/toolchain changes; reuse the previously reviewed cached libraries and pinned Rust.
+Implemented registry.rs and builtins.rs, independent examples/support/providers.rs, providers example, registry_contract tests and tracked source-pinned models/canonical descriptor fixtures. Loader changes expose only crate-private canonical type/parameter helpers; IR2 encoding/goldens and legacy APIs are unchanged. Targeted registry tests PASS: 13 cases. Provider example PASS: 200/50 numeric outputs, true/false then false/true decisions from two different loaded artifacts. Registry identity eff2b19c3e3a8405db8828ec8dc14a394b206d0b0255983f692064c3c3d130af. Full final Rust/document checks PASS: 69 behavioral tests (56 previous + 13 registry), zero failed/ignored and zero doc tests; fmt/check/strict all-target Clippy, all four examples/demo, document checker 29 Markdown/267 local links/42 tasks and diff checks PASS. Evidence `d0382d365815d233e4f28773995e2ef688f2a656` committed; this status/handoff/plan-only closure records COMPLETED. Current code remains experimental; no compiler/event runtime, indicator state, external loading or Desk change. No dependency/manifests/lockfile/toolchain changes; reuse the previously reviewed cached libraries and pinned Rust.
 
 The intended diff was reviewed; preservation checks confirm no manifest/lockfile/core/runtime/CLI/protocol/toolchain/LICENSE changes. `rg` for both independent provider IDs under engine src returned no matches; example/test source holds the implementation. Remote main read-confirmed unchanged at 0ac5d7b163e77bddb5f69689a1455e3560aad872. No GitHub publishing requested. All checks used cached reviewed dependencies with locked/offline flags; no new advisory query or private upload.
+
+P1-04 closure: evidence commit is recorded; resolve this closure SHA via the status-log command. Including this closure, main is ten commits ahead of the last confirmed origin/main. No publishing requested. Next P1-05 is READY; no phase gate passed.
