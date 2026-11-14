@@ -4,7 +4,7 @@ Recover [status](PROJECT_STATUS.md), [plan](DELIVERY_PLAN.md), [ADRs](ARCHITECTU
 
 ## Verified position
 
-P1/P2/P3 and P4-01 COMPLETED. P4-02 VERIFIED, awaiting evidence commit and closure, then continue P4-03 actual Desk integration. P4-01 evidence `0d7da5275def9bf93a12823f5c0268a9d99d34de`, closure7aaf0dc. P3 evidence31dbc6e/closurec3c5b2a. Remote last read-confirmed0ac5d7b163e77bddb5f69689a1455e3560aad872; no push requested.
+P1/P2/P3 and P4-01 COMPLETED. P4-02 COMPLETED, evidence `1275b5cb1f9792f3c2540e62c00b5accebebb146`, closure synchronized. P4-03 READY; continue actual Desk integration. P4-01 evidence `0d7da5275def9bf93a12823f5c0268a9d99d34de`, closure7aaf0dc. P3 evidence31dbc6e/closurec3c5b2a. Remote last read-confirmed0ac5d7b163e77bddb5f69689a1455e3560aad872; no push requested.
 
 P4-02 final full P3 gate PASS2026-11-14T13:39:13.469005+00:00:340 Rust/23 external, all old process/golden/source gates,64 financial pins/3 controls/four financial oracles/seven examples/fresh-child restore and required fmt/check/test/strict Clippy/docs/diff. Portable [summary](evidence/p4-02/full-gate-summary.json), raw `/tmp/fqe-p402-final-gate.json`. Earlier339 pass predates shutdown/start race fix and is historical. All16 bridge tests pass (9 managed+7 prior).
 
@@ -14,7 +14,7 @@ Latest actual pinned Dart journey13:37:04Z passes subscription close/reopen, imm
 
 ## Next task and consumer
 
-After P4-02 evidence commit, record exact SHA/COMPLETED and P4-03 READY in status/plan/handoff; closure commit before downstream code. P4-03 must implement actual Desk application binding, generic descriptor/parameter/port editor, exact saved drafts/frozen dataset/settings/results, explicit legacy compatibility and one financial authority; actual native/offline journey required before completion. Read [Desk integration](DESK_INTEGRATION_PLAN.md). No actual Desk UI or customer Store install accepted yet.
+P4-02 evidence and closure recorded; activate P4-03 before downstream edits. P4-03 must implement actual Desk application binding, generic descriptor/parameter/port editor, exact saved drafts/frozen dataset/settings/results, explicit legacy compatibility and one financial authority; actual native/offline journey required before completion. Read [Desk integration](DESK_INTEGRATION_PLAN.md). No actual Desk UI or customer Store install accepted yet.
 
 Desk `/Users/george/Desktop/finger_desk`, mainHEADf8e8b8ae0c8b88137ac38bb472dfc3fa17e14cb7; last156 tracked modified/252 untracked, preserve unrelated work and refresh actual state. Read its AGENTS and full `docs/full-desktop-workbench-contract.md` before edits. Top/bottom shell cannot move; reuse existing workspace/panel IDs, FullDesktopDialog/palette. Application service owns process; panel closure cannot stop it. Preserve existing Dart/Python historical readers/explicit legacy backend, never silently reinterpret dual-SMA models or run two ledgers for one run. No complete ancestor master/api-map context found; already disclosed, no BFF/port inference.
 

@@ -10,7 +10,7 @@
 - Previous implementation: **P2-04 — Snapshot / Restore**, COMPLETED; evidence `4dffdfe235eba1f698a34b3e0df6c2198a066ba3`, complete bounded reconstruction/atomic persistence;229 Rust/23 external/11 process cases PASS.
 - Previous implementation: **P2-05 — Replay & Debug Trace**, COMPLETED; evidence `8c2b39f83c03fbcb0794c18a5fef4d92e998a5ee`;238 Rust/23 external/11 process cases PASS.
 - Latest implementation: **P2-06 — Temporal Strategy Gate**, COMPLETED; evidence `d272c4d78445f984686d9025e7cb29c0de9fc544`;244 Rust/23 external/11 process/55 independent rows/full P2 gate PASS.
-- Next eligible implementation: **P4-02 — Engine Controls & Events**, VERIFIED. P4-01 boundary verified/closed; implement application-owned native runs and bounded events/results. User authorizes continuing downstream work without routine confirmation; publishing is not requested.
+- Next eligible implementation: **P4-03 — Desktop Client & Local State**, READY. P4-02 verified/closed; integrate actual Desk binding/editor/state and native offline journey. User authorizes continuing downstream work without routine confirmation; publishing is not requested.
 - P1-02 acceptance met: evaluated numeric policy/limits, strict type/unit/scale checks, unsupported-shape rejection, full binding matrix and tests. Evidence `a653c105fba5ea6ada15395abc22cc8f82cc4472` and local closure recorded below; publishing not requested.
 - Actual root: `/Users/george/Desktop/finger-quant-engine`; main tracking origin/main; remote `https://github.com/FingerTrader/finger-quant-engine.git`.
 - Rust source baseline / latest pre-governance commit: `342d8aa76b48d32fa9c9110609b371eac52b8d86` (foundation). Previous commit: `cbcebad`.
@@ -49,14 +49,15 @@
 | P3-06 | COMPLETED | Isolated typed grid/train-only ranking/separate validation;317 Rust/full gate/independent grid PASS; evidence `2dac73503bbce2ce06788b123b23162941f5796d` |
 | P3-07 | COMPLETED | Full P3 gate324 Rust/23 external/11 prior+2 financial process cases/all oracles/examples/pins/restore PASS; evidence `31dbc6e1024d9d16b5703e5bcf78b101ad2c7182` |
 | P4-01 | COMPLETED | [Boundary](DESKTOP_BOUNDARY.md)/[evidence](P4_01_ACCEPTANCE.md), actual pinned Dart/native Sandbox comparison;331 Rust/full P3 gate PASS; evidence `0d7da5275def9bf93a12823f5c0268a9d99d34de`; local closure, not pushed |
-| P4-02 | VERIFIED | [Managed controls](ENGINE_CONTROLS.md),340 Rust/full P3 gate, actual pinned Dart/13 native lifecycle/workload cases/old compatibility PASS; evidence commit/closure pending |
-| P4-03, P4-04, P4-05 | NOT_STARTED | P4 run controls/consumer dependencies first |
+| P4-02 | COMPLETED | [Managed controls](ENGINE_CONTROLS.md),340 Rust/full P3 gate, actual pinned Dart/13 native lifecycle/workload cases/old compatibility PASS; evidence `1275b5cb1f9792f3c2540e62c00b5accebebb146`; local closure, not pushed |
+| P4-03 | READY | Actual Desk integration after P4-02 closure; acceptance in Desk integration contract |
+| P4-04, P4-05 | NOT_STARTED | P4 consumer dependencies first |
 | P5-01, P5-02, P5-03, P5-04, P5-05 | NOT_STARTED | P4 gate first; Python → Java → Go |
 | P5-05.01 | NOT_STARTED | Real unlisted-language onboarding after P5-04; prerequisite of parent P5-05 |
 | P6-01, P6-02, P6-03, P6-04, P6-05, P6-06 | NOT_STARTED | P5 gate first |
 | P6-03.01 | NOT_STARTED | Java-indicator/Go-predicate graph after P6-02; prerequisite of parent P6-03 |
 
-Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 25 COMPLETED, 1 VERIFIED, 16 NOT_STARTED. P4-02 is next eligible; none is BLOCKED. P1/P2/P3 gates passed; P4–P6 gates remain open. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
+Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 26 COMPLETED, 1 READY, 15 NOT_STARTED. P4-03 is next eligible; none is BLOCKED. P1/P2/P3 gates passed; P4–P6 gates remain open. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
 
 ## Delivered baseline and limitations
 
@@ -487,3 +488,5 @@ P4-02 partial implementation: native managed.rs registry/admission/lifecycle/ded
 P4-02 initial full P3 gate PASS339 Rust/23 external/all protected pins/prior gates/examples/oracles/required checks at2026-11-14T13:33:59.368641Z. Before closure review found a Rust API shutdown/start interleaving: execute's early closed check could precede a wait for the registry lock. Added a second check under the start/initialize lock and a regression proving an already-dispatched start cannot consume an operation after close. Terminal publication/admission release now share the registry lock.16 bridge tests (9 managed including new unit+7 prior), strict Clippy/release build verification launched; final full gate must be repeated for these changes (expected340 total), so initial339 pass is not final acceptance. Current prior SDK comparison/fault/peer compatibility passes: IPC26.069ms cold/0.320ms echo p95/19.732ms financial/2.913ms timer gap/11.209ms cancel/2.860ms death cleanup, normal peer exit0; FFI cold3.239619s again exceeds3s budget and remains rejected. Financial result unchanged byte-for-byte. No financial source/fixture/dependency/Desk changes.
 
 P4-02 final verification PASS2026-11-14T13:39:13.469005+00:00:340 Rust/23 external/full old P1/P2/P3 process and source/golden gates,64 financial pins/3 gate controls/four independent financial oracles/seven examples/fresh-child restore/all required checks.9 new managed Rust tests +7 prior bridge tests pass, full13-case managed native lifecycle/workload/rational/parity/RSS and latest actual pinned Dart13:37:04Z journey pass. Selected actual256-bar72-fill48.568ms/0-fill28.572ms/peak27443200B; Dart stop16.381ms/controlp950.384ms/complete canonical financial result unchanged. Final artifact/source witness and raw evidence linked from ENGINE_CONTROLS. First339 full gate was repeated after reviewed shutdown/start fix; use latest340 pass. No dependency/lock/manifest/financial provider/fixture/actual Desk edits. VERIFIED, awaiting local evidence commit/closure then P4-03 actual consumer. Publishing not requested.
+
+P4-02 closure: evidence `1275b5cb1f9792f3c2540e62c00b5accebebb146` records complete code/tests/contracts/raw evidence and full340-test verification. All closure conditions met; COMPLETED. P4-03 READY, continue automatically. Remote main independently confirmed0ac5d7b163e77bddb5f69689a1455e3560aad872; publishing not requested/no push attempted.
