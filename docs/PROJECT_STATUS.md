@@ -5,9 +5,9 @@
 ## Current position
 
 - Phase: **P1 — Universal Strategy Foundation, incomplete**. P2–P6 NOT_STARTED. No functional phase gate has passed.
-- Completed: GOV-01/GOV-02/GOV-03 and P1-01 through P1-07; local evidence and closure records synchronized.
-- Latest implementation: **P1-08 — Basic Universal Event Evaluation**, VERIFIED pending evidence/closure commits. Strict fqe.event-plan/1 codec, closed bars, atomic staged state/crossings, retryable streaming runtime and source-linked observations delivered. 146 tests/full checks/all examples PASS. Previous P1-07 evidence `c9a097e9a98ef91c3dd5c0f15df9639a72748260`.
-- Current closure: **P1-08**, VERIFIED; P1-09 becomes READY after evidence is committed and closure synchronized. User authorized continuing downstream work without routine confirmation; publishing is not requested.
+- Completed: GOV-01/GOV-02/GOV-03 and P1-01 through P1-08; local evidence and closure records synchronized.
+- Latest implementation: **P1-08 — Basic Universal Event Evaluation**, COMPLETED. Evidence `cea3f92df2027743711e73a84927396417689042`. Strict fqe.event-plan/1 codec, closed bars, atomic staged state/crossings, retryable streaming runtime and source-linked observations delivered. 146 tests/full checks/all examples PASS. Previous P1-07 evidence `c9a097e9a98ef91c3dd5c0f15df9639a72748260`.
+- Next eligible implementation: **P1-09 — CLI Model Execution**, READY. P1-08 evidence and closure are synchronized. User authorized continuing downstream work without routine confirmation; publishing is not requested.
 - P1-02 acceptance met: evaluated numeric policy/limits, strict type/unit/scale checks, unsupported-shape rejection, full binding matrix and tests. Evidence `a653c105fba5ea6ada15395abc22cc8f82cc4472` and local closure recorded below; publishing not requested.
 - Actual root: `/Users/george/Desktop/finger-quant-engine`; main tracking origin/main; remote `https://github.com/FingerTrader/finger-quant-engine.git`.
 - Rust source baseline / latest pre-governance commit: `342d8aa76b48d32fa9c9110609b371eac52b8d86` (foundation). Previous commit: `cbcebad`.
@@ -28,8 +28,9 @@
 | P1-05 | COMPLETED | Typed expressions/calls and transactional crossings; 86 tests/full checks/all examples PASS; evidence `424aacb9faf5d081b72bf0a82f26ef396de16c78`, local closure |
 | P1-06 | COMPLETED | Registered indicators/owned staged state/ADR-017; 96 tests/full checks/all examples PASS; evidence `e772bf0a44f35a5b457cbe10c02eb8cc16689003`, local closure |
 | P1-07 | COMPLETED | Compiler/pure modules/source maps/ADR-018; 119 tests/full checks/all examples PASS; evidence `c9a097e9a98ef91c3dd5c0f15df9639a72748260`, local closure |
-| P1-08 | VERIFIED | Compiled event runtime/strict expression codec and bars, atomic state/signals, 146 tests/full checks/example PASS; evidence commit pending |
-| P1-09, P1-10, P1-11 | NOT_STARTED | Dependencies in DELIVERY_PLAN |
+| P1-08 | COMPLETED | Compiled event runtime/strict expression codec and bars, atomic state/signals, 146 tests/full checks/all examples PASS; evidence `cea3f92df2027743711e73a84927396417689042`, local closure |
+| P1-09 | READY | P1-08 closed; real loaded CLI validation/run, data/results codecs and subprocess acceptance next |
+| P1-10, P1-11 | NOT_STARTED | Dependencies in DELIVERY_PLAN |
 | P2-01, P2-02, P2-03, P2-04, P2-05, P2-06 | NOT_STARTED | P1 gate first |
 | P3-01, P3-02, P3-03, P3-04, P3-05, P3-06, P3-07 | NOT_STARTED | P2 gate first |
 | P4-01, P4-02, P4-03, P4-04, P4-05 | NOT_STARTED | P3 gate first |
@@ -38,7 +39,7 @@
 | P6-01, P6-02, P6-03, P6-04, P6-05, P6-06 | NOT_STARTED | P5 gate first |
 | P6-03.01 | NOT_STARTED | Java-indicator/Go-predicate graph after P6-02; prerequisite of parent P6-03 |
 
-Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 7 COMPLETED, 1 VERIFIED, 34 NOT_STARTED. P1-08 awaits evidence/closure; none is BLOCKED. No functional phase gate has passed. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
+Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 8 COMPLETED, 1 READY, 33 NOT_STARTED. P1-09 is first eligible; none is BLOCKED. No functional phase gate has passed. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
 
 ## Delivered baseline and limitations
 
@@ -198,4 +199,4 @@ Verified: invalid/gapped/overlapping/unclosed/mixed-domain/time/OHLC/unit/scale/
 
 No dependency/manifests/Cargo.lock/toolchain/LICENSE changes. Existing reviewed pinned crates reused offline; no new third-party check, installer, advisory-service query, private upload or scanner. No Desk/SDK/external repo edits. Residual limits: explicit32 input/state-output slots and bounded AST expansion, one instrument/duration continuous bars, caller-asserted dataset hash, trusted deep forks/purity and no performance/isolation/durable-transaction claim. Generalized scheduling/state, CLI file execution, backtesting/accounting, language adapters and packaged Desk remain later tasks. New retry policy applies only to EventRuntime; old Runtime retains Failed-on-error behavior.
 
-Document checker PASS:34 Markdown files/363 local links and anchors/42 stage tasks; diff checks PASS. Final source diff/protected-path review passed; source hashes: indicators125c8a17228b1a0f92b99661d2d7a69024672672b86292b4cd91c78086b0a29e, builtins101df288c16907a6d6953df729c40d082b31ee1fb374e513319b8a5f1f4c13d1, independent providerc17c31b99564b24886511bb674eb5084b57ad166a20006c795b5ece58cd2d3bf unchanged. Evidence/closure commits pending; task remains VERIFIED. Remote main independently read-confirmed `0ac5d7b163e77bddb5f69689a1455e3560aad872`; no push requested/performed.
+Document checker PASS:34 Markdown files/363 local links and anchors/42 stage tasks; diff checks PASS. Final source diff/protected-path review passed; source hashes: indicators 125c8a17228b1a0f92b99661d2d7a69024672672b86292b4cd91c78086b0a29e, builtins 101df288c16907a6d6953df729c40d082b31ee1fb374e513319b8a5f1f4c13d1, independent provider c17c31b99564b24886511bb674eb5084b57ad166a20006c795b5ece58cd2d3bf unchanged. Local implementation evidence committed as `cea3f92df2027743711e73a84927396417689042`; this status/plan/handoff-only closure records COMPLETED and P1-09 READY. Eighteen local commits including this closure remain unpushed. Remote main independently read-confirmed `0ac5d7b163e77bddb5f69689a1455e3560aad872`; no push requested/performed.

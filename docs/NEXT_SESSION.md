@@ -6,9 +6,11 @@ Updated 2026-11-14 (Asia/Tokyo); derived from [Project status](PROJECT_STATUS.md
 
 Read PROJECT_STATUS, DELIVERY_PLAN, ARCHITECTURE_DECISIONS, README, [Workflow](WORKFLOW.md), [authority](DOCUMENT_AUTHORITY.md), then task contracts. Verify root, Git status/main/upstream/history and actual evidence; code/tests/history override stale records. Work on main, preserve all unrelated changes/history. User authorizes continued work without routine confirmation. No publishing requested; historical remote receipts are not authorization for new pushes.
 
-P1-01–P1-07 COMPLETED; P1-08 VERIFIED awaiting evidence/closure. P1/P2–P6 gates remain incomplete. Resolve actual HEAD with `git rev-parse HEAD`, latest record with `git log -1 --format=%H -- docs/PROJECT_STATUS.md`. No toolchain installation needed.
+P1-01–P1-08 COMPLETED; P1-09 READY. P1/P2–P6 gates remain incomplete. Resolve actual HEAD with `git rev-parse HEAD`, latest record with `git log -1 --format=%H -- docs/PROJECT_STATUS.md`. No toolchain installation needed.
 
 ## Latest delivered behavior
+
+P1-08 implementation evidence **cea3f92df2027743711e73a84927396417689042**; task COMPLETED with synchronized plan/status/handoff closure. This closure remains local; no push requested/performed.
 
 P1-08 implements [compiled event execution](EVENT_EXECUTION.md)/ADR-019: strict bounded fqe.event-plan/1 wrapper over fqe.graph/1, closed-bar/tick triggers, exact event field bindings, portable typed operator/cross ASTs, immutable compiled identity and per-run fresh state. Every incremental node advances once in compiled dependency order, then all crossing subscriptions run before lazy roots. Deep candidates and all cursors/signals publish only after whole-event success; rejection leaves prior state untouched and permits explicit same-sequence retry. The original Runtime/demo still fails one-shot runs on ordering errors.
 
@@ -18,7 +20,7 @@ No new dependencies/manifests/Cargo.lock/toolchain changes; reuse approved cache
 
 ## Next implementation: P1-09 — CLI Model Execution
 
-First finish P1-08 evidence and three-document closure commits; only then mark P1-09 READY/IN_PROGRESS. Read [event execution](EVENT_EXECUTION.md), [compiler](GRAPH_COMPILER.md), [model loading](MODEL_LOADING.md), [events](EVENT_CONTRACT.md), [expressions](EXPRESSION_CONTRACT.md), [indicators](INDICATOR_CONTRACT.md), [CLI source](../crates/fqe-cli/src/main.rs), plan acceptance and source.
+P1-08 is closed. Mark P1-09 IN_PROGRESS before implementation. Read [event execution](EVENT_EXECUTION.md), [compiler](GRAPH_COMPILER.md), [model loading](MODEL_LOADING.md), [events](EVENT_CONTRACT.md), [expressions](EXPRESSION_CONTRACT.md), [indicators](INDICATOR_CONTRACT.md), [CLI source](../crates/fqe-cli/src/main.rs), plan acceptance and source.
 
 - Add real validate/run commands accepting local event model, parameter bindings and bounded synthetic tick/bar data files. Reuse immutable loader/compiler/registry/EventRuntime; CLI must not contain handwritten MACD/RSI/strategy conditions. Preserve existing demo/exits unless a documented versioned CLI change is justified.
 - Design explicit versioned, exact integer/typed input and structured result/diagnostic codecs. Validate unknown/duplicate fields, file/record/line/count/output limits, input order/readiness and source identity; do not silently accept malformed/truncated/empty records or emit private source tokens. Choose bounded IO/results and explicit failure behavior, keeping warmup/source/run/artifact provenance.
@@ -57,3 +59,5 @@ git diff --check
 ```
 
 Record last actual state/check failures before interruption. At task closure, evidence commit first, then status/plan/handoff closure naming its SHA. Push only when authorized; confirm remote with ls-remote and never force-push. Last remote main read-confirmed `0ac5d7b163e77bddb5f69689a1455e3560aad872`; recheck before publishing.
+
+Local branch main is eighteen commits ahead of last read-confirmed remote after this closure. Working tree should be clean; verify live rather than relying on the recorded count.
