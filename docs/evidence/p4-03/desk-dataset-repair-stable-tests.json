@@ -1,0 +1,27 @@
+{
+  "status": "passed",
+  "exit_code": 0,
+  "source_stable": true,
+  "source_sha256": {
+    "lib/app/quant/fqe/composition_panel.dart": "f004762407a69cc25ab2959d797914cbdfbdc31d0e8ee658191b0dd80d13577d",
+    "lib/app/modules/home/widgets/quant_strategy_composition_editor.dart": "5f8a377a5e1660ff4fc7cf3f0be8d1acc1cd65404263aa150860c627a6ca7f8c",
+    "test/quant/fqe_composition_dataset_test.dart": "fba3ef82f7c0fb7cf291ba1d73fbf2c54e4f1915592b5f291dde268ac7179af5",
+    "lib/app/quant/fqe/results_panel.dart": "f782379ab6ccaad0c5f0de5a09be9b9740741238fbc68cf3512898a494864c57",
+    "lib/app/quant/fqe/result_projection.dart": "adc8a4a9b47b2958dde1b62588dd80a8ee6e1fe4b0b55bf9f708d15d2e8f4c7b",
+    "lib/app/quant/fqe/result_controller.dart": "b7a47e1a1ed9a20c5906cca82d4b793356c77784c0e0d3aeb49c27a7ee08898d"
+  },
+  "tests": 13,
+  "command": [
+    "/Users/george/fvm/versions/3.24.1/bin/cache/dart-sdk/bin/dart",
+    "--disable-dart-dev",
+    "/Users/george/fvm/versions/3.24.1/bin/cache/flutter_tools.snapshot",
+    "--suppress-analytics",
+    "--no-version-check",
+    "test",
+    "--no-pub",
+    "test/quant/fqe_composition_dataset_test.dart",
+    "test/quant/fqe_composition_panel_test.dart",
+    "test/quant/quant_strategy_composition_editor_test.dart"
+  ],
+  "measured_at": "2026-11-14T20:20:45.539273+00:00"
+}

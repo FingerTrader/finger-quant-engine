@@ -1,0 +1,44 @@
+{
+  "format": "fqe.research-workload/1",
+  "status": "passed",
+  "measured_at": "2026-11-14T20:25:32.191385+00:00",
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "peer_sha256": "d2d5b5f5be33d3395164292de5c4b5500942a113dbb6488a900cd118f9fe395c",
+  "budgets": {
+    "seconds": 20,
+    "native_peak_rss_bytes": 536870912
+  },
+  "measurements": [
+    {
+      "source_bars": 8,
+      "outcome": "completed",
+      "seconds": 0.062,
+      "native_peak_rss_bytes": 5668864,
+      "max_request_bytes": 4889,
+      "max_response_bytes": 21099,
+      "final_equity": "101.00",
+      "fills": 1,
+      "result_id": "sha256:ee8997c01d61ed9d9f208d0fca151b73275e64698989336a8c136978a9133a15"
+    },
+    {
+      "source_bars": 10000,
+      "outcome": "completed",
+      "seconds": 0.994,
+      "native_peak_rss_bytes": 187383808,
+      "max_request_bytes": 854209,
+      "max_response_bytes": 11662017,
+      "final_equity": "101.00",
+      "fills": 1,
+      "result_id": "sha256:6bea4ce3aa854456322adad6e00c0a666e42f538e5718957db31a036c620c3b0"
+    },
+    {
+      "source_bars": 20000,
+      "outcome": "response_quota",
+      "seconds": 0.799,
+      "native_peak_rss_bytes": 204177408,
+      "max_request_bytes": 1704209,
+      "max_response_bytes": 296,
+      "result_available": false
+    }
+  ]
+}

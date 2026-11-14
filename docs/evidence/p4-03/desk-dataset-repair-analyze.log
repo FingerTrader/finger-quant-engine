@@ -1,0 +1,10 @@
+Analyzing composition_panel.dart, fqe_composition_dataset_test.dart...
+
+   info - lib/app/quant/fqe/composition_panel.dart:70:9 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - lib/app/quant/fqe/composition_panel.dart:79:9 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - lib/app/quant/fqe/composition_panel.dart:83:9 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - lib/app/quant/fqe/composition_panel.dart:98:9 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - lib/app/quant/fqe/composition_panel.dart:172:5 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - test/quant/fqe_composition_dataset_test.dart:126:11 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+
+6 issues found.

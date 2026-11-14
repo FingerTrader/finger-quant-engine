@@ -1,0 +1,50 @@
+{
+  "format": "fqe.native-acceptance-repair-checkpoint/1",
+  "task": "P4-03.03",
+  "task_status": "IN_PROGRESS",
+  "recorded_at": "2026-11-14T20:26:24.298026+00:00",
+  "fqe_base": "b74b049b4a67966da322799a3f8f4c1ebea1c423",
+  "desk_base": "055b0c98214def9eda56adc80e96a3b6cb3633c0",
+  "rust": {
+    "status": "passed",
+    "tests": 360,
+    "checks": [
+      "cargo fmt --check",
+      "cargo check --workspace --locked --offline",
+      "cargo test --workspace --locked --offline",
+      "cargo clippy --workspace --all-targets --locked --offline -- -D warnings",
+      "python3 scripts/check_docs.py",
+      "git diff --check"
+    ],
+    "log": "native-acceptance-repair-rust.log"
+  },
+  "desk": {
+    "tests": 14,
+    "status": "passed",
+    "native_oracle": "real repository CSV freeze -> native research graph -> 2 fills at 4.00/2.00 -> final equity 98.00 from 100.00",
+    "analyzer": "exit0; no errors/warnings; 6 brace-style infos",
+    "build": "Android Studio native debug build passed; not a final frozen installed candidate",
+    "native_ui": "own project and synthetic600bar CSV imported; old preflight reproduced Invalid run identity; after repair rebuild, explicit current-path window control repeatedly timed out. Two same-path Desk processes observed; no final native journey claimed.",
+    "publication": "Desk changes remain local and selectively archived; preserve independent result-panel refactor"
+  },
+  "dependencies": "No manifest or lockfile changes; no new dependencies/install/scanner upload",
+  "limits": [
+    "Actual no-login/author/run/stop/reopen/optimizer/apply/export native journey remains open",
+    "10000bar native workload verified, 20000bar open-position report rejects response_quota",
+    "Later task dependencies unchanged"
+  ],
+  "artifacts": {
+    "desk-dataset-repair.patch.json": "4da2e24c3bc51452d083088444b96452ee87b30d31cf472dfdbd36694b01c7e1",
+    "desk-dataset-native-repair.log": "4c0ba8f4d2a6c0fa52a79b5c59391c63c374e6f7a3d9293238d33dd7e57a7cba",
+    "desk-dataset-repair-analyze.log": "c5c6ae2df6a245adc978e442b1478bc4ccaac2d95e955f8a22dafc73dc5ac00a",
+    "desk-dataset-repair-stable-tests.json": "7d561bfbe14d552031fe9038733a9d721d1f9eae9ea6cbe21e1d4d84c4d21286",
+    "desk-dataset-repair-tests.log": "1536c50e3d06d68bbbdb8cd1992af46b85929dc136b69e509a71c319f6e7ca0f"
+  },
+  "log_normalization": {
+    "rule": "Replace carriage-return progress updates with newlines; strip trailing whitespace. Content retained. Raw hashes identify the original local logs.",
+    "raw_sha256": {
+      "desk-dataset-native-repair.log": "c4ed49ba6327d2c93f55d499376bfa2e24b1761435f03161e551e691aece7512",
+      "desk-dataset-repair-tests.log": "860b08c4a60bc54102ee3236e39cad0916e2782ad672f02f5082cc02a78807ae"
+    }
+  }
+}

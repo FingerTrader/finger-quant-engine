@@ -1,0 +1,43 @@
+
+00:00 +0: loading /Users/george/Desktop/finger_desk/test/quant/fqe_composition_dataset_test.dart
+00:01 +0: loading /Users/george/Desktop/finger_desk/test/quant/fqe_composition_dataset_test.dart
+00:02 +0: loading /Users/george/Desktop/finger_desk/test/quant/fqe_composition_dataset_test.dart
+00:02 +0: /Users/george/Desktop/finger_desk/test/quant/fqe_composition_dataset_test.dart: actual saved dataset freezes twice through the production composition path
+00:02 +1: /Users/george/Desktop/finger_desk/test/quant/fqe_composition_panel_test.dart: native confirmation refuses changed strategy then submits exact project snapshot
+00:03 +1: /Users/george/Desktop/finger_desk/test/quant/fqe_composition_panel_test.dart: native confirmation refuses changed strategy then submits exact project snapshot
+00:03 +2: /Users/george/Desktop/finger_desk/test/quant/fqe_composition_panel_test.dart: native confirmation refuses changed strategy then submits exact project snapshot
+00:03 +3: /Users/george/Desktop/finger_desk/test/quant/fqe_composition_panel_test.dart: native confirmation refuses changed strategy then submits exact project snapshot
+00:03 +3: /Users/george/Desktop/finger_desk/test/quant/fqe_composition_panel_test.dart: edits while native preflight is pending cannot open confirmation
+00:03 +4: /Users/george/Desktop/finger_desk/test/quant/fqe_composition_panel_test.dart: edits while native preflight is pending cannot open confirmation
+00:03 +4: /Users/george/Desktop/finger_desk/test/quant/fqe_composition_panel_test.dart: switching project during preflight cannot submit the previous project
+00:03 +5: /Users/george/Desktop/finger_desk/test/quant/fqe_composition_panel_test.dart: switching project during preflight cannot submit the previous project
+00:03 +5: /Users/george/Desktop/finger_desk/test/quant/fqe_composition_panel_test.dart: saved genuine native record stays project scoped and replay never calls execution
+00:04 +5: /Users/george/Desktop/finger_desk/test/quant/fqe_composition_panel_test.dart: saved genuine native record stays project scoped and replay never calls execution
+00:04 +6: /Users/george/Desktop/finger_desk/test/quant/fqe_composition_panel_test.dart: saved genuine native record stays project scoped and replay never calls execution
+00:05 +6: /Users/george/Desktop/finger_desk/test/quant/fqe_composition_panel_test.dart: saved genuine native record stays project scoped and replay never calls execution
+00:05 +6: loading /Users/george/Desktop/finger_desk/test/quant/quant_strategy_composition_editor_test.dart
+00:05 +6: /Users/george/Desktop/finger_desk/test/quant/quant_strategy_composition_editor_test.dart: desktop property menus select cancel and undo in dark
+00:06 +6: /Users/george/Desktop/finger_desk/test/quant/quant_strategy_composition_editor_test.dart: desktop property menus select cancel and undo in dark
+00:07 +6: /Users/george/Desktop/finger_desk/test/quant/quant_strategy_composition_editor_test.dart: desktop property menus select cancel and undo in dark
+00:07 +7: /Users/george/Desktop/finger_desk/test/quant/quant_strategy_composition_editor_test.dart: desktop property menus select cancel and undo in dark
+00:07 +7: /Users/george/Desktop/finger_desk/test/quant/quant_strategy_composition_editor_test.dart: desktop property menus select cancel and undo in dark-compact
+00:08 +7: /Users/george/Desktop/finger_desk/test/quant/quant_strategy_composition_editor_test.dart: desktop property menus select cancel and undo in dark-compact
+00:08 +8: /Users/george/Desktop/finger_desk/test/quant/quant_strategy_composition_editor_test.dart: desktop property menus select cancel and undo in dark-compact
+00:08 +8: /Users/george/Desktop/finger_desk/test/quant/quant_strategy_composition_editor_test.dart: desktop property menus select cancel and undo in light
+00:09 +8: /Users/george/Desktop/finger_desk/test/quant/quant_strategy_composition_editor_test.dart: desktop property menus select cancel and undo in light
+00:09 +9: /Users/george/Desktop/finger_desk/test/quant/quant_strategy_composition_editor_test.dart: desktop property menus select cancel and undo in light
+00:09 +9: /Users/george/Desktop/finger_desk/test/quant/quant_strategy_composition_editor_test.dart: desktop property menus select cancel and undo in light-compact
+00:10 +9: /Users/george/Desktop/finger_desk/test/quant/quant_strategy_composition_editor_test.dart: desktop property menus select cancel and undo in light-compact
+00:10 +10: /Users/george/Desktop/finger_desk/test/quant/quant_strategy_composition_editor_test.dart: desktop property menus select cancel and undo in light-compact
+00:10 +10: /Users/george/Desktop/finger_desk/test/quant/quant_strategy_composition_editor_test.dart: typed port selection links actual input; delete dialog and undo preserve branches
+00:11 +10: /Users/george/Desktop/finger_desk/test/quant/quant_strategy_composition_editor_test.dart: typed port selection links actual input; delete dialog and undo preserve branches
+00:11 +11: /Users/george/Desktop/finger_desk/test/quant/quant_strategy_composition_editor_test.dart: typed port selection links actual input; delete dialog and undo preserve branches
+00:11 +11: /Users/george/Desktop/finger_desk/test/quant/quant_strategy_composition_editor_test.dart: literal replacement keeps the empty field mounted and undoable
+00:12 +11: /Users/george/Desktop/finger_desk/test/quant/quant_strategy_composition_editor_test.dart: literal replacement keeps the empty field mounted and undoable
+00:12 +12: /Users/george/Desktop/finger_desk/test/quant/quant_strategy_composition_editor_test.dart: literal replacement keeps the empty field mounted and undoable
+00:12 +12: /Users/george/Desktop/finger_desk/test/quant/quant_strategy_composition_editor_test.dart: code and parameter pages operate on the same graph and retain invalid buffers
+00:12 +13: /Users/george/Desktop/finger_desk/test/quant/quant_strategy_composition_editor_test.dart: code and parameter pages operate on the same graph and retain invalid buffers
+00:12 +13: /Users/george/Desktop/finger_desk/test/quant/quant_strategy_composition_editor_test.dart: project result and test configuration never fabricate a run; layouts support narrow light mode
+00:13 +13: /Users/george/Desktop/finger_desk/test/quant/quant_strategy_composition_editor_test.dart: project result and test configuration never fabricate a run; layouts support narrow light mode
+00:13 +14: /Users/george/Desktop/finger_desk/test/quant/quant_strategy_composition_editor_test.dart: project result and test configuration never fabricate a run; layouts support narrow light mode
+00:13 +14: All tests passed!

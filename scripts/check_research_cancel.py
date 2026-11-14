@@ -23,6 +23,8 @@ end=start+datetime.timedelta(minutes=20000)
 spec['calendar']['sessions']=[{'open':text(start),'close':text(end)}]
 spec['acquired_at']=text(end+datetime.timedelta(minutes=1))
 stream.update(end_ns=str(int(end.timestamp())*1000000000),csv='\n'.join(rows)+'\n',history_spec=json.dumps(spec))
+STOP_ACK_SECONDS=2
+STOP_TERMINAL_SECONDS=5
 attempts=[]
 for delay in [0.2,0.4,0.7,1.0]:
  p=subprocess.Popen([str(PEER)],stdin=subprocess.PIPE,stdout=subprocess.PIPE)
@@ -42,27 +44,33 @@ for delay in [0.2,0.4,0.7,1.0]:
   handle=begun['handle']; args=dict(session_id=session,handle=handle)
   running=call('run.status',args);assert running['phase'] in ['accepted','running'],running
   time.sleep(delay)
+  stop_started=time.monotonic()
   stopped=call('run.stop',args)
-  deadline=time.monotonic()+20
+  stop_ack_seconds=time.monotonic()-stop_started
+  assert stop_ack_seconds<STOP_ACK_SECONDS,'stop acknowledgement deadline'
+  deadline=stop_started+STOP_TERMINAL_SECONDS
   while True:
    status=call('run.status',args)
    if status['terminal']:break
    assert time.monotonic()<deadline,'stop deadline'
    time.sleep(0.01)
+  stop_terminal_seconds=time.monotonic()-stop_started
+  assert stop_terminal_seconds<STOP_TERMINAL_SECONDS,'stop terminal deadline'
   result=call('run.result',args);report=result['report'];processed=int(report['processed_source_bars'])
-  attempts.append(dict(delay=delay,phase=status['phase'],processed=processed))
+  attempts.append(dict(delay=delay,phase=status['phase'],processed=processed,stop_ack_seconds=round(stop_ack_seconds,6),stop_terminal_seconds=round(stop_terminal_seconds,6)))
   if status['phase']!='cancelled' or processed==0:continue
   assert 0<processed<20000,processed
   assert report['terminal']=='cancelled'
   assert len(report['equity_curve'])==processed
   assert not report['fills']
+  assert len(report['orders'])==1,report['orders']
   assert all(o['status']=='cancelled_terminal' for o in report['orders']),report['orders']
   assert report['account']['cash_hub']['reserved_cash']=='0.00'
   assert report['metrics']['final_equity']=='100.00'
   raw=json.dumps(report,sort_keys=True,separators=(',',':'),ensure_ascii=False).encode()
   assert result['result_id']=='sha256:'+hashlib.sha256(b'FQE-BACKTEST-RESULT/1\n'+raw).hexdigest()
   call('run.release',args)
-  print(json.dumps(dict(format='fqe.research-managed-cancel-check/1',status='passed',peer_sha256=hashlib.sha256(PEER.read_bytes()).hexdigest(),attempts=attempts,result_id=result['result_id'],processed=processed)))
+  print(json.dumps(dict(format='fqe.research-managed-cancel-check/1',status='passed',peer_sha256=hashlib.sha256(PEER.read_bytes()).hexdigest(),budgets=dict(stop_ack_seconds=STOP_ACK_SECONDS,stop_terminal_seconds=STOP_TERMINAL_SECONDS),attempts=attempts,result_id=result['result_id'],processed=processed)))
   break
  finally:
   p.stdin.close();p.wait(timeout=30)

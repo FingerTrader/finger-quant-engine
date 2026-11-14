@@ -1,0 +1,678 @@
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.08s
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.12s
+     Running unittests src/lib.rs (target/debug/deps/fqe_bridge-645b45ebb661f188)
+
+running 1 test
+test managed::tests::closed_session_cannot_admit_an_already_dispatched_start ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/bin/peer.rs (target/debug/deps/fqe_desktop_peer-898129ee4b3bef14)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/authoring.rs (target/debug/deps/authoring-e60db7f7b9166c9c)
+
+running 10 tests
+test caller_registered_unknown_names_and_ports_need_no_frontend_branch_or_evaluation ... ok
+test source_compiles_through_native_descriptor_types_and_keeps_source_map ... ok
+test generic_u64_nodes_keep_full_width_values_and_lexical_order_is_not_topology ... ok
+test native_errors_locate_nodes_and_explicit_discard_does_not_execute ... ok
+test rpc_diagnostics_and_source_locations_are_data_not_a_fake_success ... ok
+test malformed_types_unknown_providers_cycles_and_budget_fail_closed ... ok
+test decimal_boolean_parameters_comments_and_exact_constraints_round_trip ... ok
+test independently_authored_native_graph_matches_text_and_round_trip ... ok
+test invalid_buffers_and_stale_transactions_cannot_run_the_previous_model ... ok
+test actual_cash_run_obeys_independent_crosses_next_open_fills_and_ledger ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.35s
+
+     Running tests/boundary.rs (target/debug/deps/boundary-1a06a57478a83e73)
+
+running 8 tests
+test framing_rejects_quota_truncation_and_preserves_multiple_frames ... ok
+test native_owned_pool_and_task_quotas_cleanup_invalid_handles ... ok
+test strict_outer_codec_presence_versions_and_exact_strings ... ok
+test capability_negotiation_rejects_incompatible_and_unknown_methods ... ok
+test financial_preflight_and_precancel_are_explicit ... ok
+test preflight_validates_full_frozen_financial_inputs_without_running ... ok
+test workflow_and_margin_dispatch_remain_engine_owned ... ok
+test generic_catalog_validate_and_actual_event_financial_parity ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.37s
+
+     Running tests/discovery.rs (target/debug/deps/discovery-0ebbaa329c713013)
+
+running 3 tests
+test unknown_extra_missing_and_inexact_contexts_reject ... ok
+test explicit_capability_and_existing_model_based_discovery_remain_distinct ... ok
+test blank_project_discovers_domain_bound_descriptors_without_a_model ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/managed.rs (target/debug/deps/managed-60156bcd9b6e80c4)
+
+running 9 tests
+test initialize_session_presence_and_shared_admission_are_real ... ok
+test failures_are_retained_explicitly_and_quotas_do_not_evict_old_results ... ok
+test model_inspection_includes_generic_workflow_modules_and_parameters ... ok
+test operation_receipts_are_bounded_without_forgetting_duplicate_identity ... ok
+test shutdown_joins_current_work_and_closes_the_session ... ok
+test terminal_events_cursor_and_stop_races_never_rewrite_outcomes ... ok
+test repeated_operations_are_pinned_and_survive_release_as_tombstones ... ok
+test extended_graph_uses_the_same_managed_lifecycle_and_exact_result_bytes ... ok
+test result_chunks_pages_and_repeated_reads_match_native_bytes_without_rerun ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.36s
+
+     Running tests/research.rs (target/debug/deps/research-dc2d8ac02221e283)
+
+running 5 tests
+test run_identity_and_seed_are_validated_independently ... ok
+test unused_invalid_nodes_and_settings_do_not_disappear ... ok
+test graph_cannot_have_an_instantaneous_cycle_or_wrong_unit ... ok
+test cancellation_is_a_real_empty_prefix_and_not_completed ... ok
+test exact_native_result_and_repeated_run_are_identical ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.24s
+
+     Running unittests src/main.rs (target/debug/deps/fqe-14d442b8783f02e3)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/cli.rs (target/debug/deps/cli-6e7b0fcbcddba8e4)
+
+running 3 tests
+test demo_runs_offline_and_is_deterministic ... ok
+test unknown_or_extra_arguments_fail_instead_of_running_a_strategy ... ok
+test help_and_version_expose_foundation_status ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.49s
+
+     Running tests/loaded_execution.rs (target/debug/deps/loaded_execution-0cc79bf847f16ff5)
+
+running 17 tests
+test explicit_empty_array_completes_with_zero_events ... ok
+test non_utf8_path_arguments_return_structured_errors_without_panicking ... ok
+test closed_output_pipe_returns_io_status_instead_of_panicking ... ok
+test full_width_tick_values_and_unrelated_filter_survive_json ... ok
+test manifest_uses_independent_data_hash_and_record_source_links ... ok
+test unicode_and_space_paths_are_read_as_paths ... ok
+test validate_compiles_without_data_and_matches_library_contract ... ok
+test exact_file_byte_limit_is_accepted_but_one_more_is_rejected ... ok
+test malformed_unknown_duplicate_data_and_secret_values_never_emit_partial_stdout ... ok
+test missing_directory_oversized_and_empty_files_are_structured_errors ... ok
+test later_event_order_domain_and_numeric_errors_discard_entire_batch ... ok
+test actual_binary_report_matches_same_public_library_execution ... ok
+test malformed_models_unknown_providers_and_wrong_binding_types_reject ... ok
+test same_binary_changes_decisions_with_parameters_and_artifact ... ok
+test actual_binary_runs_g002_g007_offline_and_repeats_identically ... ok
+test invalid_missing_duplicate_and_extra_options_fail_before_io ... ok
+test oversized_batch_result_is_rejected_without_publishing_a_prefix ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+
+     Running unittests src/lib.rs (target/debug/deps/fqe_core-f9ffa22aa84b4a86)
+
+running 3 tests
+test tests::prices_are_positive_and_exact_including_large_values ... ok
+test tests::zero_sequence_is_invalid_but_epoch_zero_is_valid ... ok
+test tests::identifiers_reject_ambiguous_or_unbounded_values ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/financial_contract.rs (target/debug/deps/financial_contract-ef744f956562be55)
+
+running 4 tests
+test gregorian_utc_and_microsecond_mapping_are_exact_at_leaps_epoch_and_full_width_limits ... ok
+test fixed_decimal_sources_are_exact_and_never_use_float_or_implicit_rounding ... ok
+test instrument_price_quantity_currency_steps_and_checked_notionals_are_explicit ... ok
+test independent_signed_half_ties_and_floor_ceiling_align_to_actual_step_not_decimal_places ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/value_contract.rs (target/debug/deps/value_contract-0fe1f6056e3c0257)
+
+running 9 tests
+test readiness_cannot_be_confused_with_valid_zero ... ok
+test decimal_arithmetic_has_checked_results_and_no_implicit_scale_conversion ... ok
+test independent_eighths_round_to_nearest_even_for_both_denominator_signs ... ok
+test rescaling_requires_an_explicit_precision_and_rounding_decision ... ok
+test arithmetic_never_wraps_or_saturates_and_intermediate_limits_are_explicit ... ok
+test typed_values_preserve_units_scale_and_utf8_byte_limits ... ok
+test numeric_candidates_expose_integer_float_and_decimal_tradeoffs ... ok
+test decimal_is_exact_above_javascript_integer_precision_and_across_signs ... ok
+test unsupported_shapes_types_and_versions_fail_at_descriptor_construction ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/fqe_ir-bf05c396424bd8d4)
+
+running 3 tests
+test tests::unrelated_instruments_do_not_emit_signals ... ok
+test tests::validation_rejects_unknown_versions_and_invalid_ids ... ok
+test tests::greater_than_is_strict_and_has_no_float_rounding ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/checkpoint_contract.rs (target/debug/deps/checkpoint_contract-7cc216d1244d2cf7)
+
+running 3 tests
+test independently_encoded_checksum_canonical_and_full_width_values ... ok
+test strict_checkpoint_versions_shape_integrity_cursors_and_portable_data ... ok
+test checkpoint_admission_bounds_and_programmatic_command_validation ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/compiler_contract.rs (target/debug/deps/compiler_contract-b093a67a3e843d55)
+
+running 23 tests
+test legacy_source_maps_keep_original_file_positions_after_normalization ... ok
+test compiled_unknown_name_legacy_compositions_execute_without_manual_node_wiring ... ok
+test provider_relationship_errors_retain_definition_and_nested_invocation_locations ... ok
+test pure_modules_reject_stateful_dependencies_even_when_unreachable_from_outputs ... ok
+test module_defaults_are_bound_per_invocation_and_passthroughs_have_no_hidden_state ... ok
+test scoped_path_vectors_do_not_collide_with_slashes_in_logical_ids ... ok
+test real_indicator_plans_retain_price_units_and_reject_scale_or_instrument_changes ... ok
+test nested_and_reused_modules_bind_parameters_and_expand_named_multi_outputs ... ok
+test independent_graph_canonical_identity_and_legacy_format_are_preserved ... ok
+test declaration_order_and_source_locations_do_not_change_deterministic_plan_identity ... ok
+test compiled_pure_modules_map_to_the_existing_typed_expression_engine ... ok
+test repeated_pure_dependencies_cannot_expand_into_an_unbounded_expression_tree ... ok
+test typed_graph_inputs_pass_through_nested_modules_without_hidden_constants ... ok
+test incremental_preparation_is_pinned_and_never_creates_or_advances_state_at_compile_time ... ok
+test strict_graph_decode_rejects_unknown_duplicate_and_future_features ... ok
+test direct_indirect_graph_cycles_and_module_recursion_are_explicit ... ok
+test required_unknown_range_enum_and_unbound_module_parameters_are_rejected ... ok
+test unknown_versions_artifacts_and_dependency_requirements_fail_before_execution ... ok
+test bindings_model_registry_and_module_changes_are_pinned_in_compiled_identity ... ok
+test expanded_alias_edge_work_is_bounded_separately_from_source_graph_size ... ok
+test bad_ports_sources_units_scales_and_parameter_types_are_rejected ... ok
+test empty_modules_alias_inputs_and_visit_boundary_is_enforced_without_provider_nodes ... ok
+test expansion_rejects_provider_count_and_nested_depth_exhaustion ... ok
+
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+     Running tests/event_plan_contract.rs (target/debug/deps/event_plan_contract-30519d60b76db1e2)
+
+running 9 tests
+test independent_canonical_bytes_and_hash_roundtrip ... ok
+test syntax_versions_capabilities_unknown_fields_and_canonical_numbers ... ok
+test expression_literals_preserve_large_integer_precision_and_rounding_tags ... ok
+test duplicate_roots_crossings_signals_and_invalid_cross_dependencies_rejected ... ok
+test event_slot_profile_and_expansion_are_bounded ... ok
+test source_descriptor_pin_is_required_and_factories_are_deferred ... ok
+test exact_event_field_types_units_scales_and_domains ... ok
+test canonical_named_reordering_is_stable_but_semantics_and_bindings_are_pinned ... ok
+test typed_roots_crossings_and_signals_are_checked_before_run ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/exchange_contract.rs (target/debug/deps/exchange_contract-9eed263cbf8b93c4)
+
+running 12 tests
+test diagnostics_encode_only_supplied_public_context ... ok
+test raw_source_hash_and_full_width_tick_integers_are_exact ... ok
+test data_versions_unknown_duplicate_fields_and_noncanonical_integers_reject ... ok
+test typed_closed_bar_fields_and_source_reference_are_preserved ... ok
+test failed_output_writer_cannot_be_finished_or_reused ... ok
+test report_json_preserves_readiness_and_precision ... ok
+test validation_result_json_is_typed_and_deterministic ... ok
+test reference_catalog_rejects_invalid_public_trigger_values ... ok
+test record_bar_validation_precedes_runtime ... ok
+test explicit_empty_dataset_is_valid_but_record_and_shared_budgets_are_bounded ... ok
+test bindings_use_existing_typed_document_and_reject_malformed_payloads ... ok
+test report_size_is_bounded_and_summary_must_match ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+
+     Running tests/expression_contract.rs (target/debug/deps/expression_contract-a0cd19ad6504a460)
+
+running 18 tests
+test not_preserves_readiness_and_never_applies_numeric_truthiness ... ok
+test pure_arithmetic_in_decisively_skipped_branches_is_not_executed ... ok
+test decimal_rounding_and_domain_arithmetic_are_explicit ... ok
+test comparison_equality_limits_and_incompatible_units_fail_at_plan_validation ... ok
+test exact_integer_arithmetic_order_and_failure_boundaries ... ok
+test nonready_resets_committed_cross_history_but_sequence_gaps_alone_do_not ... ok
+test invalid_inputs_and_repeated_sequences_do_not_consume_a_step ... ok
+test subscribed_crossing_advances_behind_false_guards_and_with_shared_references ... ok
+test ready_boolean_operand_reordering_preserves_cross_history ... ok
+test equal_edges_first_ready_and_below_crossings_are_exact ... ok
+test failed_root_and_subscribed_numeric_errors_roll_back_history_and_cursor ... ok
+test independent_boolean_truth_tables_include_left_to_right_error_precedence ... ok
+test observers_read_existing_calls_and_crossings_without_changing_call_count_or_results ... ok
+test shared_subscriptions_advance_pure_operand_once_per_step_and_instances_are_isolated ... ok
+test crossing_dependencies_use_stable_order_and_reject_pure_cycles ... ok
+test total_node_text_and_collection_budgets_are_enforced ... ok
+test bounded_plan_references_duplicates_and_call_signatures_are_checked ... ok
+test independently_registered_predicate_and_multi_input_function_compose_generically ... ok
+
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/history_contract.rs (target/debug/deps/history_contract-edde3ab7df33c8ad)
+
+running 6 tests
+test independent_python_identity_fixture_and_exact_ohlc_scales_survive_immutable_range_selection ... ok
+test malformed_duplicate_backward_gap_unclosed_step_precision_and_unknown_metadata_fail_without_repair ... ok
+test revision_parent_and_source_content_changes_are_exact_and_never_overwrite_previous_dataset ... ok
+test signed_history_and_declared_session_gaps_are_validated_without_claiming_continuous_runtime_support ... ok
+test calendar_acquisition_profile_precision_and_quota_boundaries_fail_before_import ... ok
+test csv_quoting_and_crlf_preserve_values_but_oversized_rows_and_bad_quotes_are_rejected ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/indicators.rs (target/debug/deps/indicators-4a17d194264fbbad)
+
+running 10 tests
+test generic_unknown_stateful_provider_rolls_back_errors_panics_and_invalid_outputs ... ok
+test missing_and_warmup_reset_each_owned_instance_and_sequence_gaps_do_not ... ok
+test g007_registered_sma_outputs_drive_generic_crossing_at_bar_five_only ... ok
+test precision_limits_half_even_output_and_strict_decision_boundary ... ok
+test g002_named_macd_and_rsi_outputs_have_stable_threshold_decisions ... ok
+test error_sequence_and_input_failures_preserve_history_for_same_sequence_retry ... ok
+test invalid_parameters_and_profiles_fail_before_instances ... ok
+test independent_rational_goldens_cover_seeds_warmup_edges_and_long_series ... ok
+test maximum_period_compound_warmup_matches_declared_initial_history ... ok
+test period_one_maximum_period_and_numeric_units_are_explicit ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.49s
+
+     Running tests/loading_contract.rs (target/debug/deps/loading_contract-b2ac7770b6b2e14d)
+
+running 12 tests
+test reader_stops_at_byte_budget_and_io_errors_are_structured ... ok
+test malformed_truncated_utf8_trailing_and_duplicate_documents_fail ... ok
+test real_file_and_independent_canonical_sha256_fixture ... ok
+test bound_parameters_are_immutable_and_pinned_to_exact_content ... ok
+test decoded_range_enum_type_and_integer_representation_matrix ... ok
+test invalid_defaults_constraints_and_duplicate_parameter_ids_are_rejected ... ok
+test binding_default_required_optional_null_unknown_and_readiness_matrix ... ok
+test ordering_whitespace_and_escaped_keys_do_not_change_canonical_identity ... ok
+test resource_limits_reject_bytes_depth_strings_keys_collections_and_item_count ... ok
+test each_supported_type_obeys_decoded_default_required_and_absence_rules ... ok
+test exact_decimal_i128_min_units_scales_bool_text_and_i64 ... ok
+test missing_unknown_unsupported_versions_features_and_references_fail ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/model_contract.rs (target/debug/deps/model_contract-312fa3e81b368a46)
+
+running 8 tests
+test digest_text_has_one_exact_algorithm_and_lowercase_representation ... ok
+test model_definitions_and_bindings_are_independent_and_immutable ... ok
+test unbound_optional_graph_parameter_cannot_be_prepared_for_execution ... ok
+test declarations_are_normalized_by_identity_without_reordering_port_meaning ... ok
+test invalid_identifiers_and_declared_resource_limits_fail ... ok
+test unknown_versions_capabilities_and_roles_are_not_silently_accepted ... ok
+test duplicate_entry_node_port_output_and_capability_identities_fail ... ok
+test missing_entry_parameter_node_and_port_references_fail_structurally ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/parameter_contract.rs (target/debug/deps/parameter_contract-f094201178795f34)
+
+running 10 tests
+test bindings_have_stable_key_order_and_independent_per_run_values ... ok
+test schema_and_binding_duplicates_and_unknown_keys_are_rejected_before_map_loss ... ok
+test inclusive_exclusive_bounds_and_defaults_are_checked_at_definition_and_binding ... ok
+test supplied_value_overrides_default_without_mutating_existing_bindings ... ok
+test decimal_domain_scale_currency_and_instrument_mismatches_never_coerce ... ok
+test numeric_ranges_cover_signed_and_decimal_extremes_and_reject_nonnumeric_bounds ... ok
+test enum_sets_validate_members_types_duplicates_ranges_and_defaults ... ok
+test required_default_absence_and_invalid_input_matrix_covers_every_supported_type ... ok
+test invalid_keys_descriptions_and_resource_limits_are_rejected ... ok
+test maximum_schema_choice_and_binding_sizes_are_usable_but_extra_inputs_fail ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/registry_contract.rs (target/debug/deps/registry_contract-2ff05729be946390)
+
+running 13 tests
+test descriptor_versions_capabilities_state_roles_cardinality_and_bounds_fail_closed ... ok
+test missing_warmup_and_numeric_errors_do_not_call_provider ... ok
+test arity_names_types_units_scale_and_payloads_fail_before_provider ... ok
+test independently_encoded_descriptor_bytes_and_digest_match ... ok
+test exact_version_artifact_role_and_duplicate_pins_are_checked ... ok
+test readiness_precedence_and_multi_output_duplicates_are_deterministic ... ok
+test discovery_and_registration_do_not_execute_provider_code ... ok
+test descriptor_normalization_and_registry_identity_are_order_independent ... ok
+test provider_wrong_outputs_panics_and_failures_never_publish_partial_results ... ok
+test parameters_are_bound_once_with_schema_and_provider_relationship_validation ... ok
+test two_independent_unknown_name_compositions_use_the_shared_builtin_call_interface ... ok
+test loaded_model_preparation_checks_signature_edges_parameters_and_implementation_pins ... ok
+test descriptor_and_registry_resource_limits_and_frozen_lifetime_are_explicit ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/schedule_contract.rs (target/debug/deps/schedule_contract-5ef19a9f857cbbbe)
+
+running 2 tests
+test canonical_identity_is_order_independent_binds_sources_policy_and_limits ... ok
+test strict_version_capability_calendar_domains_and_queue_limits ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/temporal_contract.rs (target/debug/deps/temporal_contract-af36806c31a87b09)
+
+running 2 tests
+test canonical_temporal_order_and_bound_workflow_identity ... ok
+test strict_temporal_versions_types_domains_and_bounds ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/workflow_contract.rs (target/debug/deps/workflow_contract-afa5eba248a3cec6)
+
+running 7 tests
+test state_view_is_typed_versioned_bounded_and_not_restorable ... ok
+test strict_envelopes_capabilities_and_duplicate_keys ... ok
+test canonical_order_source_identity_and_exact_bindings ... ok
+test typed_instance_dag_and_explicit_delay_feedback ... ok
+test declaration_duplicates_modes_and_state_limits ... ok
+test expanded_expression_and_initial_cell_budgets_are_admission_checks ... ok
+test invalid_types_bindings_expressions_and_phases ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running unittests src/lib.rs (target/debug/deps/fqe_protocol-603fe1f1732975ef)
+
+running 2 tests
+test tests::matching_and_newer_minor_versions_negotiate_to_local_minor ... ok
+test tests::incompatible_majors_are_rejected ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/fqe_runtime-a6733723f4a1f6c3)
+
+running 1 test
+test source_identity::tests::checkpoint_source_manifest_covers_all_engine_rust_files ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/backtest.rs (target/debug/deps/backtest-12fe9a7aaa0ab707)
+
+running 13 tests
+test exact_json_encoder_bounds_float_depth_and_bytes ... ok
+test typed_policy_preflight_and_missing_input_rejections ... ok
+test exact_metrics_match_nine_independent_fraction_cases_and_reject_bad_curve ... ok
+test margin_runner_reports_debt_in_equity_and_finishes_without_invented_close ... ok
+test actual_strategy_to_two_fills_account_report_and_independent_hashes ... ok
+test source_capacity_rejected_before_running_and_policy_origin_is_bound_and_deduped ... ok
+test selection_and_engine_warmup_never_generate_orders ... ok
+test bound_parameters_provenance_and_no_trade_run ... ok
+test workflow_boolean_bindings_and_flat_signals_are_not_long_entries ... ok
+test changed_future_prices_cannot_change_prior_orders_decisions_or_equity ... ok
+test late_batch_quota_failure_returns_no_report_and_does_not_poison_rerun ... ok
+test prefix_stop_cancel_empty_and_pending_release_keep_truthful_open_positions ... ok
+test deterministic_reruns_and_every_native_financial_prefix ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.91s
+
+     Running tests/checkpoint_execution.rs (target/debug/deps/checkpoint_execution-d0e1e95628e698e2)
+
+running 5 tests
+test corruption_compatibility_and_recomputed_checksum_divergence_never_replace_live_state ... ok
+test blocked_lane_retry_cancel_and_failed_control_commands_restore_at_each_boundary ... ok
+test x002_every_command_restore_preserves_queued_fairness_cells_delay_count_windows_and_output_cursor ... ok
+test actual_indicators_crossing_and_count_time_buffers_restore_at_every_boundary ... ok
+test checkpoint_budget_failure_precedes_state_mutation_and_retains_last_complete_image ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 13.69s
+
+     Running tests/checkpoint_persistence.rs (target/debug/deps/checkpoint_persistence-f1c5aa690c7d9c65)
+
+running 4 tests
+test checkpoint_crash_worker ... ok
+test symlink_and_oversized_inputs_are_rejected ... ok
+test prepare_drop_and_atomic_commit_preserve_complete_valid_files ... ok
+test process_exit_after_temp_sync_before_rename_retains_previous_committed_checkpoint ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests/event_execution.rs (target/debug/deps/event_execution-ee53ba4c262193d0)
+
+running 18 tests
+test late_root_error_rolls_back_nodes_and_already_computed_crossing ... ok
+test unrelated_ticks_consume_order_but_never_advance_subscriptions ... ok
+test later_node_failure_rolls_back_all_nodes_crossings_and_cursor ... ok
+test missing_output_resets_cross_history_and_suppresses_signals ... ok
+test zero_input_stateful_providers_are_generic_event_subscriptions ... ok
+test fork_panic_is_an_error_and_does_not_poison_runtime ... ok
+test subscribed_failures_cannot_be_hidden_by_false_guards ... ok
+test false_guards_reordering_and_shared_crossings_advance_state_once ... ok
+test skipped_pure_root_error_stays_lazy_while_event_is_accepted ... ok
+test bar_domain_endpoints_and_logical_sequence_gaps_are_explicit ... ok
+test incremental_dependencies_are_evaluated_in_topological_order ... ok
+test declared_warmup_suppresses_signals_but_advances_crossings ... ok
+test every_invalid_bar_leaves_state_untouched_and_can_retry ... ok
+test bound_parameter_changes_decisions_without_rebuild ... ok
+test tick_order_filter_domains_and_lifecycle ... ok
+test independent_g002_g007_signals_and_provenance ... ok
+test run_memory_is_independent_and_close_only ... ok
+test deterministic_reruns_prefix_invariance_and_manifest ... ok
+
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/financial_checkpoint.rs (target/debug/deps/financial_checkpoint-b8585fdbf1297b53)
+
+running 7 tests
+test financial_checkpoint_process_child ... ok
+test default_deny_capability_unknown_corrupt_versions_cursor_and_full_input_pins ... ok
+
+running 1 test
+test live_holds_partial_fills_debt_and_no_finish_side_effects_survive_paused_restore ... ok
+test financial_persistence_roundtrip_private_atomic_publish_and_actual_child_exit ... ok
+test failed_bar_preserves_entire_committed_strategy_and_financial_prefix ... ok
+test close_maintenance_pending_forced_sale_and_liquidated_state_survive_every_split ... ok
+test all_cash_margin_event_workflow_and_partial_source_splits_continue_byte_identically ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 30.54s
+
+     Running tests/history_execution.rs (target/debug/deps/history_execution-949fb8cba9b0b8a0)
+
+running 3 tests
+test explicit_session_gap_can_be_inspected_but_cannot_enter_continuous_runtime ... ok
+test inclusive_frontier_blocks_future_data_and_rejection_does_not_advance_cursor ... ok
+test frozen_manifest_pins_compiled_bindings_data_units_seed_and_warmup_without_claiming_fills ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+
+     Running tests/ledger_accounting.rs (target/debug/deps/ledger_accounting-210034de88f670f4)
+
+running 10 tests
+test partial_lots_can_be_below_order_minimum_without_ignoring_tick_or_lot_steps ... ok
+test public_cash_long_history_comparison_has_explicit_fee_cost_difference_and_same_flat_net ... ok
+test proceeds_remain_restricted_and_cover_risk_is_rejected_without_fabricating_margin ... ok
+test reservations_partially_consume_only_named_hold_and_failures_do_not_release_funds ... ok
+test account_quantity_and_notional_bounds_fail_atomically_and_money_steps_are_actual_multiples ... ok
+test duplicate_time_units_insufficient_funds_cross_zero_and_wrong_profile_are_atomic ... ok
+test every_journal_split_continues_identically_through_funding_hold_partial_release_and_trades ... ok
+test replay_recomputes_every_field_and_binds_opening_account_profile_instrument_engine ... ok
+test funding_and_reserved_capacity_are_bounded_and_do_not_change_realized_profit ... ok
+test independent_fraction_pack_matches_each_long_short_partial_and_rounding_transaction ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.62s
+
+     Running tests/margin_simulation.rs (target/debug/deps/margin_simulation-0a9e7f37e4fe9f3a)
+
+running 11 tests
+test margin_profile_rates_scales_and_reserved_namespace_fail_explicitly ... ok
+test initial_pending_limits_cancel_and_failed_replace_keep_debt_and_holds_correct ... ok
+test after_fee_fill_leverage_is_rechecked_and_rejection_reverses_financing_without_charging_fee ... ok
+test liquidation_has_a_reserved_system_order_slot_and_zero_execution_price_is_not_a_fake_close ... ok
+test late_fill_quota_rolls_back_leveraged_bar_and_cancel_repays_before_same_bar_retry ... ok
+test zero_prior_volume_stalls_liquidation_and_finish_reports_open_stopped_risk ... ok
+test maintenance_equality_is_healthy_breach_waits_for_next_open_and_system_exit_cannot_be_cancelled ... ok
+test financing_is_balanced_principal_only_profile_gated_and_replay_validated ... ok
+test failed_zero_price_exit_preserves_distinct_failed_or_insolvent_status_through_finish ... ok
+test independent_fraction_margin_pack_matches_financing_maintenance_partial_liquidation_and_gap_debt ... ok
+test every_margin_command_split_and_tampered_rules_debt_status_replay_are_verified ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.69s
+
+     Running tests/optimization.rs (target/debug/deps/optimization-2efa4c5aea10e31f)
+
+running 13 tests
+test strictly_later_same_snapshot_split_and_metadata_are_required ... ok
+test no_successful_trial_is_distinct_and_cannot_validate_or_choose_a_winner ... ok
+test tied_training_ranking_uses_parameter_identity_independent_of_seed_or_validation ... ok
+test past_only_validation_warmup_has_no_inherited_position_or_financial_state ... ok
+test actual_independent_grid_ranking_and_separate_validation_not_promoted_to_training ... ok
+test workflow_search_and_validation_share_generic_runner_and_preserve_instance_parameters ... ok
+test dimensions_and_total_trial_source_output_budgets_are_enforced ... ok
+test frozen_independent_parameter_ids_and_validation_alternative_do_not_reselect_winner ... ok
+test actual_two_dimension_cartesian_grid_is_canonical_and_does_not_special_case_names ... ok
+test one_bad_type_and_late_run_failure_are_isolated_and_never_ranked ... ok
+test validation_data_does_not_reorder_training_results ... ok
+test cancellation_records_completed_prefix_and_never_runs_validation ... ok
+test identical_seed_bytes_and_different_seed_order_do_not_change_training_winner ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.03s
+
+     Running tests/order_simulation.rs (target/debug/deps/order_simulation-8701a6cd8dd50ae0)
+
+running 13 tests
+test previous_volume_participation_is_lot_floored_and_shared_by_acceptance_fifo ... ok
+test cancel_replace_races_are_sequential_and_rejected_replacement_preserves_original ... ok
+test gap_cash_cap_and_initial_funds_position_rejections_release_holds_without_fills ... ok
+test open_only_limit_waits_despite_intrabar_touch_then_improves_with_price_cap ... ok
+test partials_may_be_below_order_minimum_and_per_fill_fee_can_exhaust_a_cash_cap ... ok
+test future_close_and_volume_cannot_change_next_open_fill_and_same_bar_is_rejected ... ok
+test independent_fee_slippage_cash_position_and_flat_profit_match_hand_calculation ... ok
+test late_fill_capacity_failure_rolls_back_whole_bar_and_same_bar_can_retry_after_cancel ... ok
+test adverse_slippage_rounds_to_actual_price_tick_and_out_of_range_gap_is_an_order_rejection ... ok
+test malformed_scale_tick_minimums_bar_gaps_and_terminal_commands_are_atomic ... ok
+test configured_limits_keep_a_finish_slot_and_order_capacity_failures_preserve_state ... ok
+test real_loaded_strategy_requires_explicit_bound_nonwarmup_intent_and_only_fills_next_bar ... ok
+test complete_command_replay_at_every_split_includes_partial_cancel_replace_costs_and_finish ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.91s
+
+     Running tests/p1_gate.rs (target/debug/deps/p1_gate-8e154a608cbf4947)
+
+running 6 tests
+test g001_strict_threshold_has_same_legacy_and_loaded_event_signals ... ok
+test novel_provider_overflow_rejects_whole_event_and_allows_corrected_retry ... ok
+test source_formatting_preserves_semantics_but_not_raw_identity ... ok
+test loaded_unknown_name_functions_predicates_and_reused_rules_match_manual_goldens ... ok
+test loaded_financial_outputs_match_independent_readiness_and_signal_table ... ok
+test invalid_loaded_models_fail_before_any_provider_execution ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests/p2_gate.rs (target/debug/deps/p2_gate-e4d897b0aa27e397)
+
+running 5 tests
+test unrelated_symbol_events_do_not_count_as_wait_bars_and_asof_trace_never_reads_future ... ok
+test queued_future_input_prefixes_and_duplicate_backward_ingress_cannot_change_g006_decisions ... ok
+test actual_g006_all_six_independent_numeric_state_latch_expiry_recross_cases_and_real_long_signals ... ok
+test real_indicator_and_rule_instances_are_isolated_shared_plan_repeat_and_trace_replay_identically ... ok
+test g006_restore_every_wait_point_and_every_expiry_case_command_preserves_continuation_and_output_identity ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 20.31s
+
+     Running tests/replay_trace.rs (target/debug/deps/replay_trace-492191425d24bcb5)
+
+running 8 tests
+test pure_graph_calls_use_the_existing_evaluator_and_trace_the_enclosing_source_and_call_ordinal ... ok
+test invalid_trace_configuration_and_mismatched_reference_reject_without_changing_live_state ... ok
+test exhausted_diagnostics_cannot_hide_a_later_command_outcome_divergence_or_invent_a_node_location ... ok
+test rejected_temporal_candidates_are_labeled_and_do_not_change_rollback_or_other_lanes ... ok
+test changed_input_reports_first_observed_source_event_while_wrong_outcome_without_reference_stays_command_only ... ok
+test observational_trace_and_entry_byte_exhaustion_preserve_all_receipts_state_and_checkpoint_bytes ... ok
+test real_indicator_crossing_workflow_window_traces_repeat_with_identical_pins_and_suppress_replay_receipts ... ok
+test every_command_restore_keeps_trace_suffix_equal_without_recollecting_historical_computation ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 7.41s
+
+     Running tests/runtime.rs (target/debug/deps/runtime-fa23bc6e9e3e0cd3)
+
+running 6 tests
+test repeated_inputs_produce_identical_reports_and_signal_provenance ... ok
+test unrelated_instruments_are_counted_but_emit_no_signal ... ok
+test completed_runs_are_one_shot_including_empty_input ... ok
+test timestamps_cannot_move_backward ... ok
+test equal_times_and_sequence_gaps_are_allowed ... ok
+test duplicate_or_backward_sequence_fails_without_consuming_invalid_event ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/schedule_execution.rs (target/debug/deps/schedule_execution-e07307be89845156)
+
+running 8 tests
+test backpressure_has_no_cursor_advance_and_retry_after_publication_is_exact ... ok
+test gap_report_is_explicit_never_fills_missing_bars_or_higher_timeframe ... ok
+test inclusive_watermarks_stall_until_all_streams_are_available_and_block_late_input ... ok
+test malformed_unclosed_off_grid_duplicate_gap_and_order_are_atomic ... ok
+test as_of_view_hides_queued_future_and_unpublished_same_time_higher_frame ... ok
+test tick_before_bar_tie_and_full_width_boundary_are_exact ... ok
+test interleaved_arrivals_equal_time_ties_and_global_source_provenance ... ok
+test failed_dispatch_does_not_publish_alignment_or_consume_then_transactional_workflow_runs ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/temporal_execution.rs (target/debug/deps/temporal_execution-db2446c9fdcd0e81)
+
+running 7 tests
+test atomic_fanout_backpressure_cancel_and_terminal_lifecycle ... ok
+test temporal_overflow_rolls_back_workflow_and_blocks_only_failed_lane_until_cancel ... ok
+test attachment_domains_identity_limits_and_late_mutation_are_rejected ... ok
+test watermark_stall_same_time_timer_ties_and_incomplete_count_eof_are_explicit ... ok
+test event_time_timer_fires_after_all_same_deadline_markets_and_without_an_expiry_bar ... ok
+test shared_model_instances_are_isolated_round_robin_and_repeatable ... ok
+test count_window_includes_expiry_excludes_arm_latches_early_and_ignores_expiry_recross ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/workflow_execution.rs (target/debug/deps/workflow_execution-28caa67b59cc6ab6)
+
+running 10 tests
+test late_numeric_error_rolls_back_provider_crossing_rule_delay_and_cursor_then_retry ... ok
+test temporal_failure_discards_candidate_provider_crossing_and_rule_state_together ... ok
+test lifecycle_releases_owned_providers_validates_before_factories_and_restarts_fresh ... ok
+test x002_independent_golden_exact_old_new_delay_modes_signals_and_parameters ... ok
+test repeat_prefix_fresh_instance_and_unrelated_events ... ok
+test disjoint_effects_see_old_state_and_upstream_outputs_stay_old ... ok
+test conflicting_effects_modes_and_unready_writes_leave_everything_unchanged ... ok
+test unready_guard_skips_effect_inactive_guard_is_not_evaluated_and_delay_errors_rollback ... ok
+test checkpoint_requires_explicit_provider_capability_before_factory_and_restores_opted_in_extension ... ok
+test p2_x002_custom_provider_and_parameterized_rule_instances_restore_every_command_without_shared_state ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.96s
+
+   Doc-tests fqe_bridge
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests fqe_core
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests fqe_ir
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests fqe_protocol
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests fqe_runtime
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.17s
+PASS: 57 Markdown files, 738 local links/anchors, 49 stage tasks; dependencies and status projections consistent.
