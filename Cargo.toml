@@ -5,6 +5,7 @@ members = [
     "crates/fqe-runtime",
     "crates/fqe-protocol",
     "crates/fqe-cli",
+    "crates/fqe-bridge",
 ]
 resolver = "3"
 

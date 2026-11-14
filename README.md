@@ -45,7 +45,8 @@ This repository contains the initial engineering foundation, version `0.1.0`. It
 | Complete bounded financial continuation/private atomic files and full P3 offline gate | Implemented experimental native Rust; [recovery](docs/FINANCIAL_RECOVERY.md), [acceptance](docs/P3_ACCEPTANCE.md); closure in PROJECT_STATUS |
 | Other broker models | Planned |
 | Python / Java / Go workers and source-language compilers | Planned |
-| Plugins, Desktop IPC, persistent history storage, Trading SDK adapter | Planned |
+| Versioned desktop stdio boundary, Dart client stub and native Sandbox feasibility | Implemented experimental P4-01; [boundary](docs/DESKTOP_BOUNDARY.md); actual Desk UI still planned |
+| Plugins, persistent history storage, Trading SDK adapter | Planned |
 
 **Implemented** means executable code is present and tested. **Experimental** means the API or schema can change and has no compatibility guarantee. **Planned** means design intent only. These labels can overlap: an experimental component may have implemented code.
 
@@ -87,6 +88,7 @@ crates/
   fqe-runtime/    Ordered event loop, lifecycle, and signal reports
   fqe-protocol/   Draft .proto schema and version negotiation helper
   fqe-cli/        Standalone fqe executable
+  fqe-bridge/     Experimental desktop peer and FFI comparison candidate
 docs/            Architecture, contracts, development, and roadmap
 ```
 
@@ -102,7 +104,7 @@ cargo clippy --workspace --all-targets
 python3 scripts/check_docs.py
 ```
 
-Commit `Cargo.lock` alongside dependency changes. The lockfile contains five workspace packages and 21 reviewed registry packages (16 active on the verified target); [dependency review](docs/P1_03_DEPENDENCY_REVIEW.md). See [Development](docs/DEVELOPMENT.md) for offline verification and dependency rules.
+Commit `Cargo.lock` alongside dependency changes. The lockfile contains six workspace packages and 21 reviewed registry packages (16 active on the verified target); [dependency review](docs/P1_03_DEPENDENCY_REVIEW.md). See [Development](docs/DEVELOPMENT.md) for offline verification and dependency rules.
 
 ## Governance and recovery
 

@@ -47,6 +47,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "fqe-bridge"
+version = "0.1.0"
+dependencies = [
+ "fqe-core",
+ "fqe-ir",
+ "fqe-runtime",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "fqe-cli"
 version = "0.1.0"
 dependencies = [

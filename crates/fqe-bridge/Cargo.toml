@@ -1,0 +1,29 @@
+[package]
+name = "fqe-bridge"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+[lib]
+crate-type = ["rlib", "cdylib"]
+
+[[bin]]
+name = "fqe-desktop-peer"
+path = "src/bin/peer.rs"
+
+[dependencies]
+fqe-core.workspace = true
+fqe-ir.workspace = true
+fqe-runtime.workspace = true
+serde_json = "=1.0.145"
+serde = "=1.0.228"
+
+# Export symbols alone require unsafe attributes. Engine crates keep workspace forbid.
+[lints.rust]
+unsafe_code = "deny"
+
+[lints.clippy]
+all = "warn"

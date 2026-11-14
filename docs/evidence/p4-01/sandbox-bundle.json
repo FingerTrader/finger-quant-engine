@@ -1,0 +1,32 @@
+{
+  "actual_desk_app": false,
+  "adhoc_only": true,
+  "candidates": {
+    "ffi": {
+      "exit": 0,
+      "response_sha256": "b1289b9f231c0cb9d9076f3666ed5c0cf61780c4e9b6954e7192526e283e1608",
+      "sandbox": "sandbox_entitled=1 outside_public_file_blocked=1"
+    },
+    "ipc": {
+      "exit": 0,
+      "response_sha256": "b1289b9f231c0cb9d9076f3666ed5c0cf61780c4e9b6954e7192526e283e1608",
+      "sandbox": "sandbox_entitled=1 outside_public_file_blocked=1"
+    }
+  },
+  "format": "fqe.desktop-sandbox-bundle-probe/1",
+  "helper_entitlements": {
+    "com.apple.security.app-sandbox": true,
+    "com.apple.security.inherit": true
+  },
+  "host_entitlements": {
+    "com.apple.security.app-sandbox": true,
+    "com.apple.security.files.user-selected.read-only": true,
+    "com.apple.security.network.client": true
+  },
+  "installer_or_store_acceptance": false,
+  "native_dependencies": {
+    "ffi": "/private/tmp/fqe-p401-bundle-final/FqeBoundaryProbe.app/Contents/Frameworks/libfqe_bridge.dylib:\n\t@rpath/libfqe_bridge.dylib (compatibility version 0.0.0, current version 0.0.0)\n\t/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1359.0.0)\n",
+    "peer": "/private/tmp/fqe-p401-bundle-final/FqeBoundaryProbe.app/Contents/MacOS/fqe-desktop-peer:\n\t/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1359.0.0)\n"
+  },
+  "status": "passed"
+}

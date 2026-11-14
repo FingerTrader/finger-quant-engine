@@ -1,6 +1,6 @@
 # Desktop integration
 
-Status: planned. The FQE CLI is implemented; no Flutter package, Dart binding, FFI bridge, local daemon, or Desktop connection is implemented.
+Status: experimental native desktop boundary and Dart standard-library client stub implemented in P4-01. A bundled private stdio engine process is selected after actual Desk-pinned Dart and native App Sandbox experiments; [boundary](DESKTOP_BOUNDARY.md) / [evidence](P4_01_ACCEPTANCE.md) own exact scope. Actual Desk UI/run persistence and installed distribution remain planned.
 
 ## Independence
 
@@ -12,13 +12,11 @@ The concrete consumer is the existing `finger_desk` project. “Optional” desc
 
 P4 discovery and editing are descriptor-driven under the [Extensibility contract](EXTENSIBILITY_CONTRACT.md): built-in/reviewed test entries expose language/runtime capabilities, parameters, typed ports, diagnostics and output labels through a generic client API. P4 does not load P6 external code. P5 independently proves actual Python/Java/Go Desk journeys for supported runtime/platform combinations; P6 proves foreign-language indicator/predicate discovery and graph use in the final installed app. Per-name Desk page additions are not the supported extension mechanism.
 
-## Intended boundary
+## Selected experimental boundary
 
-The required boundary is versioned; FFI and IPC are candidates to evaluate in P4-01 under [ADR-010](ARCHITECTURE_DECISIONS.md#adr-010--one-engine-optional-desktop-boundary). Protocol Buffers is the first cross-language encoding candidate, not a chosen transport. Framing, process discovery, lifecycle ownership, and authentication remain undecided. No port, executable download path, or service endpoint is reserved here.
+[ADR-034](ARCHITECTURE_DECISIONS.md#adr-034--bundled-private-stdio-desktop-boundary) selects a versioned bounded exact JSON envelope over private framed stdio pipes to a bundled first-party native executable. The independently runnable FFI candidate remains comparison evidence. Protocol Buffers and the existing version-number helper remain separate drafts, without generated financial bindings or worker compatibility claims.
 
-A future integration must negotiate engine/protocol capabilities and distinguish ready, unsupported, failed, and disconnected states. The current version helper compares version numbers only; it does not establish a connection or validate a Desktop client.
-
-The selected FFI/IPC mechanism must follow measured correctness, safety, lifecycle, overhead and packaging evidence. It must not bypass domain contracts or tie engine releases to Flutter implementation details. P1-10 proves minimal external invocation; P4 proves actual Desktop integration and CLI/Desktop parity with the same models, parameters and data.
+The implemented boundary negotiates major/minor/capabilities, preserves exact decimal/u64/time strings and mandatory presence, discovers reviewed typed descriptors, validates actual model/parameters and runs native Event/Workflow backtests. The actual Dart3.5.1 stub validates responses, runs asynchronously, bounds queues/messages/logs and cancels/cleans a failed peer. A disposable ad-hoc signed native bundle proved App Sandbox feasibility with actual financial parity and denied ungranted external-file access. These experiments establish the boundary, not full Desk UI/native journey, durable run ownership, Store signing/install or external strategy runtimes.
 
 ## Client responsibilities
 
@@ -39,4 +37,4 @@ Do not pass broker secrets through strategy definitions or generic UI log stream
 
 ## Integration acceptance gates
 
-Before implementation is described as available, provide a real local connection, request/event correlation, version/capability checks, process cleanup rules, bounded data flow, disconnect behavior, and an end-to-end test with the actual Desk application. P4-03/P4-05 include saved model/parameter/data binding, explicit simulation intents, verified financial results, native run/stop/reopen and legacy-record handling. P5-02/P5-05 add FQE-managed Python strategies; P6-04/P6-06 repeat the final installed-bundle journey with the final engine/worker combination. The original initialization made no Desk edits; future paired implementation belongs to the owning repositories. This documentation assessment also leaves Desk untouched.
+Before implementation is described as available, provide a real local connection, request/event correlation, version/capability checks, process cleanup rules, bounded data flow, disconnect behavior, and an end-to-end test with the actual Desk application. P4-03/P4-05 include saved model/parameter/data binding, explicit simulation intents, verified financial results, native run/stop/reopen and legacy-record handling. P5-02/P5-05 add FQE-managed Python strategies; P6-04/P6-06 repeat the final installed-bundle journey with the final engine/worker combination. The original initialization made no Desk edits; future paired implementation belongs to the owning repositories. P4-01 leaves Desk source untouched; actual consumer integration follows P4-02/P4-03.

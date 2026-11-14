@@ -1,0 +1,103 @@
+{
+  "checks": [
+    {
+      "exit": 0,
+      "name": "completed-prerequisites"
+    },
+    {
+      "exit": 0,
+      "name": "financial-source-fixture-pins-and-generic-dispatch"
+    },
+    {
+      "exit": 0,
+      "name": "gate-negative-controls"
+    },
+    {
+      "exit": 0,
+      "name": "independent-ledger"
+    },
+    {
+      "exit": 0,
+      "name": "independent-margin"
+    },
+    {
+      "exit": 0,
+      "name": "independent-backtest"
+    },
+    {
+      "exit": 0,
+      "name": "independent-optimization"
+    },
+    {
+      "exit": 0,
+      "name": "full-p2-p1-workspace-regression"
+    },
+    {
+      "exit": 0,
+      "name": "actual-historical_inputs"
+    },
+    {
+      "exit": 0,
+      "name": "actual-virtual_ledger"
+    },
+    {
+      "exit": 0,
+      "name": "actual-simulated_orders"
+    },
+    {
+      "exit": 0,
+      "name": "actual-margin_simulation"
+    },
+    {
+      "exit": 0,
+      "name": "actual-financial_checkpoint"
+    },
+    {
+      "exit": 0,
+      "name": "actual-backtest"
+    },
+    {
+      "exit": 0,
+      "name": "independent-actual-backtest"
+    },
+    {
+      "exit": 0,
+      "name": "actual-optimization"
+    },
+    {
+      "exit": 0,
+      "name": "independent-actual-optimization"
+    },
+    {
+      "exit": 0,
+      "name": "docs-final"
+    },
+    {
+      "exit": 0,
+      "name": "diff-final"
+    }
+  ],
+  "environment": {
+    "architecture": "arm64",
+    "platform": "darwin",
+    "python": "3.14.6"
+  },
+  "external_tests": 23,
+  "financial_process_cases": 2,
+  "format": "fqe.p3-gate-report",
+  "full_checks": true,
+  "full_gate_report_sha256": "c59951a583c3794df84540b0ed223522c04587570c57275e031bfe17712db0c3",
+  "independent_cases": {
+    "ledger": 5,
+    "margin": 4,
+    "metrics": 9,
+    "optimization": 3
+  },
+  "new_dart_client_fault_cases": 7,
+  "new_peer_process_cases": 12,
+  "protected_financial_source_count": 64,
+  "rust_tests": 331,
+  "schema_version": 1,
+  "status": "passed",
+  "verified_at": "2026-11-14T13:15:23.128343+00:00"
+}
