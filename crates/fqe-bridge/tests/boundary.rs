@@ -7,9 +7,9 @@ fn request(method: &str, params: Value) -> Vec<u8> {
 fn call(method: &str, params: Value) -> Value {
     serde_json::from_slice(&dispatch(&request(method, params), &AtomicBool::new(false))).unwrap()
 }
-fn params() -> Value {
-    json!({"kind":"event","model":include_str!("../../fqe-runtime/tests/fixtures/p3/backtest-events.json"),"parameters":include_str!("../../fqe-cli/tests/fixtures/parameters-60.json"),"history_spec":include_str!("../../fqe-runtime/tests/fixtures/p3/backtest-history-spec.json"),"csv":include_str!("../../fqe-runtime/tests/fixtures/p3/backtest-history.csv"),"start_ns":"1704153600000000000","end_ns":"1704154020000000000","warmup_bars":"0","run":"desktop.test","seed":"18446744073709551615","account":{"id":"local.research","profile":"cash_long","initial_cash":"100.00","participation_bps":"10000","fee_bps":"0","minimum_fee":"0.50","slippage_bps":"0","risk":null},"policies":[{"id":"entry","source":{"kind":"long_signal"},"action":{"kind":"buy_if_flat","quantity":"2.000","cash_cap":"20.00"}},{"id":"exit","source":{"kind":"event_boolean","name":"exit"},"action":{"kind":"close_long"}}]})
-}
+mod support;
+use support::params;
+
 #[test]
 fn strict_outer_codec_presence_versions_and_exact_strings() {
     for raw in [

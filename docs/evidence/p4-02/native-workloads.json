@@ -1,0 +1,44 @@
+{
+  "cases": [
+    "initialize-version-capabilities-session",
+    "actual-no-trade-native-parity",
+    "idempotent-no-trade",
+    "stable-cursor-no-trade",
+    "actual-many-fill-native-parity",
+    "idempotent-many-fill",
+    "stable-cursor-many-fill",
+    "stop-race-terminal",
+    "failed-no-stale-result",
+    "retained-run-quota",
+    "release-retains-operation-tombstone",
+    "stale-process-session-rejected",
+    "graceful-native-shutdown"
+  ],
+  "format": "fqe.managed-native-peer/1",
+  "peak_native_rss_bytes": 27443200,
+  "platform": "darwin",
+  "rss_limit_bytes": 201326592,
+  "status": "passed",
+  "workloads": [
+    {
+      "bars": 256,
+      "control_p95_ms": 0.08862465620040894,
+      "control_samples": 21,
+      "elapsed_ms": 28.572458773851395,
+      "fills": 0,
+      "final_equity": "1000000.00",
+      "result_id": "sha256:af8580e88a24c5d5efce8d999fd9d25f20b17846c079f5f22f4e8bdc0ee28f4c",
+      "workload": "no-trade"
+    },
+    {
+      "bars": 256,
+      "control_p95_ms": 0.10791700333356857,
+      "control_samples": 35,
+      "elapsed_ms": 48.56824968010187,
+      "fills": 72,
+      "final_equity": "999892.00",
+      "result_id": "sha256:ea87c76839c927f898901b6a2cb812072131b05c30fc062fdd1b111b5d76ccde",
+      "workload": "many-fill"
+    }
+  ]
+}

@@ -46,6 +46,7 @@ This repository contains the initial engineering foundation, version `0.1.0`. It
 | Other broker models | Planned |
 | Python / Java / Go workers and source-language compilers | Planned |
 | Versioned desktop stdio boundary, Dart client stub and native Sandbox feasibility | Implemented experimental P4-01; [boundary](docs/DESKTOP_BOUNDARY.md); actual Desk UI still planned |
+| Application-owned native jobs, bounded lifecycle/output cursors and SDK-only service | Implemented experimental P4-02; [controls](docs/ENGINE_CONTROLS.md); full task closure in PROJECT_STATUS |
 | Plugins, persistent history storage, Trading SDK adapter | Planned |
 
 **Implemented** means executable code is present and tested. **Experimental** means the API or schema can change and has no compatibility guarantee. **Planned** means design intent only. These labels can overlap: an experimental component may have implemented code.

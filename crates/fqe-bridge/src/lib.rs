@@ -2,6 +2,7 @@
 mod codec;
 pub mod ffi;
 pub mod framing;
+pub mod managed;
 use fqe_core::finance::parse_decimal;
 use fqe_ir::{
     catalog,
@@ -27,6 +28,7 @@ pub const CAPABILITIES: &[&str] = &[
     "desktop.exact-json/1",
     "catalog.reference/1",
     "model.validate/1",
+    "model.inspect/1",
     "backtest.cash-long/1",
     "backtest.margin-long/1",
     "cancel.bar-boundary/1",
@@ -122,6 +124,7 @@ pub fn bridge_id() -> String {
         include_bytes!("ffi.rs").as_slice(),
         include_bytes!("framing.rs").as_slice(),
         include_bytes!("codec.rs").as_slice(),
+        include_bytes!("managed.rs").as_slice(),
         include_bytes!("bin/peer.rs").as_slice(),
         include_bytes!("../Cargo.toml").as_slice(),
     ] {
@@ -176,43 +179,39 @@ pub fn dispatch(bytes: &[u8], cancel: &AtomicBool) -> Vec<u8> {
 pub fn execute(request: &Request, cancel: &AtomicBool) -> Result<Value> {
     let p = &request.params;
     match request.method.as_str() {
-        "hello" => {
-            fields(p, &["major", "minor", "required"])?;
-            if p["major"].as_u64() != Some(1) || p["minor"].as_u64().is_none() {
-                return Err(fail("incompatible_protocol"));
-            }
-            let required = p["required"]
-                .as_array()
-                .ok_or_else(|| fail("capability_shape"))?;
-            if required.len() > 32
-                || required
-                    .iter()
-                    .any(|v| !v.as_str().is_some_and(|s| CAPABILITIES.contains(&s)))
-            {
-                return Err(fail("unsupported_capability"));
-            }
-            Ok(object([
-                ("major", Value::from(1)),
-                ("minor", Value::from(0)),
-                ("engine_package", string(env!("CARGO_PKG_VERSION"))),
-                ("bridge_id", string(bridge_id())),
-                (
-                    "capabilities",
-                    Value::Array(CAPABILITIES.iter().map(string).collect()),
-                ),
-                ("max_request_bytes", string(MAX_REQUEST)),
-                ("max_response_bytes", string(MAX_RESPONSE)),
-                ("max_bars", string(MAX_BACKTEST_BARS)),
-                ("financial_authority", string("native-ledger")),
-                ("maturity", string("experimental")),
-            ]))
-        }
+        "hello" => negotiate(p, CAPABILITIES),
         // Measurement method is an exact arbitrary bounded JSON echo, not strategy execution.
         "echo" => Ok(p.clone()),
-        "model.validate" | "descriptor.list" => {
+        "model.validate" | "descriptor.list" | "model.inspect" => {
             fields(p, &["kind", "model", "parameters"])?;
             let (plan, registry) = compile(p)?;
-            if request.method == "model.validate" {
+            if request.method == "model.inspect" {
+                let canonical = match text(p, "kind")? {
+                    "event" => LoadedEventPlan::from_bytes(text(p, "model")?.as_bytes())?
+                        .canonical_bytes()
+                        .to_vec(),
+                    "workflow" => LoadedWorkflow::from_bytes(text(p, "model")?.as_bytes())?
+                        .canonical_bytes()
+                        .to_vec(),
+                    _ => return Err(fail("artifact_kind")),
+                };
+                let artifact: Value =
+                    serde_json::from_slice(&canonical).map_err(|_| fail("native_model"))?;
+                let descriptors = registry
+                    .descriptors()
+                    .map(|d| json::decode_input(d.canonical_bytes()).map_err(Failure::from))
+                    .collect::<Result<Vec<_>>>()?;
+                Ok(object([
+                    ("execution_id", string(plan.execution_id())),
+                    ("registry_id", string(registry.content_id())),
+                    (
+                        "bound_parameters",
+                        json::parameters(plan.event().graph().parameters()),
+                    ),
+                    ("artifact", artifact),
+                    ("descriptors", Value::Array(descriptors)),
+                ]))
+            } else if request.method == "model.validate" {
                 Ok(object([
                     ("execution_id", string(plan.execution_id())),
                     ("registry_id", string(registry.content_id())),
@@ -409,4 +408,36 @@ pub fn prepare(p: &Value) -> Result<PreparedBacktest> {
         unsigned(p, "seed")?,
         RunControl::Complete,
     )?)
+}
+
+pub fn negotiate(p: &Value, capabilities: &[&str]) -> Result<Value> {
+    fields(p, &["major", "minor", "required"])?;
+    if p["major"].as_u64() != Some(1) || p["minor"].as_u64().is_none() {
+        return Err(fail("incompatible_protocol"));
+    }
+    let required = p["required"]
+        .as_array()
+        .ok_or_else(|| fail("capability_shape"))?;
+    if required.len() > 32
+        || required
+            .iter()
+            .any(|v| !v.as_str().is_some_and(|s| capabilities.contains(&s)))
+    {
+        return Err(fail("unsupported_capability"));
+    }
+    Ok(object([
+        ("major", Value::from(1)),
+        ("minor", Value::from(0)),
+        ("engine_package", string(env!("CARGO_PKG_VERSION"))),
+        ("bridge_id", string(bridge_id())),
+        (
+            "capabilities",
+            Value::Array(capabilities.iter().map(string).collect()),
+        ),
+        ("max_request_bytes", string(MAX_REQUEST)),
+        ("max_response_bytes", string(MAX_RESPONSE)),
+        ("max_bars", string(MAX_BACKTEST_BARS)),
+        ("financial_authority", string("native-ledger")),
+        ("maturity", string("experimental")),
+    ]))
 }

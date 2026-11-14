@@ -1,0 +1,30 @@
+{
+  "format": "fqe.managed-desktop-journey/1",
+  "status": "passed",
+  "dart": "3.5.1 (stable) (Tue Aug 13 21:02:17 2024 +0000) on \"macos_arm64\"",
+  "timestamp_utc": "2026-11-14T13:37:04.047310Z",
+  "session": "sha256:5f2987a272891e1d8dd3068c986879d916742b4874b2ebd08605b1030b62ed8c",
+  "final_equity": "97.00",
+  "result_id": "sha256:4c14f944e93837515558c26e3708a9cc0efd01633662a8198dfed1e52f6755ed",
+  "stop_ms": 16.381,
+  "stop_terminal": "cancelled",
+  "control_p95_ms": 0.384,
+  "observed_views": [
+    "managed.1:2:running",
+    "managed.1:3:completed",
+    "managed.2:0:accepted",
+    "managed.2:3:cancelling",
+    "managed.2:4:cancelled",
+    "managed.2:4:released",
+    "managed.3:0:accepted",
+    "managed.3:3:failed",
+    "managed.3:3:released",
+    "managed.1:3:released"
+  ],
+  "window_close_preserved_run": true,
+  "exact_chunk_reassembly": true,
+  "same_operation_no_rerun": true,
+  "release_tombstone": true,
+  "failure_and_disconnect_clear_success": true,
+  "graceful_peer_exit": 0
+}

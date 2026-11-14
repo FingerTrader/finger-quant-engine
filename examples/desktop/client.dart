@@ -127,10 +127,17 @@ class PipeClient extends DesktopClient {
   }
   Future<Map<String, dynamic>> cancelActive(String requestId) => call('cancel', {'request_id': requestId});
   String get lastRequestId => 'dart.$_serial';
+  bool get disconnected => _closed;
   @override
   Future<void> close() async {
-    _fail(StateError('closed'));
-    await process.exitCode.timeout(const Duration(seconds: 2));
+    if (!_closed && _pending.isEmpty) {
+      _closed = true;
+      try {
+        await _writes.then((_) => process.stdin.close()).then((_) => process.exitCode)
+            .timeout(const Duration(milliseconds: 1500));
+      } catch (_) { process.kill(ProcessSignal.sigkill); }
+    } else { _fail(StateError('closed')); }
+    await process.exitCode.timeout(const Duration(milliseconds: 500));
     await _stdout.cancel(); await _stderr.cancel();
     try { await process.stdin.close(); } catch (_) {}
   }

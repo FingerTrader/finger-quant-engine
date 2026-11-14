@@ -1,0 +1,38 @@
+{
+  "format": "fqe.desktop-candidate-measurement/1",
+  "timestamp_utc": "2026-11-14T13:31:22.944099Z",
+  "dart": "3.5.1 (stable) (Tue Aug 13 21:02:17 2024 +0000) on \"macos_arm64\"",
+  "os": "macos",
+  "ffi": {
+    "cold_ms": 3239.619,
+    "echo_p95_ms": 0.649,
+    "cold_budget_pass": false,
+    "financial_ms": 26.148,
+    "host_timer_max_gap_ms": 10.868,
+    "host_timer_ticks": 9,
+    "cancel_ms": 12.661,
+    "cancel_terminal": "cancelled",
+    "bridge_id": "sha256:129edc7aa33a068736f7bdda2e039e230d0731d3986ce3d163790d8d874093c6",
+    "result_id": "sha256:4c14f944e93837515558c26e3708a9cc0efd01633662a8198dfed1e52f6755ed",
+    "descriptors": 7,
+    "remaining_buffers": 0,
+    "remaining_tasks": 0
+  },
+  "ipc": {
+    "cold_ms": 26.069,
+    "echo_p95_ms": 0.32,
+    "cold_budget_pass": true,
+    "financial_ms": 19.732,
+    "host_timer_max_gap_ms": 2.913,
+    "host_timer_ticks": 17,
+    "cancel_ms": 11.209,
+    "cancel_terminal": "cancelled",
+    "bridge_id": "sha256:129edc7aa33a068736f7bdda2e039e230d0731d3986ce3d163790d8d874093c6",
+    "result_id": "sha256:4c14f944e93837515558c26e3708a9cc0efd01633662a8198dfed1e52f6755ed",
+    "descriptors": 7,
+    "peer_exit": 0
+  },
+  "peer_death_cleanup_ms": 2.86,
+  "full_report_byte_parity": true,
+  "packages": "SDK standard libraries only"
+}

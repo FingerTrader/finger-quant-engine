@@ -2,6 +2,7 @@
 use fqe_bridge::{
     Request, dispatch,
     framing::{read_frame, write_frame},
+    managed::{Admission, ManagedRuns},
     response,
 };
 use std::{
@@ -17,6 +18,8 @@ fn main() -> std::process::ExitCode {
         return std::process::ExitCode::from(2);
     }
     let output = Arc::new(Mutex::new(io::stdout()));
+    let admission = Admission::default();
+    let managed = ManagedRuns::new(admission.clone());
     let mut worker: Option<(String, Arc<AtomicBool>, thread::JoinHandle<()>)> = None;
     let input = io::stdin();
     let mut input = input.lock();
@@ -39,7 +42,20 @@ fn main() -> std::process::ExitCode {
                     continue;
                 }
             };
-            if r.method == "cancel" {
+            if r.method == "hello" {
+                let mut capabilities = fqe_bridge::CAPABILITIES.to_vec();
+                capabilities.push("run.managed/1");
+                let result = fqe_bridge::negotiate(&r.params, &capabilities).map(|mut v| {
+                    v.as_object_mut().expect("hello object").insert(
+                        "session_id".into(),
+                        fqe_ir::financial_exchange::string(managed.session_id()),
+                    );
+                    v
+                });
+                send(&response(Some(&r.id), result))?;
+            } else if r.method.starts_with("run.") {
+                send(&response(Some(&r.id), managed.execute(&r)))?;
+            } else if r.method == "cancel" {
                 let target = r.params.get("request_id").and_then(|v| v.as_str());
                 let valid = r.params.as_object().is_some_and(|m| m.len() == 1) && target.is_some();
                 if !valid {
@@ -77,11 +93,19 @@ fn main() -> std::process::ExitCode {
                     ))?;
                     continue;
                 }
+                let permit = match admission.acquire() {
+                    Ok(permit) => permit,
+                    Err(error) => {
+                        send(&response(Some(&r.id), Err(error)))?;
+                        continue;
+                    }
+                };
                 let flag = Arc::new(AtomicBool::new(false));
                 let thread_flag = flag.clone();
                 let out = output.clone();
                 let id = r.id.clone();
                 let w = thread::spawn(move || {
+                    let _permit = permit;
                     let reply = dispatch(&bytes, &thread_flag);
                     if let Ok(mut out) = out.lock() {
                         let _ = write_frame(&mut *out, &reply);
@@ -94,6 +118,7 @@ fn main() -> std::process::ExitCode {
         }
         Ok(())
     })();
+    managed.shutdown();
     if let Some((_, flag, w)) = worker {
         flag.store(true, Ordering::Release);
         let _ = w.join();
