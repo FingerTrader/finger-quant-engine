@@ -1,3 +1,5 @@
+Checkpoint evidence commit: `68e947917e2353f37c87f1779a7cb61cc54cc786`. P4-03.03 stays IN_PROGRESS; Desk shared source is uncommitted and final native controls/acceptance remain pending. Compare current HEAD/remote and preserve later commits when resuming.
+
 # Latest continuation — actual build succeeded; native control still unavailable
 
 Supersedes build-failure details below: the other Desk modification restored store.dart import and changed const slots to final. Current14targeted Flutter tests PASS, including real repository→pinned native→twofills4.00/2.00→100to98. Current Android Studio debug build PASS. Immediately afterward same-path appPIDs9593(parent8151) and9594(parent1) were observed; no kill or lock-file deletion performed. Explicit current-path getApp/getAX repeatedly timeout; subsequent Android Studio AX returned noWindowsAvailable. Do not assert lockscreen without evidence. Current CUA unavailable-outcome completion summary sent. Coordination question remains unanswered; user authorization for scoped work persists, but preserve concurrent result-panel refactor. No final native acceptance or task closure.
