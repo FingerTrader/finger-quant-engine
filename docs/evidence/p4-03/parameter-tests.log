@@ -1,0 +1,6 @@
+00:00 +0: loading /Users/george/Desktop/finger_desk/test/quant/fqe_panel_test.dart
+00:00 +0: visible parameter edits apply without Enter; invalid values cannot run
+00:01 +1: preflight confirmation uses desktop dialog; cancel and confirm are distinct
+00:01 +2: generic descriptors render and node dialog is shared; errors are explicit
+00:02 +3: panel detach preserves editor draft and app service; light narrow enlarged text
+00:03 +4: All tests passed!

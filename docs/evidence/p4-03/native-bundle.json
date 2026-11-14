@@ -1,0 +1,56 @@
+{
+  "observed_utc": "2026-11-14T14:27:43.296781+00:00",
+  "candidate": "actual Android Studio main.dart Debug macos-arm64 development bundle; not installed customer-channel acceptance",
+  "manifest": {
+    "bridge_id": "sha256:f145203a13cc7febf55001e52f54de244b1b9a7edb1aa15f7f0624d53dfe4834",
+    "executable_sha256": "62de31755bf7246ba2dfeec64a95ac9d4beb0de05d374d1cea789ae23076e221",
+    "financial_engine_id": "sha256:b3b9f742ff6d6c81825880a9b388ff8d8f8783a10a1ef3a3717fcab00056b300",
+    "format": "finger-desk.fqe-bundle/1",
+    "fqe_base_commit": "1275b5cb1f9792f3c2540e62c00b5accebebb146",
+    "max_request_bytes": 262144,
+    "max_response_bytes": 4194304,
+    "notices_sha256": "b114621f9694fcea0ec17db188b3f1ca8dee03627e3c1f4c3b523a74badf034b",
+    "platform": "macos-arm64",
+    "prepared_sha256": "929bd690893a19a45ee8bf1a968db3b4a337a0c89ea03c5f0dc424e2a98ef93b",
+    "source_sha256": {
+      "crates/fqe-bridge/src/bin/peer.rs": "f83f9c3ee67ffd3817b09c3eeb2603074505ef3db16d99404c6330ba4de460be",
+      "crates/fqe-bridge/src/codec.rs": "6d46df3f67ad9deb3a76a1584625a5582441721e570e9d2f3174f16c7619bb2e",
+      "crates/fqe-bridge/src/ffi.rs": "35aed36d651b238ffdeaa4906096df25dc75f36629c63178a8f0aa269997e935",
+      "crates/fqe-bridge/src/framing.rs": "e17a11663ba5134629b277d4f94e7d1aa608b1151aa5102d4d9c3555f4c2450b",
+      "crates/fqe-bridge/src/lib.rs": "2e13fffda71722808f7c80caa9af2994dffe7f98aeef69bda9763f5b4629219e",
+      "crates/fqe-bridge/src/managed.rs": "08c6ba64e11c459467eaa7920818680795a35d0ea6cb1e7622933311f6a7ce30"
+    }
+  },
+  "helper_sha256": "62de31755bf7246ba2dfeec64a95ac9d4beb0de05d374d1cea789ae23076e221",
+  "helper_matches_manifest": true,
+  "app_signature": {
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Executable=/Users/george/Desktop/finger_desk/build/macos/Build/Products/Debug/finger_desk.app/Contents/MacOS/finger_desk\nIdentifier=com.sajiya.finger\nFormat=app bundle with Mach-O thin (arm64)\nCodeDirectory v=20400 size=437 flags=0x0(none) hashes=3+7 location=embedded\nSignature size=4776\nAuthority=Apple Development: Xu Cheng (4G2DV75TFB)\nAuthority=Apple Worldwide Developer Relations Certification Authority\nAuthority=Apple Root CA\nSigned Time=Nov 14, 2026 at 23:08:55\nInfo.plist entries=27\nTeamIdentifier=9A4J9827UQ\nSealed Resources version=2 rules=13 files=1792\nInternal requirements count=1 size=176"
+  },
+  "helper_signature": {
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Executable=/Users/george/Desktop/finger_desk/build/macos/Build/Products/Debug/finger_desk.app/Contents/MacOS/fqe-desktop-peer\nIdentifier=com.sajiya.finger.fqe-engine\nFormat=Mach-O thin (arm64)\nCodeDirectory v=20400 size=8256 flags=0x0(none) hashes=247+7 location=embedded\nSignature size=4776\nAuthority=Apple Development: Xu Cheng (4G2DV75TFB)\nAuthority=Apple Worldwide Developer Relations Certification Authority\nAuthority=Apple Root CA\nSigned Time=Nov 14, 2026 at 23:08:54\nInfo.plist=not bound\nTeamIdentifier=9A4J9827UQ\nSealed Resources=none\nInternal requirements count=1 size=184"
+  },
+  "helper_entitlements": {
+    "exit": 0,
+    "stdout": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"https://www.apple.com/DTDs/PropertyList-1.0.dtd\"><plist version=\"1.0\"><dict><key>com.apple.security.app-sandbox</key><true/><key>com.apple.security.inherit</key><true/></dict></plist>",
+    "stderr": "Executable=/Users/george/Desktop/finger_desk/build/macos/Build/Products/Debug/finger_desk.app/Contents/MacOS/fqe-desktop-peer\nwarning: Specifying ':' in the path is deprecated and will not work in a future release"
+  },
+  "verify": {
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "native_dependencies": {
+    "exit": 0,
+    "stdout": "/Users/george/Desktop/finger_desk/build/macos/Build/Products/Debug/finger_desk.app/Contents/MacOS/fqe-desktop-peer:\n\t/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1359.0.0)",
+    "stderr": ""
+  },
+  "architecture": {
+    "exit": 0,
+    "stdout": "arm64",
+    "stderr": ""
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "format": "fqe.p3-gate-report",
+  "schema_version": 1,
+  "status": "passed",
+  "verified_at": "2026-11-14T14:00:06.133717+00:00",
+  "full_checks": true,
+  "environment": {
+    "architecture": "arm64",
+    "platform": "darwin",
+    "python": "3.14.6"
+  },
+  "financial_process_cases": 2,
+  "independent_cases": {
+    "ledger": 5,
+    "margin": 4,
+    "metrics": 9,
+    "optimization": 3
+  },
+  "checks": [
+    {
+      "exit": 0,
+      "name": "completed-prerequisites"
+    },
+    {
+      "exit": 0,
+      "name": "financial-source-fixture-pins-and-generic-dispatch"
+    },
+    {
+      "exit": 0,
+      "name": "gate-negative-controls"
+    },
+    {
+      "exit": 0,
+      "name": "independent-ledger"
+    },
+    {
+      "exit": 0,
+      "name": "independent-margin"
+    },
+    {
+      "exit": 0,
+      "name": "independent-backtest"
+    },
+    {
+      "exit": 0,
+      "name": "independent-optimization"
+    },
+    {
+      "exit": 0,
+      "name": "full-p2-p1-workspace-regression"
+    },
+    {
+      "exit": 0,
+      "name": "actual-historical_inputs"
+    },
+    {
+      "exit": 0,
+      "name": "actual-virtual_ledger"
+    },
+    {
+      "exit": 0,
+      "name": "actual-simulated_orders"
+    },
+    {
+      "exit": 0,
+      "name": "actual-margin_simulation"
+    },
+    {
+      "exit": 0,
+      "name": "actual-financial_checkpoint"
+    },
+    {
+      "exit": 0,
+      "name": "actual-backtest"
+    },
+    {
+      "exit": 0,
+      "name": "independent-actual-backtest"
+    },
+    {
+      "exit": 0,
+      "name": "actual-optimization"
+    },
+    {
+      "exit": 0,
+      "name": "independent-actual-optimization"
+    },
+    {
+      "exit": 0,
+      "name": "docs-final"
+    },
+    {
+      "exit": 0,
+      "name": "diff-final"
+    }
+  ],
+  "rust_tests": 341,
+  "external_tests": 23,
+  "protected_financial_source_count": 64,
+  "full_gate_report_sha256": "7978c9069259944869e7e348eb2f2fcbe8c09b08591e88c97bd9bb46fa3dca9d"
+}

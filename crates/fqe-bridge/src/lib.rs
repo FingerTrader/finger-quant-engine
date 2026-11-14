@@ -29,6 +29,7 @@ pub const CAPABILITIES: &[&str] = &[
     "catalog.reference/1",
     "model.validate/1",
     "model.inspect/1",
+    "backtest.validate/1",
     "backtest.cash-long/1",
     "backtest.margin-long/1",
     "cancel.bar-boundary/1",
@@ -230,6 +231,17 @@ pub fn execute(request: &Request, cancel: &AtomicBool) -> Result<Value> {
                     ("descriptors", Value::Array(descriptors)),
                 ]))
             }
+        }
+        "backtest.validate" => {
+            // Prepare validates immutable history, settings and policies without
+            // evaluating a strategy, admitting a job or creating a ledger fill.
+            let prepared = prepare(p)?;
+            let manifest: Value =
+                serde_json::from_slice(prepared.manifest()).map_err(|_| fail("native_manifest"))?;
+            Ok(object([
+                ("manifest_id", string(prepared.manifest_id())),
+                ("manifest", manifest),
+            ]))
         }
         "backtest.run" => {
             let prepared = prepare(p)?;

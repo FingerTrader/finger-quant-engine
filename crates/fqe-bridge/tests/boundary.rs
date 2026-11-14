@@ -11,6 +11,31 @@ mod support;
 use support::params;
 
 #[test]
+fn preflight_validates_full_frozen_financial_inputs_without_running() {
+    let p = params();
+    let preflight = call("backtest.validate", p.clone());
+    assert_eq!(preflight["ok"], true);
+    let run = call("backtest.run", p.clone());
+    assert_eq!(preflight["body"]["manifest_id"], run["body"]["manifest_id"]);
+    assert_eq!(
+        preflight["body"]["manifest"],
+        run["body"]["report"]["manifest"]
+    );
+    assert!(preflight["body"].get("report").is_none());
+    for key in ["initial_cash", "participation_bps", "minimum_fee"] {
+        let mut invalid = p.clone();
+        invalid["account"][key] = "invalid".into();
+        assert_eq!(call("backtest.validate", invalid)["ok"], false);
+    }
+    let mut invalid = p.clone();
+    invalid["warmup_bars"] = "257".into();
+    assert_eq!(call("backtest.validate", invalid)["ok"], false);
+    let mut invalid = p;
+    invalid["policies"][0]["source"]["kind"] = "legacy_python".into();
+    assert_eq!(call("backtest.validate", invalid)["ok"], false);
+}
+
+#[test]
 fn strict_outer_codec_presence_versions_and_exact_strings() {
     for raw in [
         b"{\"a\":1,\"a\":2}".as_slice(),

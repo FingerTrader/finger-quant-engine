@@ -1,0 +1,32 @@
+{
+  "observed_utc": "2026-11-14T14:32:10.142984+00:00",
+  "desk_head": "f8e8b8ae0c8b88137ac38bb472dfc3fa17e14cb7",
+  "identity_is_release_candidate": false,
+  "reason": "Concurrent Desk UI edits removed the native-engine editor entry after the successful baseline run; this is a current-source hash inventory, not the frozen source of that earlier journey. Pending consumer UI decision and native rerun.",
+  "files": {
+    "lib/app/quant/fqe/binding.dart": "6c7e2fd7e94f0bc545d9aa23607702d331094886c113d746f3a1995739a94b4f",
+    "lib/app/quant/fqe/client.dart": "ff92b75a28b2f3b250c024b0b0b2a3b8e0405f778e56164cf7341fd0ab831891",
+    "lib/app/quant/fqe/dataset.dart": "0ef22d71cc716e277fa46a53a9e1f012b332002b920de5ed7cd9b280ea3b9400",
+    "lib/app/quant/fqe/editor.dart": "c3b4a5cee787c38ac3e4aba05d9a161afc0849bc8de021ec179d1aabaf8d914b",
+    "lib/app/quant/fqe/example.dart": "8411fdd1d9607ac7f2a0381fad35622073b3bb40d3db8e88793a43a43838b9e2",
+    "lib/app/quant/fqe/managed_client.dart": "ed56da28cf7a731562a064b0751903779f56ba50cf9488e80a7096795e95ce6a",
+    "lib/app/quant/fqe/panel.dart": "406b38be92a4134b61cbf7e4049ab9aacca1c4f1b51b21f632b370b1169a21ef",
+    "lib/app/quant/fqe/service.dart": "49d6d8b5486b475f8ab03998a2e2780b0e86462175b8118b4520038e2203f63e",
+    "lib/app/quant/fqe/store.dart": "370091e34c318887538045a5114e6ace367f8b15f695085a81a6e5f1adb4b1da",
+    "tools/quant/prepare_fqe_engine.py": "a7f45078f3814229235a5e25ecf002d7775d07860ce11b5e408985dd1d3ff7b3",
+    "tools/quant/stage_fqe_engine.py": "0b4dc98987f680df5494d2a97c426154832505638339b35e1cf0e5820bb058dc",
+    "tools/quant/test_stage_fqe_engine.py": "650e77bffd25fa37c22220f8f2001bad263ecd249a307f6ba5b41e49ecd768d8",
+    "ci/fqe-engine.json": "852253eefa6c846646099b8df80d97d51e76029c1b5e397056ac3c887c27946c",
+    "ci/fqe-engine-NOTICES.txt": "b114621f9694fcea0ec17db188b3f1ca8dee03627e3c1f4c3b523a74badf034b",
+    "macos/Runner/FqeHelper.entitlements": "def90a0f9a48b78e8aaa6812ed5ad35662b83645bd249d056db00aeeb14c0f30",
+    "lib/app/quant/presentation/quant_application_binding.dart": "57057528c1d33aa20101a29d8db3f8bbc8c3cf03c46e8e77807c69579493cda0",
+    "lib/app/modules/home/views/full_desktop_quant_dashboard.dart": "bd99475784ce8e9c038c9897434b39280f3513c9d73452b19d100f5e4f081484",
+    "macos/Runner.xcodeproj/project.pbxproj": "fdcd087672247f3075962c7deccc7af916cc6c8c18ea23203f9a4cd47d5b36c1",
+    "docs/quant/fqe-integration-v1.md": "a95b366c9a8bcbfd145f579710f4764ae91055bf13b2f26f794c5b476afe3e11",
+    "test/fqe_service_check.dart": "e5046dfc6e440bcc4511a4ebf99b677185f866896b893323387015bbce718155",
+    "test/fqe_store_check.dart": "329c271af86d4ac6168ccc093c4064a8b732c662b3aec9fa936366cbb1ac258b",
+    "test/quant/fqe_panel_test.dart": "c100c4719fc9d290f31bbdcce8bd3ca34ade1fd79f1e0a9f4ae9664fb59ca124",
+    "test/quant/fqe-descriptors.json": "fb8c90a5b094de9e5781992ca2aabb26f4359b3502b256e898586c616cba1b8e"
+  },
+  "baseline_dirty_diff_sha256": "768f23900b9308920ae0b8deee073a15a0f78893bb27df67b7756416ad59671f"
+}

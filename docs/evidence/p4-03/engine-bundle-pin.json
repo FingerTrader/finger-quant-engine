@@ -1,0 +1,19 @@
+{
+  "format": "finger-desk.fqe-bundle/1",
+  "platform": "macos-arm64",
+  "fqe_base_commit": "1275b5cb1f9792f3c2540e62c00b5accebebb146",
+  "bridge_id": "sha256:f145203a13cc7febf55001e52f54de244b1b9a7edb1aa15f7f0624d53dfe4834",
+  "financial_engine_id": "sha256:b3b9f742ff6d6c81825880a9b388ff8d8f8783a10a1ef3a3717fcab00056b300",
+  "prepared_sha256": "929bd690893a19a45ee8bf1a968db3b4a337a0c89ea03c5f0dc424e2a98ef93b",
+  "max_request_bytes": 262144,
+  "max_response_bytes": 4194304,
+  "source_sha256": {
+    "crates/fqe-bridge/src/lib.rs": "2e13fffda71722808f7c80caa9af2994dffe7f98aeef69bda9763f5b4629219e",
+    "crates/fqe-bridge/src/managed.rs": "08c6ba64e11c459467eaa7920818680795a35d0ea6cb1e7622933311f6a7ce30",
+    "crates/fqe-bridge/src/bin/peer.rs": "f83f9c3ee67ffd3817b09c3eeb2603074505ef3db16d99404c6330ba4de460be",
+    "crates/fqe-bridge/src/codec.rs": "6d46df3f67ad9deb3a76a1584625a5582441721e570e9d2f3174f16c7619bb2e",
+    "crates/fqe-bridge/src/framing.rs": "e17a11663ba5134629b277d4f94e7d1aa608b1151aa5102d4d9c3555f4c2450b",
+    "crates/fqe-bridge/src/ffi.rs": "35aed36d651b238ffdeaa4906096df25dc75f36629c63178a8f0aa269997e935"
+  },
+  "notices_sha256": "b114621f9694fcea0ec17db188b3f1ca8dee03627e3c1f4c3b523a74badf034b"
+}

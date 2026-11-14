@@ -1,0 +1,11 @@
+{
+  "checked_utc": "2026-11-14T14:32:10.135178+00:00",
+  "unchanged": {
+    "pubspec.yaml": true,
+    "pubspec.lock": true,
+    "macos/Podfile.lock": true
+  },
+  "new_registry_packages": [],
+  "package_resolution": false,
+  "third_party_scanner_upload": false
+}

@@ -1,0 +1,15 @@
+{
+  "format": "finger-desk.fqe-service-evidence/1",
+  "store": "/var/folders/3y/ykztv5957hb8mlp2_8bwm9rc0000gn/T/fqe-desk-service-CyFoE0",
+  "baseline_result_id": "sha256:4c14f944e93837515558c26e3708a9cc0efd01633662a8198dfed1e52f6755ed",
+  "variant_result_id": "sha256:e242d18211e9402876523edf479bf04c77061b296dec2f14857593a2b797da73",
+  "composed_result_id": "sha256:699ba9ad1240da5a2b6ed2f1965663cd24c0eeaa20c322209a0abf949e3b17fe",
+  "dataset_adapter": "passed",
+  "stop_ms": 135.865,
+  "stop_phase": "cancelled",
+  "disconnect": "explicit failure; no fallback",
+  "native_pid": 4998,
+  "reopen_ms": 5.411,
+  "status": "passed",
+  "native_execution": true
+}

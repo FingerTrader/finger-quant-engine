@@ -1,0 +1,12 @@
+{
+  "observed_utc": "2026-11-14T14:31:17.971315+00:00",
+  "action": "normal Cmd+Q through actual IDE-built Desk UI",
+  "owned_app_pid": 9538,
+  "owned_helper_pid": 14197,
+  "ps_exit": 1,
+  "remaining_owned_processes": "",
+  "stderr": "",
+  "cleanup_passed": true,
+  "latency_budget_measured": false,
+  "scope": "idle actual native application exit; not active-run cancellation"
+}

@@ -1,0 +1,38 @@
+{
+  "status": "PARTIAL_CURRENT_CONSUMER_CHANGED",
+  "observed_utc": "2026-11-14T14:21:16Z",
+  "platform": "macOS arm64",
+  "ide": "Android Studio",
+  "project": "~/Desktop/finger_desk",
+  "app_toolchain": {
+    "flutter": "3.24.1",
+    "dart": "3.5.1"
+  },
+  "launch": "actual IDE lib/main.dart run; current Debug bundle, not Store or stale archive",
+  "app_pid": 9538,
+  "helper_pid": 14197,
+  "helper_parent_pid": 9538,
+  "baseline": {
+    "bars": 7,
+    "parameter_threshold": "60000000000000",
+    "initial_equity": "100.00",
+    "final_equity": "97.00",
+    "fees": "1.00",
+    "fills": 2,
+    "status": "completed",
+    "input_id": "f63d1c32bd8afe7266cf7108158b74959545747f6cac0feb07adace8a317b55c",
+    "result_id": "sha256:4c14f944e93837515558c26e3708a9cc0efd01633662a8198dfed1e52f6755ed",
+    "visible_views": [
+      "confirmation with exact parameters/data/account/policies",
+      "completed native report/account/parameters",
+      "two original native fill rows",
+      "persisted input and terminal entries"
+    ]
+  },
+  "limitations": [
+    "Existing Desk instance retained a login/account; this does not prove native no-login/offline reachability. No order or live transaction was submitted.",
+    "Second UI parameter variant exposed Enter-only application of text: saving/running used prior60 despite displayed90. Fixed parameter editing commits atomically before save/validate/run; targeted automated regression passes. Native verification of that fix remains open.",
+    "Concurrent consumer changes subsequently removed QuantEngineEditor wrapper and dashboard FQE entry. Current source cannot reproduce that UI journey until integration is coordinated. Do not restore or overwrite the concurrent edits.",
+    "Frozen paired consumer candidate, generic node native journey, cancellation/panel reopen/native exit and clean-customer installation remain unaccepted."
+  ]
+}

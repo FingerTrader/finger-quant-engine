@@ -1,6 +1,6 @@
 # Desk Embedded Quant Integration
 
-Status: **planned acceptance contract**, with a read-only consumer assessment on 2026-11-14 (Asia/Tokyo). No FQE integration, migration, packaging or Desk test is claimed by this document. Product authority: [Charter](PROJECT_CHARTER.md); direction: [ADR-011](ARCHITECTURE_DECISIONS.md#adr-011--desk-embedded-delivery-and-migration). Progress remains in [Project status](PROJECT_STATUS.md).
+Status: **acceptance contract; P4-03 in progress**. The read-only baseline below is dated2026-11-14; actual partial integration, one observed native baseline and the current concurrent consumer-entry conflict are recorded in [P4-03 progress](P4_03_PROGRESS.md). Native no-login/current-candidate and customer-channel acceptance remain open. Product authority: [Charter](PROJECT_CHARTER.md); direction: [ADR-011](ARCHITECTURE_DECISIONS.md#adr-011--desk-embedded-delivery-and-migration). Progress remains in [Project status](PROJECT_STATUS.md).
 
 ## Product outcome and scope
 
@@ -82,4 +82,4 @@ Maintain separate matrices for engine-compatible adapters, CLI/runtime combinati
 
 Desk bundles a pinned engine and supported worker/runtime artifacts, dependencies, licenses and content identities. Compatibility negotiation happens before loading/running. Updates preserve local data and supported old records/bindings; rollback rejects newer unsupported state rather than downgrading it silently. Each release records Desk commit plus any reviewed patch identity, FQE commit/artifact hash, worker/SDK/runtime/contract/profile versions, platform/architecture, actual toolchains, build/signature identity and fixture checksums. A dirty development checkout must be frozen into an identifiable candidate before its results become release evidence.
 
-Engine-owned interface/goldens belong here; Desk-owned bindings, app lifecycle, UI and bundle changes belong in Desk, coordinated in one paired acceptance report. Neither repository may declare cross-project delivery complete from its own unit tests. This documentation task changes only FQE; the substantial unrelated Desk work is preserved.
+Engine-owned interface/goldens belong here; Desk-owned bindings, app lifecycle, UI and bundle changes belong in Desk, coordinated in one paired acceptance report. Neither repository may declare cross-project delivery complete from its own unit tests. The original documentation audit changed only FQE; P4-03 now includes scoped consumer implementation and preserves substantial unrelated Desk work. A concurrently changed consumer entry must be coordinated before freezing the paired candidate.
