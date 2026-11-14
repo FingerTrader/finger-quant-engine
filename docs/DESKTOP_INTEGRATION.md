@@ -8,6 +8,8 @@ FQE can be built, tested, and run without Flutter Desktop. Its offline demonstra
 
 Flutter Desktop will be an optional presentation and orchestration client. It may configure a run, launch or connect to a local engine, inspect lifecycle, and display results. It must not become a build dependency of the Rust core or the authority for engine state and financial calculations.
 
+The concrete consumer is the existing `finger_desk` project. “Optional” describes the standalone engine dependency, not permission to omit Desk delivery. The owner-selected first scope is backtesting and local simulation; real-time/live trading is separately accepted. [Desk integration](DESK_INTEGRATION_PLAN.md) is the canonical contract for the observed consumer, migration, single-backend ownership, native user journey, bundle and paired-release evidence.
+
 ## Intended boundary
 
 The required boundary is versioned; FFI and IPC are candidates to evaluate in P4-01 under [ADR-010](ARCHITECTURE_DECISIONS.md#adr-010--one-engine-optional-desktop-boundary). Protocol Buffers is the first cross-language encoding candidate, not a chosen transport. Framing, process discovery, lifecycle ownership, and authentication remain undecided. No port, executable download path, or service endpoint is reserved here.
@@ -35,4 +37,4 @@ Do not pass broker secrets through strategy definitions or generic UI log stream
 
 ## Integration acceptance gates
 
-Before implementation is described as available, provide a real local connection, request/event correlation, version/capability checks, process cleanup rules, bounded data flow, disconnect behavior, and an end-to-end test with Flutter Desktop. No changes to the existing finger-desk application are part of this repository initialization.
+Before implementation is described as available, provide a real local connection, request/event correlation, version/capability checks, process cleanup rules, bounded data flow, disconnect behavior, and an end-to-end test with the actual Desk application. P4-03/P4-05 include saved model/parameter/data binding, explicit simulation intents, verified financial results, native run/stop/reopen and legacy-record handling. P5-02/P5-05 add FQE-managed Python strategies; P6-04/P6-06 repeat the final installed-bundle journey with the final engine/worker combination. The original initialization made no Desk edits; future paired implementation belongs to the owning repositories. This documentation assessment also leaves Desk untouched.

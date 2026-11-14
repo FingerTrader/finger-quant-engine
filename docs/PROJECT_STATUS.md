@@ -7,6 +7,7 @@
 - Phase: **P1 — Universal Strategy Foundation, incomplete**. P2–P6 NOT_STARTED. No functional phase gate has passed.
 - Completed: GOV-01 architecture governance and P1-01 baseline audit. No implementation task is currently active.
 - Next eligible implementation task: **P1-02 — Universal Types & Parameter Schema**, READY. It has not been implemented.
+- Current scoped work: **GOV-02 — Documentation corrections and Desk integration assessment**, VERIFIED, explicitly requested by the owner. Six findings corrected, actual Desk consumer inspected read-only, embedded delivery/migration acceptance mapped to existing tasks, contracts/plan/handoff synchronized and checks passed. Local evidence/closure commits are pending. No engine or Desk implementation is included.
 - Actual root: `/Users/george/Desktop/finger-quant-engine`; main tracking origin/main; remote `https://github.com/FingerTrader/finger-quant-engine.git`.
 - Rust source baseline / latest pre-governance commit: `342d8aa76b48d32fa9c9110609b371eac52b8d86` (foundation). Previous commit: `cbcebad`.
 - Latest status-record commit: resolve `git log -1 --format=%H -- docs/PROJECT_STATUS.md`. Current checkout: `git rev-parse HEAD`. See the non-self-referential recording rule in DOCUMENT_AUTHORITY.
@@ -17,6 +18,7 @@
 | Task(s) | Status | Evidence / next condition |
 | --- | --- | --- |
 | GOV-01 | COMPLETED | All governance artifacts/checks delivered in `f07fe8ccd4c12b46783b67ff0a2421172d05d5dc`; normal GitHub main push and remote SHA confirmed; closure records synchronized |
+| GOV-02 | VERIFIED | Six corrections, ADR-011 and [Desk delivery contract](DESK_INTEGRATION_PLAN.md); checks below passed, local evidence/closure commits pending; no stage implementation credited |
 | P1-01 | COMPLETED | [Baseline audit](BASELINE_AUDIT.md): all crate/contract inventory, 17 tests, gap/task mapping and document checks; evidence `f07fe8ccd4c12b46783b67ff0a2421172d05d5dc` |
 | P1-02 | READY | P1-01 dependency COMPLETED; acceptance below and in NEXT_SESSION; no code work started |
 | P1-03, P1-04, P1-05, P1-06, P1-07, P1-08, P1-09, P1-10, P1-11 | NOT_STARTED | Dependencies in DELIVERY_PLAN |
@@ -26,7 +28,7 @@
 | P5-01, P5-02, P5-03, P5-04, P5-05 | NOT_STARTED | P4 gate first; Python → Java → Go |
 | P6-01, P6-02, P6-03, P6-04, P6-05, P6-06 | NOT_STARTED | P5 gate first |
 
-Stage-task totals: 1 COMPLETED audit, 1 READY, 38 NOT_STARTED. No functional implementation task has been completed under the new plan. No task is currently IN_PROGRESS or BLOCKED. Open technical choices are future work, not evidence that a ready task cannot begin. No P1 implementation gap is closed by planning it.
+Stage-task totals: 1 COMPLETED audit, 1 READY, 38 NOT_STARTED. No functional implementation task has been completed under the new plan. No stage task is currently IN_PROGRESS or BLOCKED. Open technical choices are future work, not evidence that a ready task cannot begin. No P1 implementation gap is closed by planning it.
 
 ## Delivered baseline and limitations
 
@@ -52,6 +54,20 @@ No universal graph/parameter/indicator/compiler/model loader, generalized state 
 
 Only this baseline's semantics were tested. Other platforms, external codecs, financial calculations, future goldens, Desktop parity, worker/plugin resource isolation and production workloads are unverified. No third-party scanner ran and no private dependency graph was uploaded; Cargo.lock has only five local packages.
 
+## GOV-02 documentation verification
+
+2026-11-14, macOS ARM64, existing local Rust 1.99.0 / Cargo 1.99.0, no downloads or dependencies changed:
+
+- All four required Rust checks passed: formatting, locked/offline workspace check, workspace tests (17 behavioral tests, zero failed/ignored) and strict all-target Clippy.
+- Offline CLI demo passed: completed, three events and two Long observations from sequences 2/3.
+- `python3 scripts/check_docs.py` passed: 24 Markdown files, 162 local links/anchors, 40 stage tasks and synchronized stage statuses. Three in-memory negative controls caught unknown dependency, status mismatch and premature readiness.
+- Independent rational calculation matched new G-007 SMA/cross values. The documented G-006 boundary decision cases k+1/k+3/k+4 and expiry were evaluated as specification checks; they are not tests of an implemented workflow.
+- All 40 stage IDs and dependency cells match the pre-change plan. Gate wording excludes self-completion. `git diff --check` and engine/manifest/lockfile/toolchain/license preservation passed.
+- Desk source assessment only: actual HEAD and dirty source inventory recorded in DESK_INTEGRATION_PLAN. No Desk tests, app execution, package installation, API calls or source writes were performed. Existing historical native evidence was not relabeled as new evidence.
+- No third-party scanner/network advisory check or private dependency upload; only existing standard-library/workspace code and the previously audited installed toolchain were used. Cargo.lock remains the same five local packages. These documentation checks do not establish Desk compatibility, financial correctness or future runtime behavior.
+
+Delivery: local evidence/closure commits pending; GitHub publishing was not requested. Next implementation remains P1-02 READY. First Desk scope is historical backtesting/local simulation, with P4 actual integration, P5 Python compatibility and P6 final bundle acceptance still NOT_STARTED.
+
 ## Open questions and risks
 
 1. Numeric representation, signed/zero prices, units, scale, rounding/overflow and readiness: evaluate in P1-02; current positive u64 prices are insufficient as universal finance types.
@@ -60,6 +76,7 @@ Only this baseline's semantics were tested. Other platforms, external codecs, fi
 4. Desktop FFI/IPC, worker transport, plugin execution/isolation: open tasks/experiments in ADR register, no selected mechanism claimed.
 5. Ledger realism, data leakage, exact financial results and real platform compatibility remain separate acceptance gates.
 6. No toolchain on default PATH; use the existing local exports rather than installing/replacing tools.
+7. Required Desk product integration is planned under ADR-011 and [Desk integration](DESK_INTEGRATION_PLAN.md). Existing Desk Dart/Python financial/hosted paths need a pinned paired candidate, versioned migration and single-backend authority. First scope is backtesting/local simulation; no FQE/Desk connection or native customer bundle is verified.
 
 ## Next task acceptance
 

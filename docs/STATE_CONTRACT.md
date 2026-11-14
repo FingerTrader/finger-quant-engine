@@ -47,3 +47,5 @@ Future state domains must be separated:
 Before checkpoints are supported, define a versioned snapshot containing strategy artifact identity, IR version, dataset identity, accepted event cursor, declared strategy state, seeds, and applicable financial state. Specify atomic write boundaries, event replay, duplicate handling, migration, and corruption detection.
 
 A future resume operation must reject incompatible strategy/schema/data combinations. Neither copying a `RunState` nor retaining a report is sufficient for recovery. The current engine has no pause, resume, snapshot import, crash recovery, or state migration API.
+
+P2-04/P4-02 must include output identity/cursor and replay/deduplication rules at committed boundaries; snapshot atomicity alone does not establish exactly-once delivery to a client. For the existing Desk consumer, [Desk integration](DESK_INTEGRATION_PLAN.md#state-semantics-and-migration) distinguishes pure IR event rollback from legacy hosted callbacks with already committed context operations, and historical result reading from strategy re-execution. A new engine must never silently reinterpret or overwrite old financial state.

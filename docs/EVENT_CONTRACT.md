@@ -45,4 +45,16 @@ Protocol Buffers is the first wire-format candidate to evaluate, not a commitmen
 
 ## Planned event families
 
-Timers, bars, data gaps, worker lifecycle, order intents, execution reports, account updates, checkpoints, metrics, and terminal run events need future contracts. Add event families only with explicit ordering, ownership, failure, versioning, and replay rules. No broker event schema is defined by this initialization.
+Timers, data gaps, worker lifecycle, order intents, execution reports, account updates, checkpoints, metrics, and terminal run events need future contracts. Bars have the minimum target below. Add event families only with explicit ordering, ownership, failure, versioning, and replay rules. No broker event schema is defined by this initialization.
+
+## P1 closed-bar target
+
+Status: planned contract, implemented and verified by P1-08, consumed by P1-09/P1-11. It does not extend the current tick API by documentation alone. P1-03 reserves/validates declarations; P1-06 can use function-level close samples before runtime dispatch exists.
+
+- One bound instrument and fixed positive duration timeframe per P1 bar run. Each bar identifies the instrument, timeframe, open and close UTC Unix epoch nanoseconds, typed OHLC prices and volume with declared units/scales. Close time is exclusive and strictly greater than open time; the event timestamp equals close time. Numeric domains and zero-volume validity follow the P1-02 subset.
+- A bar becomes visible only after it is closed. Indicators explicitly select the close field; an OHLC bar cannot be synthesized by silently relabeling a tick. Validate `low <= min(open, close) <= max(open, close) <= high`, nonnegative volume, domain and timeframe before evaluation. These validation rules are exercised with synthetic inputs before the P3 historical loader.
+- Sequences increase; bar intervals do not overlap and each next open equals the preceding close in this continuous P1 fixture subset. Duplicate intervals, gaps, decreasing times, unclosed bars, mixed instruments/timeframes and unsupported calendars fail before changing history. P1 does not construct bars from ticks or infer market closures.
+- Tick and bar modes declare distinct trigger families. A node advances only for its subscribed event domain. Existing legacy tick ordering/instrument filtering remains as documented above; it does not become mixed-domain scheduling.
+- A run manifest records the interval convention, timeframe, source identity, price/volume scales and warm-up boundary. Warm-up advances indicators but cannot emit trade intents or count toward financial performance. P1 indicator observations retain readiness and source-event provenance.
+
+P1-08 tests interval boundaries, timestamp mismatch, wrong units/OHLC, duplicate/gapped/unclosed bars, history rollback and source linkage. P2-02 adds calendars, gaps/late arrivals, multi-domain alignment and watermarks through a versioned extension; P3-01 adds persisted historical datasets. Desk adapters must explicitly convert their timestamp/decimal formats and reject unrepresentable values; [Desk integration](DESK_INTEGRATION_PLAN.md) owns that cross-project acceptance.

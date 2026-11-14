@@ -7,7 +7,7 @@ Applies to each Codex session and developer handoff. [Document authority](DOCUME
 1. Read [Project status](PROJECT_STATUS.md), [Next session](NEXT_SESSION.md), [Delivery plan](DELIVERY_PLAN.md), then ADRs and current task contracts. Read README and repository agent instructions. Do not rely on previous chat history.
 2. Verify actual path, `git status --short --branch`, branch/upstream/remote, `git log -5 --oneline` and `git rev-parse HEAD`. For this initialization work use main, no extra branch/worktree. Preserve unrelated dirty work and all remote commits.
 3. Compare code baseline/evidence commits in status to actual history. A later documentation commit is not a code discrepancy. Verify referenced artifacts/tests still exist; use code/tests/Git facts to repair stale records before new implementation. Do not reimplement a completed, verified task.
-4. Select the first incomplete numeric task whose dependencies are COMPLETED. If a task is already IN_PROGRESS, recover its actual partial state first. Mark READY then IN_PROGRESS with its scope, acceptance and expected tests in status/handoff; synchronize plan status cells.
+4. For an implementation request, select the first incomplete numeric task whose dependencies are COMPLETED. A scoped review or documentation request stays within that request; it does not start the next implementation task. If a task is already IN_PROGRESS, recover its actual partial state first. Mark READY then IN_PROGRESS with its scope, acceptance and expected tests in status/handoff; synchronize plan status cells.
 
 ## Task status semantics
 
@@ -21,7 +21,7 @@ Applies to each Codex session and developer handoff. [Document authority](DOCUME
 | VERIFIED | All specified acceptance and tests passed with actual evidence; closure bookkeeping/commit is still pending. |
 | COMPLETED | Artifacts delivered, all acceptance met, tests passed, docs synchronized, evidence Git commit recorded, PROJECT_STATUS and NEXT_SESSION updated. |
 
-Normal flow: NOT_STARTED → READY → IN_PROGRESS → IMPLEMENTED → VERIFIED → COMPLETED. BLOCKED can interrupt work; resolve to the actual prior state after fixing the cause. New failures regress the status with an explanation. Do not confuse task status with runtime `Completed`, ADR ACCEPTED or technical maturity labels. READY is not proof of implementation, IMPLEMENTED is not VERIFIED, and a phase requires every task COMPLETED plus its gate.
+Normal flow: NOT_STARTED → READY → IN_PROGRESS → IMPLEMENTED → VERIFIED → COMPLETED. BLOCKED can interrupt work; resolve to the actual prior state after fixing the cause. New failures regress the status with an explanation. Do not confuse task status with runtime `Completed`, ADR ACCEPTED or technical maturity labels. READY is not proof of implementation, IMPLEMENTED is not VERIFIED. A gate requires all other tasks in its phase COMPLETED, followed by its own acceptance and closure; the phase completes when that gate is also COMPLETED.
 
 ## Develop a vertical slice
 
@@ -50,10 +50,10 @@ Also run current task-specific acceptance commands; for a baseline audit, `cargo
 ## Close, commit and push
 
 1. Record actual test/acceptance evidence in PROJECT_STATUS (or a linked dated report). Update contracts, plan cells and NEXT_SESSION, including remaining risks and next eligible task. Until an evidence commit exists keep the task VERIFIED.
-2. Inspect full diff, staged paths and `git diff --check`. Stage only intended files; protect secrets, datasets, generated files and unrelated changes. Commit on main with a concrete title. This task explicitly authorizes the normal GitHub push.
+2. Inspect full diff, staged paths and `git diff --check`. Stage only intended files; protect secrets, datasets, generated files and unrelated changes. Commit on main with a concrete title as part of authorized task closure. Push only when the current request or an existing session authorization covers publishing these changes. This permanent workflow does not itself grant push authorization.
 3. Record the resulting evidence commit in status/handoff. Mark COMPLETED only after all six closure conditions above hold. A small closure commit may update these records; do not amend history just to chase a self-referential SHA. Resolve latest status commit using the command in [Document authority](DOCUMENT_AUTHORITY.md).
 4. Check remote main with `git ls-remote origin refs/heads/main`; fetch if needed. If remote advanced, inspect and preserve those commits, reconcile safely and rerun affected checks. Never reset, force-push or overwrite unrelated work to resolve divergence.
-5. Normal `git push origin main`. Compare `git rev-parse HEAD` with remote main and inspect `git status --short --branch`. Report actual SHA, push result, tests, progress and next task/acceptance. Publish no success claim until the remote confirms it.
+5. When publishing is authorized, normal `git push origin main`. Compare `git rev-parse HEAD` with remote main and inspect `git status --short --branch`. Otherwise record the local-only delivery and unpushed commits; lack of requested publishing is not a failed push. Report actual SHA, push result or not requested, tests, progress and next task/acceptance. Publish no success claim until the remote confirms it.
 
 Push success is a delivery outcome separate from the seven task states. If push fails, completed local artifacts may remain COMPLETED if all six conditions hold, but record delivery BLOCKED in status/handoff with the unpushed commit and exact error. GOV-01 specifically requires confirmed push, so its acceptance remains VERIFIED until remote receipt is evidenced. Do not mark it complete based on an expected push.
 

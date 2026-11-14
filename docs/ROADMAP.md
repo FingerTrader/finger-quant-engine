@@ -19,6 +19,8 @@ The original engineering foundation remains intact: five-crate Rust workspace, v
 
 Each stage depends on the preceding gate. Task descriptions, dependencies, deliverables, acceptance, tests and status live in DELIVERY_PLAN. No dates or feature availability promises follow from this roadmap.
 
+The required product outcome is the [Desk embedded backtest/simulation loop](DESK_INTEGRATION_PLAN.md). P4 delivers actual portable-model Desk integration; P5 integrates Python strategy workers; P6 revalidates the final installed Desk combination. Desk's independent historical P0–P6 numbering is not this engine's stage system. CLI correctness alone does not establish Desk delivery, and the first offline scope does not require live trading.
+
 ## Superseded numbering migration
 
 The pre-governance “Phase 0–6” ordering is **Superseded on 2026-11-14** by P1–P6. Preserve its technical intent through this mapping; never interpret an old phase number as a new completion claim.

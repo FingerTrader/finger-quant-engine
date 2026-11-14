@@ -37,3 +37,5 @@ Backtesting and simulation should share event and accounting contracts. They nee
 Introduce a small, explicitly scoped model before complex market realism. Validate it with manually calculated order/fill/ledger fixtures; test conservation and reconciliation properties, invalid quantities, insufficient funds, and ordering edge cases.
 
 The mode and model version must appear in every report. Do not market a synthetic rule demo as paper trading or claim equivalence between simulated and live execution.
+
+The first Desk product scope is historical-data backtesting/local simulation. P3/P4 must preserve or explicitly version the existing cash-long model through independent comparison fixtures and one authoritative backend per run; see [Desk migration](DESK_INTEGRATION_PLAN.md#state-semantics-and-migration). A broader FQE partial-fill/margin profile cannot silently replace old cash-long semantics. Real-time market-data simulation and live trading require their own later acceptance; this first offline loop does not claim either.

@@ -44,3 +44,5 @@ Process isolation is not a sandbox. Python imports, JVM code, Go binaries, and n
 Users may initially supply their own language runtimes. Bundled runtime distribution, package installation, signed worker artifacts, and runtime version matrices remain open design work.
 
 Before claiming support for a language, provide a runnable reference worker, host integration, exact integer serialization tests, shared event/IR fixtures, lifecycle and failure tests, and installation documentation. No language support is released by the presence of these documents.
+
+P5-01/P5-02 also own the existing Desk hosted-Python compatibility path described in [Desk integration](DESK_INTEGRATION_PLAN.md). The existing SDK-hosted callback/API/JSON-RPC candidate is not automatically compatible with a new FQE worker. Record mappings and transaction boundaries, preserve/version accepted operations on later callback failure, and prove actual Desk use with the FQE host. Retaining an explicitly labeled legacy path before this gate does not count as FQE Python support.

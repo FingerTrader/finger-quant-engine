@@ -6,6 +6,8 @@ FQE is an independent, **Local-First, Language-Neutral** engine. All strategy co
 
 Offline engine use does not require Flutter Desktop, a Finger Trader login, or a trading account. Flutter Desktop is a planned optional client. Trading APIs belong to the independent **Finger Trader Trading SDK**; this repository does not implement that SDK.
 
+The primary consuming product is the existing **Desk** application (`finger_desk`). Project delivery requires FQE bundled into Desk for the first local backtest/simulation loop, while standalone engine use remains independent. Live trading has a separate acceptance scope. The [Desk integration contract](docs/DESK_INTEGRATION_PLAN.md) covers migration, native run/stop/results, packaging and final paired acceptance; this integration is planned, not implemented.
+
 ## Project status
 
 The unique progress ledger is [PROJECT_STATUS](docs/PROJECT_STATUS.md). New sessions recover from it, [NEXT_SESSION](docs/NEXT_SESSION.md), [DELIVERY_PLAN](docs/DELIVERY_PLAN.md), [ADRs](docs/ARCHITECTURE_DECISIONS.md), then the current task contracts. P1 remains incomplete; the current demo does not meet universal strategy acceptance.

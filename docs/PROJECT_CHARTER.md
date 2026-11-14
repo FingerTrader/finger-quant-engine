@@ -10,6 +10,8 @@ FQE is an independent, language-agnostic, embeddable and extensible engine for d
 
 This is the destination, not a claim that these capabilities exist today. The audited baseline is a small experimental rule interpreter; [Baseline audit](BASELINE_AUDIT.md) identifies its limits.
 
+The primary product integration destination is the existing **Desk** desktop application (`finger_desk`). FQE must be bundled into Desk to deliver usable local quantitative research. The first product delivery is the historical-data **backtest and local simulation loop**: saved strategy/parameters + local data → execution → orders/fills/ledger → reports/replay and historical reopening. Live trading is a later separately accepted scope. Desk remains optional for standalone engine users; actual Desk integration is mandatory for this project's product delivery. [Desk integration](DESK_INTEGRATION_PLAN.md) defines ownership, migration, milestones and native acceptance.
+
 ## Non-negotiable boundaries
 
 | Boundary | Product requirement |
@@ -36,5 +38,7 @@ One typed IR supports No-Code Visual Strategy Builder models, indicators, custom
 Deliver vertical slices with model/data fixtures, executable behavior, negative tests and updated contracts. The six gates are [P1–P6](DELIVERY_PLAN.md): universal strategy foundation; stateful runtime; local backtesting/simulation; Desktop/external integration; language workers; plugin ecosystem/release. No calendar promise or production readiness follows from a package version or a design document.
 
 Success means a user can load a versioned strategy, validate it, reproduce local results, inspect decisions, preserve/restore supported state, and extend supported interfaces without copying strategy semantics into clients. Each stage must prove its own acceptance criteria; planned capabilities remain planned until evidence exists.
+
+Product completion also requires a supported installed Desk package to perform that offline loop using the final accepted FQE/worker versions. Library/CLI tests, a prototype UI or a development-only engine path cannot substitute for the native application, package, migration and customer-environment evidence. P4 proves the first Desk loop; P5 integrates supported Python code strategies; P6 repeats final bundled acceptance. Existing Desk strategies, local data and historical results need explicit preservation/compatibility rules.
 
 Changes to these boundaries require an explicit product decision and corresponding ADR. See [Architecture decisions](ARCHITECTURE_DECISIONS.md) and [Workflow](WORKFLOW.md).

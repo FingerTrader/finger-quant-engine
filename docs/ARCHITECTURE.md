@@ -12,6 +12,8 @@ Rust is the implementation language of the authoritative core, not a restriction
 
 Flutter Desktop is one optional client. It may orchestrate a local engine, inspect state, and present results. FQE must remain usable from its CLI and future SDKs without Flutter. Trading API connectivity belongs to the independent Finger Trader Trading SDK and a future explicit adapter; a signal has no authority to place an order.
 
+The required primary consumer is the existing Desk app (`finger_desk`). Optional client dependence preserves standalone use; project delivery still requires the bundled Desk backtest/simulation loop. Existing Desk Dart financial computation and Python hosting need explicit migration to one authoritative backend per run. [Desk integration](DESK_INTEGRATION_PLAN.md) defines this target and native acceptance; no current connection is claimed.
+
 ## Implemented dependency graph
 
 ```mermaid
