@@ -59,7 +59,7 @@ Cross-above means previous ready `left <= right` and current ready `left > right
 
 P1-05/P1-08 separate history advancement from Boolean short-circuiting. For each matching accepted event, evaluate each subscribed indicator/crossing node exactly once in stable dependency order against committed prior history and current inputs; stage its next history and expose its current output. Pure Boolean expressions then evaluate left to right and may short-circuit, but cannot skip that history advancement or trigger a second update when an output is referenced twice. An error in any subscribed stateful node fails the event even if a later Boolean branch would ignore its output. Signals and staged history commit together only after successful event evaluation. Pure arithmetic in a skipped branch is not evaluated. Missing/Warmup truth tables and diagnostic precedence are specified and tested in P1-05. Regression fixtures must cover false guards across several bars, equivalent AND operand reorderings with ready values, shared node references and failure rollback.
 
-Reference indicator semantics for P1 fixtures (numeric storage still pending evaluation):
+Reference indicator semantics for P1 fixtures (the implemented bounded [numeric policy](INDICATOR_CONTRACT.md) is selected by ADR-017):
 
 - SMA(period p): require positive p; mean of the most recent p accepted close samples, including the current sample; fewer than p samples is warm-up. P1-06 registers this ordinary function for the existing Desk visual-strategy migration, without adding SMA-specific trading-condition enums.
 - EMA(period p): first ready value is arithmetic mean of p samples; subsequent value is `2/(p+1) * x + (1-2/(p+1)) * previous`. Fewer than p samples is warm-up.
@@ -136,4 +136,4 @@ P1-11 also requires the X-001 unknown-name provider and reusable-rule compositio
 
 P1-03 now provides the experimental scalar-graph IR2 [model JSON importer](MODEL_LOADING.md), exact values, content identity and immutable parameter preparation. This is separate from the legacy IR1 evaluator. Broader graph/module/workflow/runtime targets above remain planned until their task acceptance; only the tracked P1-03 scalar declaration fixture is currently importable, without execution.
 
-P1-05 implements the bounded in-memory [expression/crossing subset](EXPRESSION_CONTRACT.md), including Boolean/readiness tables and history staging. Registered indicator formulas/precision, full loaded-graph compilation, per-event subscriptions and durable state retain later gates; the Rust AST is not an external schema.
+P1-05 implements the bounded in-memory [expression/crossing subset](EXPRESSION_CONTRACT.md), including Boolean/readiness tables and history staging. P1-06 implements [registered indicator formulas/precision](INDICATOR_CONTRACT.md); full loaded-graph compilation, per-event subscriptions and durable state retain later gates; the Rust AST is not an external schema.

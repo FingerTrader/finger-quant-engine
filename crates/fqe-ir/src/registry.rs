@@ -1,4 +1,4 @@
-//! Frozen, exact-pinned registry for reviewed pure in-process scalar providers.
+//! Frozen, exact-pinned registry for reviewed pure/incremental scalar providers.
 //! This is neither a graph compiler nor an execution sandbox or external loader.
 use crate::{
     loading::{LoadedModel, ModelBinding, parameter_json, type_json},
@@ -22,9 +22,16 @@ use std::{
 
 type Result<T> = std::result::Result<T, ModelError>;
 pub const DESCRIPTOR_VERSION: u32 = 1;
+/// Bound on declared initial source samples, not recurrence influence or heap quota.
+pub const MAX_INITIAL_HISTORY: u32 = 20000;
 pub const PROVIDER_CONTRACT_VERSION: u32 = 1;
 pub const ENGINE_API_VERSION: u32 = 1;
-pub const REGISTRY_CAPABILITIES: &[&str] = &["provider.pure-scalar/1", "values/1", "parameters/1"];
+pub const REGISTRY_CAPABILITIES: &[&str] = &[
+    "provider.pure-scalar/1",
+    "provider.incremental-scalar/1",
+    "values/1",
+    "parameters/1",
+];
 pub const DESCRIPTOR_PREFIX: &[u8] = b"FQE-DESCRIPTOR-CANONICAL/1\n";
 pub const REGISTRY_PREFIX: &[u8] = b"FQE-REGISTRY-CANONICAL/1\n";
 fn error(code: &'static str, path: &str, detail: &str) -> ModelError {
@@ -258,19 +265,40 @@ impl Descriptor {
                 "unsupported descriptor/API/provider/IR requirement",
             ));
         }
+        let pure = draft.purity == Purity::Pure
+            && draft.readiness == ReadinessPolicy::Propagate
+            && draft.history == 0
+            && draft.state_schema.is_none()
+            && !draft
+                .required_capabilities
+                .iter()
+                .any(|c| c == "provider.incremental-scalar/1");
+        let incremental = draft.purity == Purity::Stateful
+            && draft.readiness == ReadinessPolicy::ProviderManaged
+            && draft.history > 0
+            && draft.history <= MAX_INITIAL_HISTORY
+            && draft
+                .state_schema
+                .as_ref()
+                .is_some_and(|s| identifier(s, "$.state_schema").is_ok())
+            && draft
+                .required_capabilities
+                .iter()
+                .any(|c| c == "provider.incremental-scalar/1")
+            && !draft
+                .required_capabilities
+                .iter()
+                .any(|c| c == "provider.pure-scalar/1");
         if draft.role != "provider"
-            || draft.purity != Purity::Pure
-            || draft.readiness != ReadinessPolicy::Propagate
+            || !(pure || incremental)
             || !draft.deterministic
-            || draft.history != 0
-            || draft.state_schema.is_some()
             || !draft.host_services.is_empty()
             || !draft.dependencies.is_empty()
         {
             return Err(error(
                 "registry_unsupported",
                 "$",
-                "only deterministic pure scalar providers without history/services/dependencies are implemented",
+                "unsupported or inconsistent pure/incremental profile; services/dependencies are unsupported",
             ));
         }
         validate_ports(&draft.inputs, "$.inputs")?;
@@ -282,11 +310,11 @@ impl Descriptor {
                 "at least one output is required",
             ));
         }
-        if draft.category == Category::Indicator {
+        if draft.category == Category::Indicator && !incremental {
             return Err(error(
                 "registry_unsupported",
                 "$.category",
-                "indicator history/formulas belong to P1-06",
+                "indicators require the incremental profile",
             ));
         }
         if draft.category == Category::Predicate
@@ -397,7 +425,7 @@ fn descriptor_json(d: &DescriptorDraft) -> Value {
         "category":match d.category{Category::Function=>"function",Category::Predicate=>"predicate",Category::Indicator=>"indicator"},
         "compatibility":{"engine_api":d.compatibility.engine_api,"provider_contract":d.compatibility.provider_contract,"ir_min":d.compatibility.ir_min,"ir_max":d.compatibility.ir_max},
         "inputs":ports(&d.inputs),"outputs":ports(&d.outputs),"parameters":{"version":d.parameters.version(),"entries":d.parameters.specs().map(parameter_json).collect::<Vec<_>>()},
-        "purity":"pure","readiness":"propagate","deterministic":true,"history":0,"state_schema":null,"required_capabilities":d.required_capabilities,
+        "purity":match d.purity {Purity::Pure=>"pure",Purity::Stateful=>"stateful"},"readiness":match d.readiness {ReadinessPolicy::Propagate=>"propagate",ReadinessPolicy::ProviderManaged=>"provider-managed"},"deterministic":d.deterministic,"history":d.history,"state_schema":d.state_schema,"required_capabilities":d.required_capabilities,
         "host_services":[],"dependencies":[],"resources":{"max_input_bytes":d.resources.max_input_bytes,"max_output_bytes":d.resources.max_output_bytes},"semantics":d.semantics,"metadata":d.metadata})
 }
 
@@ -426,6 +454,7 @@ pub type NamedValues = Vec<(String, Evaluation<TypedValue>)>;
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum ProviderFailure {
     InvalidParameters,
+    PrecisionLimit,
     Numeric(NumericError),
     Failed,
 }
@@ -450,9 +479,31 @@ impl ProviderCall<'_> {
         }
     }
 }
+enum Implementation {
+    Pure(Arc<dyn Provider>),
+    Incremental(Arc<dyn IncrementalProvider>),
+}
 struct Registration {
     descriptor: Arc<Descriptor>,
-    provider: Arc<dyn Provider>,
+    implementation: Implementation,
+}
+/// Reviewed in-process state. Fork must deeply copy all mutable instance history.
+/// This is a trust contract, not isolation or a persistent snapshot format.
+pub trait IncrementalState: Send {
+    fn fork(&self) -> Box<dyn IncrementalState>;
+    fn step(
+        &mut self,
+        call: &ProviderCall<'_>,
+    ) -> std::result::Result<NamedValues, ProviderFailure>;
+}
+pub trait IncrementalProvider: Send + Sync {
+    fn validate_parameters(&self, _: &BoundParameters) -> std::result::Result<(), ProviderFailure> {
+        Ok(())
+    }
+    fn create(
+        &self,
+        parameters: &BoundParameters,
+    ) -> std::result::Result<Box<dyn IncrementalState>, ProviderFailure>;
 }
 #[derive(Default)]
 pub struct RegistryBuilder {
@@ -464,6 +515,30 @@ impl RegistryBuilder {
     }
     /// Registration and discovery do not call provider code.
     pub fn register(&mut self, descriptor: Descriptor, provider: Arc<dyn Provider>) -> Result<()> {
+        if descriptor.draft.purity != Purity::Pure {
+            return Err(error(
+                "registry_profile",
+                "$",
+                "pure registration requires pure descriptor",
+            ));
+        }
+        self.insert(descriptor, Implementation::Pure(provider))
+    }
+    pub fn register_incremental(
+        &mut self,
+        descriptor: Descriptor,
+        provider: Arc<dyn IncrementalProvider>,
+    ) -> Result<()> {
+        if descriptor.draft.purity != Purity::Stateful {
+            return Err(error(
+                "registry_profile",
+                "$",
+                "incremental registration requires stateful descriptor",
+            ));
+        }
+        self.insert(descriptor, Implementation::Incremental(provider))
+    }
+    fn insert(&mut self, descriptor: Descriptor, implementation: Implementation) -> Result<()> {
         let key = descriptor.draft.key.clone();
         if self.entries.contains_key(&key) {
             return Err(error(
@@ -483,7 +558,7 @@ impl RegistryBuilder {
             key,
             Registration {
                 descriptor: Arc::new(descriptor),
-                provider,
+                implementation,
             },
         );
         Ok(())
@@ -562,6 +637,13 @@ impl Registry {
         values: impl IntoIterator<Item = (String, ParameterInput)>,
     ) -> Result<PreparedCall> {
         let e = self.registration(r)?;
+        let Implementation::Pure(provider) = &e.implementation else {
+            return Err(error(
+                "registry_profile",
+                "$",
+                "incremental entries require an owned instance",
+            ));
+        };
         let parameters = e.descriptor.draft.parameters.bind(values).map_err(|_| {
             error(
                 "registry_parameter",
@@ -584,14 +666,70 @@ impl Registry {
             ));
         }
         provider_result(catch_unwind(AssertUnwindSafe(|| {
-            e.provider.validate_parameters(&parameters)
+            provider.validate_parameters(&parameters)
         })))?;
         Ok(PreparedCall {
             descriptor: Arc::clone(&e.descriptor),
-            provider: Arc::clone(&e.provider),
+            provider: Arc::clone(provider),
             parameters,
             parameter_bytes: bytes,
             model_pin: None,
+            registry_id: self.content_id,
+        })
+    }
+    /// Creates a fresh owned state; never usable through repeated pure AST calls.
+    pub fn instantiate(
+        &self,
+        r: &EntryRequirement,
+        values: impl IntoIterator<Item = (String, ParameterInput)>,
+        run: impl Into<String>,
+        instance: impl Into<String>,
+    ) -> Result<IncrementalInstance> {
+        let e = self.registration(r)?;
+        let Implementation::Incremental(provider) = &e.implementation else {
+            return Err(error("registry_profile", "$", "pure entries use prepare"));
+        };
+        let parameters = e.descriptor.draft.parameters.bind(values).map_err(|_| {
+            error(
+                "registry_parameter",
+                "$.parameters",
+                "invalid provider parameter bindings",
+            )
+        })?;
+        let parameter_bytes = parameters
+            .iter()
+            .map(|(_, v)| match v {
+                BoundValue::Value(v) => payload_size(v),
+                BoundValue::Unbound => 0,
+            })
+            .sum();
+        if parameter_bytes > e.descriptor.draft.resources.max_input_bytes {
+            return Err(error(
+                "registry_limit",
+                "$.parameters",
+                "parameter payload budget exceeded",
+            ));
+        }
+        let run = run.into();
+        let instance = instance.into();
+        identifier(&run, "$.call.run")?;
+        identifier(&instance, "$.call.instance")?;
+        provider_result(catch_unwind(AssertUnwindSafe(|| {
+            provider.validate_parameters(&parameters)
+        })))?;
+        let state = provider_result(catch_unwind(AssertUnwindSafe(|| {
+            provider.create(&parameters)
+        })))?;
+        Ok(IncrementalInstance {
+            descriptor: Arc::clone(&e.descriptor),
+            provider: Arc::clone(provider),
+            parameters,
+            parameter_bytes,
+            state,
+            run,
+            instance,
+            last_sequence: None,
+            accepted_steps: 0,
             registry_id: self.content_id,
         })
     }
@@ -719,6 +857,11 @@ fn provider_result<T>(
             "registry_parameter",
             "$.provider",
             "provider parameter relationship rejected",
+        ),
+        ProviderFailure::PrecisionLimit => error(
+            "registry_precision",
+            "$.provider",
+            "provider numerical conditioning limit rejected the input",
         ),
         ProviderFailure::Numeric(n) => {
             ModelError::new("registry_numeric", "$.provider", n.to_string())
@@ -902,5 +1045,127 @@ impl CallResult {
     }
     pub fn outputs(&self) -> &BTreeMap<String, Evaluation<TypedValue>> {
         &self.outputs
+    }
+}
+
+/// Single-node transaction only. Cross-node event transactions belong to P1-08.
+pub struct IncrementalInstance {
+    descriptor: Arc<Descriptor>,
+    provider: Arc<dyn IncrementalProvider>,
+    parameters: BoundParameters,
+    parameter_bytes: usize,
+    state: Box<dyn IncrementalState>,
+    run: String,
+    instance: String,
+    last_sequence: Option<u64>,
+    accepted_steps: u64,
+    registry_id: ContentId,
+}
+impl IncrementalInstance {
+    pub fn descriptor(&self) -> &Descriptor {
+        &self.descriptor
+    }
+    pub fn parameters(&self) -> &BoundParameters {
+        &self.parameters
+    }
+    pub fn last_sequence(&self) -> Option<u64> {
+        self.last_sequence
+    }
+    pub fn accepted_steps(&self) -> u64 {
+        self.accepted_steps
+    }
+    pub fn step(&mut self, sequence: u64, inputs: NamedValues) -> Result<CallResult> {
+        if sequence == 0 || self.last_sequence.is_some_and(|s| sequence <= s) {
+            return Err(error(
+                "registry_sequence",
+                "$.call",
+                "expected strictly increasing positive sequence",
+            ));
+        }
+        let next_steps = self
+            .accepted_steps
+            .checked_add(1)
+            .ok_or_else(|| error("registry_limit", "$.call", "step counter overflow"))?;
+        let d = &self.descriptor.draft;
+        let inputs = validate_values(
+            inputs,
+            &d.inputs,
+            d.resources.max_input_bytes - self.parameter_bytes,
+            "$.inputs",
+        )?;
+        for v in inputs.values() {
+            if let Evaluation::Error(n) = v {
+                return Err(ModelError::new(
+                    "registry_numeric",
+                    "$.inputs",
+                    n.to_string(),
+                ));
+            }
+        }
+        let missing = inputs.values().any(|v| matches!(v, Evaluation::Missing));
+        let warmup = inputs.values().any(|v| matches!(v, Evaluation::Warmup));
+        let context = CallContext {
+            run: self.run.clone(),
+            instance: self.instance.clone(),
+            event_sequence: sequence,
+            call_sequence: next_steps,
+        };
+        let (state, outputs) = if missing || warmup {
+            // An accepted unavailable sample breaks continuity and resets all history.
+            let state = provider_result(catch_unwind(AssertUnwindSafe(|| {
+                self.provider.create(&self.parameters)
+            })))?;
+            let outputs = d
+                .outputs
+                .iter()
+                .map(|p| {
+                    (
+                        p.name.clone(),
+                        if missing {
+                            Evaluation::Missing
+                        } else {
+                            Evaluation::Warmup
+                        },
+                    )
+                })
+                .collect();
+            (state, outputs)
+        } else {
+            let (state, values) = provider_result(catch_unwind(AssertUnwindSafe(|| {
+                let mut state = self.state.fork();
+                let values = state.step(&ProviderCall {
+                    context: &context,
+                    parameters: &self.parameters,
+                    inputs: &inputs,
+                })?;
+                Ok((state, values))
+            })))?;
+            let outputs = validate_values(
+                values,
+                &d.outputs,
+                d.resources.max_output_bytes,
+                "$.outputs",
+            )?;
+            for v in outputs.values() {
+                if let Evaluation::Error(n) = v {
+                    return Err(ModelError::new(
+                        "registry_numeric",
+                        "$.outputs",
+                        n.to_string(),
+                    ));
+                }
+            }
+            (state, outputs)
+        };
+        self.state = state;
+        self.last_sequence = Some(sequence);
+        self.accepted_steps = next_steps;
+        Ok(CallResult {
+            context,
+            descriptor_id: self.descriptor.content_id(),
+            registry_id: self.registry_id,
+            model_pin: None,
+            outputs,
+        })
     }
 }

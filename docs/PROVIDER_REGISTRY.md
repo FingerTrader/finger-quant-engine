@@ -1,6 +1,6 @@
-# Pure Provider Registry Contract
+# Provider Registry Contract
 
-**Implemented, experimental P1-04 subset.** This owns current descriptor validation, frozen in-process registries, pure callable preparation/invocation and local model-node signature checks. The broader [Extensibility contract](EXTENSIBILITY_CONTRACT.md) remains normative for later languages/state/plugins; [Model loading](MODEL_LOADING.md) owns IR2 file syntax and model identity. [Project status](PROJECT_STATUS.md) owns progress.
+**Implemented, experimental P1-04 pure and P1-06 incremental scalar subsets.** This owns current descriptor validation, frozen in-process registries, pure callable preparation/invocation and local model-node signature checks. The [Indicator contract](INDICATOR_CONTRACT.md) owns instance-state transactions/formulas/precision. The broader [Extensibility contract](EXTENSIBILITY_CONTRACT.md) remains normative for later languages/persistence/plugins; [Model loading](MODEL_LOADING.md) owns IR2 file syntax and model identity. [Project status](PROJECT_STATUS.md) owns progress.
 
 ## Descriptors and frozen registries
 
@@ -12,16 +12,16 @@ Descriptors contain category, named typed input/output signatures, parameter sch
 
 | Field | Implemented rule |
 | --- | --- |
-| Role/category | provider; function or predicate; predicates have exactly one Boolean output |
+| Role/category | provider; function/predicate plus incremental indicator; predicates have exactly one Boolean output |
 | Ports | 0–32 named inputs, 1–32 outputs; exactly-one cardinality; P1-02 scalar types/units/scales; named multi-output values are separate scalar ports, not an opaque record |
 | Parameters | P1-02 schema/default/range/enum/type rules, plus provider relationship validator at preparation; immutable values thereafter |
-| Purity/readiness | deterministic pure stateless synchronous calls; host propagates Error/Missing/Warmup, invokes only with ready inputs, requires ready provider outputs |
-| History/state | history 0, no state schema; Indicator category/stateful/provider-managed readiness rejected until later tasks implement them |
-| Capabilities | known declaration requirements provider.pure-scalar/1, values/1, parameters/1; no granted host services or external dependencies |
+| Purity/readiness | pure profile: deterministic synchronous calls, host propagates Error/Missing/Warmup and requires ready outputs on ready inputs; incremental profile: owned staged state with provider-managed output readiness, see Indicator contract |
+| History/state | pure: history 0/no state schema; incremental: history 1–20000 plus state identity, explicit capability, owned factory/instance; no snapshot codec |
+| Capabilities | known declaration requirements provider.pure-scalar/1, provider.incremental-scalar/1, values/1, parameters/1; no granted host services or external dependencies |
 | Metadata | at most 32 identifier/string fields, string values ≤4096 bytes; nonempty semantics ≤4096 bytes; no executable UI/text |
 | Limits | at most 256 registry entries; ≤32 requirements; descriptor canonical bytes ≤262144; conservative parameter encoding preflight estimate ≤262144; scalar payload input/output budgets each 1–262144 |
 
-Unknown required capabilities, adapters/runners, optional/variadic cardinality, unsupported scalar/series/window/record/collection types, history/state/dependencies/services and nondeterminism fail explicitly. Existing TypeDescriptor construction rejects unsupported shapes before registration. Logical IDs never launch code or become paths. New names using supported signatures use the same generic interface; they do not introduce per-name dispatch branches.
+Unknown required capabilities, adapters/runners, optional/variadic cardinality, unsupported scalar/series/window/record/collection types, inconsistent history/state profiles, dependencies/services and nondeterminism fail explicitly. Existing TypeDescriptor construction rejects unsupported shapes before registration. Logical IDs never launch code or become paths. New names using supported signatures use the same generic interface; they do not introduce per-name dispatch branches.
 
 `max_input_bytes` counts bound parameter payload plus ready input payload: Bool=1, i64/u64=8, decimal coefficient=16, text=UTF-8 length; unbound/readiness markers cost 0. `max_output_bytes` applies to all returned ready payloads. These are logical scalar budgets, not serialized frame sizes, memory quotas or CPU timeouts. Type/identity metadata has its own bounded construction limits. The conservative schema preflight also caps temporary descriptor encoding before the final byte check; it may reject some otherwise individually legal parameter combinations.
 
@@ -58,3 +58,7 @@ This is local callable validation, not whole-graph compilation: it does not vali
 The independent function takes left/right u64, an optional bias default 0, and returns named checked sum/difference outputs. Its separate predicate validates threshold < ceiling and returns the strict comparison to a supplied threshold. No order/ledger operation or history is present. Two actual [sum](../crates/fqe-ir/tests/fixtures/x001-sum.json)/[difference](../crates/fqe-ir/tests/fixtures/x001-difference.json) model artifacts use provider source pins plus built-ins. The caller explicitly drives constants → pair → predicate → not; the two results are independently known: 125+75=200, 125−75=50; threshold 150 gives true/false, then false/true after not. Model wiring changes model content identity without changing engine code.
 
 Run `cargo run --locked --offline -p fqe-ir --example providers`. [Registry tests](../crates/fqe-ir/tests/registry_contract.rs) verify both compositions and descriptor/registry/parameter/type/readiness/resource/panic failures, exact u64::MAX, independent canonical identity and frozen prepared-handle lifetime. This completes only the P1-04 in-process portion of X-001. Compiled generic compositions, reusable rules, event execution and full X-001/P1-gate acceptance remain P1-07/P1-08/P1-11. External Java/Go providers, Desk discovery and signed customer bundles remain later tasks.
+
+## Incremental provider extension
+
+P1-06 adds `register_incremental` and `instantiate` through the same descriptor/frozen discovery/exact-pin path. Its explicit capability/profile, instance factories, deep staged state, readiness reset, single-node commit boundaries and supported indicator policy are normative in [Indicator contract](INDICATOR_CONTRACT.md). Pure PreparedCall and pure model-node preparation reject stateful entries. P1-04 canonical pure bytes and identities are preserved; no stateful descriptor is encoded as pure. Stateful model-node compilation and atomic event scheduling remain P1-07/P1-08.

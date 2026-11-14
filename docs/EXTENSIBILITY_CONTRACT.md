@@ -1,6 +1,6 @@
 # Open Language, Indicator and Rule Extensibility
 
-Status: **normative target with an implemented experimental pure scalar subset** in [Provider registry](PROVIDER_REGISTRY.md); remaining adapter/state/plugin mechanisms are planned. Accepted direction under [ADR-012](ARCHITECTURE_DECISIONS.md#adr-012--open-language-and-computation-extensions). P1-04 implements shared in-process descriptors/registration/invocation; no external adapter/provider bridge or extension loader is implemented. [Project status](PROJECT_STATUS.md) owns progress; [Delivery plan](DELIVERY_PLAN.md) assigns executable acceptance. Existing experimental Rust IR remains unchanged.
+Status: **normative target with implemented experimental pure and incremental scalar subsets** in [Provider registry](PROVIDER_REGISTRY.md); [P1-06](INDICATOR_CONTRACT.md) adds owned indicator state; remaining adapters/persistence/plugins are planned. Accepted direction under [ADR-012](ARCHITECTURE_DECISIONS.md#adr-012--open-language-and-computation-extensions). P1-04 implements shared in-process descriptors/registration/invocation; no external adapter/provider bridge or extension loader is implemented. [Project status](PROJECT_STATUS.md) owns progress; [Delivery plan](DELIVERY_PLAN.md) assigns executable acceptance. Existing legacy IR1 behavior and scalar IR2 model encoding remain unchanged.
 
 ## Goal and compatibility boundary
 
@@ -14,7 +14,7 @@ New languages require an adapter and actual conformance evidence. New indicators
 | --- | --- | --- |
 | Engine client | Versioned validate/compile/run/control/result interface; P1-10/P4-01/P4-02 | Any program able to implement the chosen boundary can invoke a model; doing so does not make that language a supported strategy runtime. |
 | Strategy runner | Versioned language adapter and worker lifecycle; P5-01–P5-05 | Runs an entire code strategy, uses declared host context services and emits validated observations/intents. No Python/JVM objects or Rust layouts in the public contract. |
-| Computation provider | Versioned typed function/indicator/predicate invocation; P1-04 contract, P2 state, P5 protocol mapping and P6 external execution | Exposes callable entries to the graph and other strategies through a host function service. Its implementation language is independent of the caller's language; it does not own orders or financial truth. |
+| Computation provider | Versioned typed function/indicator/predicate invocation; P1-04/P1-06 local contract, P2 generalized state, P5 protocol mapping and P6 external execution | Exposes callable entries to the graph and other strategies through a host function service. Its implementation language is independent of the caller's language; it does not own orders or financial truth. |
 
 A package can implement several roles, but each role is negotiated explicitly with separate permissions/lifecycle. A whole-strategy `on_bar` callback is not an indicator invocation API. Worker support for a language alone does not prove that its functions can be graph nodes. [Language workers](LANGUAGE_WORKERS.md) owns the strategy-runner protocol; [Plugins](PLUGIN_SYSTEM.md) owns external artifact resolution/lifecycle/isolation. Both implement this shared semantic boundary.
 

@@ -5,9 +5,9 @@
 ## Current position
 
 - Phase: **P1 — Universal Strategy Foundation, incomplete**. P2–P6 NOT_STARTED. No functional phase gate has passed.
-- Completed: GOV-01 architecture governance, GOV-02 Desk planning, GOV-03 extensibility planning, P1-01 baseline audit and P1-02 type/parameter implementation. P1-03 is now COMPLETED with local evidence recorded below.
-- Latest implementation: **P1-05 — Universal Expression Engine**, COMPLETED. Typed checked expressions/generic pure calls, explicit Boolean/readiness policy and transactional crossing subscriptions delivered; evidence `424aacb9faf5d081b72bf0a82f26ef396de16c78`.
-- Next eligible implementation: **P1-06 — Indicator Function Slice**, READY. P1-04/P1-05 closed; shared registered SMA/EMA/MACD/RSI with independently validated precision/seed/warm-up policies is next. User authorized continuing downstream work without routine confirmation.
+- Completed: GOV-01/GOV-02/GOV-03 and P1-01 through P1-05. P1-06 implementation is VERIFIED; evidence/closure commit pending.
+- Latest implementation: **P1-06 — Indicator Function Slice**, VERIFIED. Shared registered SMA/EMA/MACD/RSI, bounded decimal policy, owned incremental instances and independent fixtures delivered; 96 workspace tests/all required checks passed. Local evidence commit pending.
+- Active closure: P1-06 VERIFIED; next P1-07 becomes READY after evidence closure. User authorized continuing downstream work without routine confirmation; publishing is not requested.
 - P1-02 acceptance met: evaluated numeric policy/limits, strict type/unit/scale checks, unsupported-shape rejection, full binding matrix and tests. Evidence `a653c105fba5ea6ada15395abc22cc8f82cc4472` and local closure recorded below; publishing not requested.
 - Actual root: `/Users/george/Desktop/finger-quant-engine`; main tracking origin/main; remote `https://github.com/FingerTrader/finger-quant-engine.git`.
 - Rust source baseline / latest pre-governance commit: `342d8aa76b48d32fa9c9110609b371eac52b8d86` (foundation). Previous commit: `cbcebad`.
@@ -26,7 +26,7 @@
 | P1-03 | COMPLETED | Strict bounded import/identity/binding/compatibility contract; 56 tests/full checks; evidence `b4b7707fc786c5ea5b68dd7f19fb03cb10f5b45d`; local closure, not pushed |
 | P1-04 | COMPLETED | Pure registry/invocation/model-node preparation, two independent X-001 compositions, 69 tests/full checks; evidence `d0382d365815d233e4f28773995e2ef688f2a656`, local closure |
 | P1-05 | COMPLETED | Typed expressions/calls and transactional crossings; 86 tests/full checks/all examples PASS; evidence `424aacb9faf5d081b72bf0a82f26ef396de16c78`, local closure |
-| P1-06 | READY | P1-05 completed; numeric/formula/warm-up and generic registered indicator acceptance in NEXT_SESSION |
+| P1-06 | VERIFIED | Registered SMA/EMA/MACD/RSI, owned staged state, independent fixtures/ADR-017; 96 tests/full checks/all examples PASS; evidence commit pending |
 | P1-07, P1-08, P1-09, P1-10, P1-11 | NOT_STARTED | Dependencies in DELIVERY_PLAN |
 | P2-01, P2-02, P2-03, P2-04, P2-05, P2-06 | NOT_STARTED | P1 gate first |
 | P3-01, P3-02, P3-03, P3-04, P3-05, P3-06, P3-07 | NOT_STARTED | P2 gate first |
@@ -36,7 +36,7 @@
 | P6-01, P6-02, P6-03, P6-04, P6-05, P6-06 | NOT_STARTED | P5 gate first |
 | P6-03.01 | NOT_STARTED | Java-indicator/Go-predicate graph after P6-02; prerequisite of parent P6-03 |
 
-Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 5 COMPLETED, 1 READY, 36 NOT_STARTED. P1-06 is next; none is IN_PROGRESS or BLOCKED. No functional phase gate has passed. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
+Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 5 COMPLETED, 1 VERIFIED, 36 NOT_STARTED. P1-06 awaits evidence closure; none is BLOCKED. No functional phase gate has passed. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
 
 ## Delivered baseline and limitations
 
@@ -93,14 +93,14 @@ Delivery: evidence `5e9f770c01e513598478f4cbdd42a9a5278fb804` committed; this fo
 
 ## Open questions and risks
 
-1. P1-02 implements the bounded decimal/type/parameter contract under ADR-013. Indicator working/output scales, formula rounding/decision tolerances and financial tick/lot/currency policy remain P1-06/P3-01 work. The legacy evaluator remains positive-u64-only.
+1. P1-02 implements the bounded decimal/type/parameter contract under ADR-013. Indicator work18/output12 policy and conditioning limits are selected in ADR-017; financial tick/lot/currency policy remains P3-01 work. The legacy evaluator remains positive-u64-only.
 2. ADR-014 selects experimental model JSON; Protobuf mapping/transport/generators remain P4-01/P5-01 choices with separate review.
 3. State workflow/snapshot semantics: P2; counters are not resumable strategy state.
 4. Desktop FFI/IPC, worker transport, plugin execution/isolation: open tasks/experiments in ADR register, no selected mechanism claimed.
 5. Ledger realism, data leakage, exact financial results and real platform compatibility remain separate acceptance gates.
 6. No toolchain on default PATH; use the existing local exports rather than installing/replacing tools.
 7. Required Desk product integration is planned under ADR-011 and [Desk integration](DESK_INTEGRATION_PLAN.md). Existing Desk Dart/Python financial/hosted paths need a pinned paired candidate, versioned migration and single-backend authority. First scope is backtesting/local simulation; no FQE/Desk connection or native customer bundle is verified.
-8. Open language/indicator/rule extension support follows ADR-012 and [Extensibility](EXTENSIBILITY_CONTRACT.md). The pure scalar in-process registry/provider slice now exists under P1-04; stateful/external providers, onboarding kit, fourth-language X-004 and cross-language graph X-005 remain future gates. Type/event/host-service growth needs versioned negotiation; runtime support and Desk bundle availability need separate evidence.
+8. Open language/indicator/rule extension support follows ADR-012 and [Extensibility](EXTENSIBILITY_CONTRACT.md). The pure scalar in-process registry/provider slice now exists under P1-04; external providers/persistent state, onboarding kit, fourth-language X-004 and cross-language graph X-005 remain future gates. Type/event/host-service growth needs versioned negotiation; runtime support and Desk bundle availability need separate evidence.
 
 ## P1-02 type/parameter verification
 
@@ -158,3 +158,17 @@ P1-05 intended diff reviewed; preservation checks confirm manifests/lockfile/cor
 P1-05 closure records actual evidence above. Including this closure, twelve local commits are ahead of last-confirmed origin/main; no publishing requested or attempted. Current source/history is resolved from Git. Next P1-06 is READY and remains unimplemented; no P1 functional gate has passed.
 
 Final P1-05 closure document check PASS: 30 Markdown files, 286 local links/anchors and all 42 synchronized stage tasks; final whitespace check PASS.
+
+## P1-06 indicator verification
+
+2026-11-14, macOS ARM64, existing pinned rustc/Cargo 1.99.0:
+
+- Added [indicator implementation](../crates/fqe-ir/src/indicators.rs), [public tests](../crates/fqe-ir/tests/indicators.rs), [example](../crates/fqe-ir/examples/indicators.rs), [contract](INDICATOR_CONTRACT.md), [independent numeric evaluation](P1_06_NUMERIC_EVALUATION.md) and ADR-017. Shared registry supports exact-pinned owned incremental factories/instances; pure canonical identity is preserved. No per-indicator branch in registry/compiler/expression code.
+- Required fmt/check/locked offline workspace tests/strict all-target Clippy all PASS. **96 behavioral tests = 86 prior + 10 indicator tests**, zero failed/ignored/doc tests. CLI demo and parameters/load_model/providers/expressions/indicators examples all PASS. Indicator example: MACD(2,3,2), six accepted steps, line first ready bar3, signal/histogram bar4; final line 0.129629629630, signal 0.209876543210, histogram −0.080246913580.
+- Independent Python stdlib Fraction generator, not invoked by tests: nine datasets/563 samples, eight output series each. Rust matches rational reference readiness exactly and ready coefficients within 1 at output scale12. Measured work18 candidate maximum absolute RSI error ~4.973e-13 versus ~1.068e-11 for work12 on these fixtures; see evaluation for all outputs and worst-case limitations. G-007 SMA2/SMA3 emits a cross only at bar5, never first-ready bar3. G-002 named MACD/RSI outputs fed to generic expressions yield bar5 at threshold60 and none at90; this manual library composition does not close loaded G-003/P1-11.
+- Covered mean seeds, MACD partial readiness/no ×2, RSI flat/rising/falling, signed/short/512-step/large series; ±one output quantum/half-even ties/strict thresholds, binary64 loss near 1e12, max periods and MACD 19999-sample compound seed, explicit RSI conditioning rejection, parameter/type/profile/canonical-state fields, Missing/Warmup reset, sequence gaps/retries/isolated instances. An unknown-name stateful provider mutates staged state then fails/panics/returns invalid outputs; no state/cursor is committed and retry succeeds.
+- Numeric policy: work18/output12 HalfEven, abs(close)≤1e12, period≤10000. RSI rejects nonzero mean gain+loss <1e-6 input units with registry_precision; this bounded version is unsuitable for smaller movements without an explicit unit/provider change. Single-node atomicity only; P1-08 must make all subscribed state and signals atomic together. In-memory deep clones are trusted-provider contracts, not isolation/persistence/heap quotas.
+- Indicator source SHA-256 `125c8a17228b1a0f92b99661d2d7a69024672672b86292b4cd91c78086b0a29e`; tracked rational fixture SHA-256 `446071c02c76c144fe4cd80cc396f8af26a4d461b82fd68f6f775d1aadc430c6`. Source pins are not binary/dependency attestations. Fixture generation and numeric policy review are deliberate, not test-time regeneration.
+- Document checker PASS: 32 Markdown files and 42 stage tasks; dependency/status projections and local links checked. Whitespace/full intended diff/protected paths review PASS. Initial test helper's Result/Option compile mismatch was corrected; final checks above ran after all code changes. No other test failure, tool installation, package/manifest/lockfile change, new advisory query/scanner/private upload, Desk edit or external repository execution. Existing reviewed pinned dependencies used offline; no new dependencies.
+
+Local evidence commit pending; task remains VERIFIED until recorded. Remote main read-confirmed `0ac5d7b163e77bddb5f69689a1455e3560aad872`; no push requested/attempted. P1-07 graph/modules and P1-08 event scheduling remain unimplemented, with P1-09–P1-11/Desk/backtest/simulation gates still open.

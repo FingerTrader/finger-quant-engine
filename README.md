@@ -8,7 +8,7 @@ Offline engine use does not require Flutter Desktop, a Finger Trader login, or a
 
 The primary consuming product is the existing **Desk** application (`finger_desk`). Project delivery requires FQE bundled into Desk for the first local backtest/simulation loop, while standalone engine use remains independent. Live trading has a separate acceptance scope. The [Desk integration contract](docs/DESK_INTEGRATION_PLAN.md) covers migration, native run/stop/results, packaging and final paired acceptance; this integration is planned, not implemented.
 
-Language and financial-function support are open-ended targets: Python/Java/Go and the first indicators are reference implementations. The [Extensibility contract](docs/EXTENSIBILITY_CONTRACT.md) defines adapter onboarding, callable indicator/predicate providers, rule modules and descriptor-driven Desk use. A new conforming extension within supported capabilities must not require per-name core/compiler/UI changes. The experimental pure scalar in-process [provider registry](docs/PROVIDER_REGISTRY.md) is implemented; external adapters/stateful providers and client discovery retain later execution/conformance gates.
+Language and financial-function support are open-ended targets: Python/Java/Go and the first indicators are reference implementations. The [Extensibility contract](docs/EXTENSIBILITY_CONTRACT.md) defines adapter onboarding, callable indicator/predicate providers, rule modules and descriptor-driven Desk use. A new conforming extension within supported capabilities must not require per-name core/compiler/UI changes. The experimental pure scalar in-process [provider registry](docs/PROVIDER_REGISTRY.md) is implemented; [owned incremental indicators](docs/INDICATOR_CONTRACT.md) are implemented in P1-06; external adapters/providers and client discovery retain later execution/conformance gates.
 
 ## Project status
 
@@ -23,6 +23,7 @@ This repository contains the initial engineering foundation, version `0.1.0`. It
 | Bounded JSON model import, canonical content identity and pinned parameter preparation | Implemented, experimental P1-03 subset; [contract](docs/MODEL_LOADING.md); no graph execution |
 | Frozen callable descriptors, typed scalar provider invocation and independent unknown-name example | Implemented, experimental P1-04 subset; [contract](docs/PROVIDER_REGISTRY.md) |
 | Typed arithmetic/Boolean expressions and transactional crossing subscriptions | Implemented, experimental P1-05 subset; [contract](docs/EXPRESSION_CONTRACT.md) |
+| Registered SMA/EMA/MACD/RSI and instance-owned incremental scalar providers | Implemented, experimental P1-06 library slice; [contract](docs/INDICATOR_CONTRACT.md); no event scheduler |
 | Typed IR: a single-instrument price comparison producing signals | Implemented, experimental API |
 | Synchronous, deterministic in-memory event runtime and run state | Implemented, experimental API |
 | Offline CLI demonstration and behavioral tests | Implemented |

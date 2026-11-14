@@ -4,6 +4,7 @@ use std::fmt;
 
 pub mod builtins;
 pub mod expressions;
+pub mod indicators;
 pub mod loading;
 pub mod model;
 pub mod parameters;
