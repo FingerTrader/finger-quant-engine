@@ -1,0 +1,219 @@
+{
+  "format": "fqe.p1-golden-suite",
+  "schema_version": 1,
+  "profile": "experimental-p1-scalar/1",
+  "numeric_policy": {
+    "work_scale": 18,
+    "output_scale": 12,
+    "rounding": "half_even",
+    "indicator_coefficient_tolerance": "1",
+    "signal_tolerance": "0"
+  },
+  "provider_source": "crates/fqe-runtime/tests/support/gate_providers.rs",
+  "novel_names": [
+    "acceptance.shift",
+    "acceptance.window",
+    "reviewed.window_rule"
+  ],
+  "financial_table": "crates/fqe-runtime/tests/fixtures/p1/financial.expected.tsv",
+  "inventory": {
+    "G-001": {
+      "status": "covered",
+      "evidence": [
+        "crates/fqe-runtime/tests/p1_gate.rs"
+      ]
+    },
+    "G-002": {
+      "status": "covered",
+      "evidence": [
+        "crates/fqe-ir/tests/indicators.rs",
+        "crates/fqe-ir/tests/fixtures/indicators.json"
+      ]
+    },
+    "G-003": {
+      "status": "covered",
+      "evidence": [
+        "crates/fqe-runtime/tests/fixtures/p1/financial.expected.tsv",
+        "crates/fqe-runtime/tests/p1_gate.rs"
+      ]
+    },
+    "G-004": {
+      "status": "covered",
+      "evidence": [
+        "crates/fqe-cli/tests/loaded_execution.rs",
+        "tests/external/test_caller.py",
+        "scripts/check_p1_gate.py"
+      ]
+    },
+    "G-005": {
+      "status": "covered",
+      "evidence": [
+        "crates/fqe-runtime/tests/fixtures/p1/invalid.expected.tsv",
+        "crates/fqe-ir/tests/loading_contract.rs",
+        "crates/fqe-ir/tests/compiler_contract.rs",
+        "crates/fqe-cli/tests/loaded_execution.rs"
+      ]
+    },
+    "G-007": {
+      "status": "covered",
+      "evidence": [
+        "crates/fqe-runtime/tests/fixtures/p1/financial.expected.tsv",
+        "crates/fqe-ir/tests/indicators.rs"
+      ]
+    },
+    "X-001": {
+      "status": "covered",
+      "evidence": [
+        "crates/fqe-runtime/tests/fixtures/p1/x001.expected.tsv",
+        "crates/fqe-runtime/tests/p1_gate.rs"
+      ]
+    },
+    "G-006": {
+      "status": "deferred-to-P2-06",
+      "evidence": [
+        "docs/P1_STRATEGY_DESIGN.md"
+      ]
+    }
+  },
+  "cases": [
+    {
+      "name": "g001",
+      "model": "crates/fqe-cli/tests/fixtures/tick-model.json",
+      "data": "crates/fqe-runtime/tests/fixtures/p1/g001-data.json",
+      "parameters": null,
+      "signals": [
+        "3",
+        "4"
+      ]
+    },
+    {
+      "name": "g003-default",
+      "model": "crates/fqe-ir/tests/fixtures/g002-events.json",
+      "data": "crates/fqe-cli/tests/fixtures/g002-data.json",
+      "parameters": null,
+      "signals": [
+        "5"
+      ],
+      "table_case": "g003"
+    },
+    {
+      "name": "g003-60",
+      "model": "crates/fqe-ir/tests/fixtures/g002-events.json",
+      "data": "crates/fqe-cli/tests/fixtures/g002-data.json",
+      "parameters": "crates/fqe-cli/tests/fixtures/parameters-60.json",
+      "signals": [
+        "5"
+      ],
+      "table_case": "g003"
+    },
+    {
+      "name": "g003-90",
+      "model": "crates/fqe-ir/tests/fixtures/g002-events.json",
+      "data": "crates/fqe-cli/tests/fixtures/g002-data.json",
+      "parameters": "crates/fqe-cli/tests/fixtures/parameters-90.json",
+      "signals": [],
+      "table_case": "g003-high"
+    },
+    {
+      "name": "g003-model90",
+      "model": "crates/fqe-cli/tests/fixtures/g002-high-model.json",
+      "data": "crates/fqe-cli/tests/fixtures/g002-data.json",
+      "parameters": null,
+      "signals": [],
+      "table_case": "g003-high"
+    },
+    {
+      "name": "g007",
+      "model": "crates/fqe-ir/tests/fixtures/g007-events.json",
+      "data": "crates/fqe-cli/tests/fixtures/g007-data.json",
+      "parameters": null,
+      "signals": [
+        "5"
+      ],
+      "table_case": "g007"
+    },
+    {
+      "name": "full-width",
+      "model": "crates/fqe-cli/tests/fixtures/tick-model.json",
+      "data": "crates/fqe-cli/tests/fixtures/tick-data.json",
+      "parameters": null,
+      "signals": [
+        "18446744073709551615"
+      ]
+    },
+    {
+      "name": "empty",
+      "model": "crates/fqe-cli/tests/fixtures/tick-model.json",
+      "data": "crates/fqe-cli/tests/fixtures/empty-data.json",
+      "parameters": null,
+      "signals": []
+    },
+    {
+      "name": "late-error",
+      "model": "crates/fqe-cli/tests/fixtures/tick-error-model.json",
+      "data": "crates/fqe-cli/tests/fixtures/tick-error-data.json",
+      "parameters": null,
+      "signals": [],
+      "engine_error": 4,
+      "code": "expression_numeric"
+    },
+    {
+      "name": "unavailable-catalog",
+      "model": "crates/fqe-runtime/tests/fixtures/p1/x001.json",
+      "data": "crates/fqe-runtime/tests/fixtures/p1/x001-data.json",
+      "parameters": null,
+      "signals": [],
+      "engine_error": 3,
+      "code": "registry_unknown"
+    },
+    {
+      "name": "bad-version",
+      "model": "crates/fqe-runtime/tests/fixtures/p1/invalid-version.json",
+      "data": "crates/fqe-runtime/tests/fixtures/p1/x001-data.json",
+      "parameters": null,
+      "signals": [],
+      "engine_error": 3,
+      "code": "event_version"
+    }
+  ],
+  "source_ids": {
+    "crates/fqe-cli/tests/fixtures/empty-data.json": "sha256:37846f330d7d8dd9e41e615ce63adc7681159294ce6f0fdab27f80c2964218a3",
+    "crates/fqe-cli/tests/fixtures/g002-data.json": "sha256:6fbd0524f77580aecd8fdd528968d1d078e88b1ff7a2a72f3eb8d5c033aa5c7a",
+    "crates/fqe-cli/tests/fixtures/g002-high-model.json": "sha256:e58f7f714f79dce97e9538802c1551460c101d62bd1302a52cedefe205f111b0",
+    "crates/fqe-cli/tests/fixtures/g007-data.json": "sha256:c76a7c5ce1aa98c2a65b061ed4510fed4301b9345722a25089a0357faa7fc9c8",
+    "crates/fqe-cli/tests/fixtures/parameters-60.json": "sha256:8944ee9b2cebd545dd8a32d5b1beb9a4f1efb6d23c6254dbf5f602df2496f4f4",
+    "crates/fqe-cli/tests/fixtures/parameters-90.json": "sha256:0ee0b6c9d60f5b5ad07ad9385f450e7ab2db9d5f86da6c4415f6c6e06d2d3860",
+    "crates/fqe-cli/tests/fixtures/tick-data.json": "sha256:a47e2086a9636c303db68e1365d790289947494ca781542c3161f130100fda64",
+    "crates/fqe-cli/tests/fixtures/tick-error-data.json": "sha256:de0a9a2ab4302ef54586e8c499a8e5537725c60b8e4409dc5636872e0e1fa600",
+    "crates/fqe-cli/tests/fixtures/tick-error-model.json": "sha256:8094d43ad7f6deb20bda71cc6a450274ba66dd1d679004091949e363a169352b",
+    "crates/fqe-cli/tests/fixtures/tick-model.json": "sha256:acf93a456e7dad402f82cefcfc8cf5aeffe26ec1bc8db61636594b308cb0416a",
+    "crates/fqe-ir/examples/support/providers.rs": "sha256:c17c31b99564b24886511bb674eb5084b57ad166a20006c795b5ece58cd2d3bf",
+    "crates/fqe-ir/src/builtins.rs": "sha256:101df288c16907a6d6953df729c40d082b31ee1fb374e513319b8a5f1f4c13d1",
+    "crates/fqe-ir/src/indicators.rs": "sha256:125c8a17228b1a0f92b99661d2d7a69024672672b86292b4cd91c78086b0a29e",
+    "crates/fqe-ir/tests/fixtures/g002-events.json": "sha256:311a8f24cff10b2c85f2373bcfa58387b143968fb62ebd95c661bbeeb6c81c46",
+    "crates/fqe-ir/tests/fixtures/g007-events.json": "sha256:71758c77824f689eb4b0b66f88a0f01f37278af08cde544a285514477a87f269",
+    "crates/fqe-ir/tests/fixtures/indicators.json": "sha256:446071c02c76c144fe4cd80cc396f8af26a4d461b82fd68f6f775d1aadc430c6",
+    "crates/fqe-runtime/tests/fixtures/p1/financial.expected.tsv": "sha256:226ae5a0ddae54b926630d2687039808713893a53f626a82962688f935e80cb0",
+    "crates/fqe-runtime/tests/fixtures/p1/g001-data.json": "sha256:d6ab1f6b62c768a4d1c655b6c8fd989338c2f8b7694f246fac5a1c4c5ee7c4c3",
+    "crates/fqe-runtime/tests/fixtures/p1/invalid-artifact.json": "sha256:70dd29ce3c4aed1ff4fc2d3ea19a2d6246a06f202231e84fab6cb97912239520",
+    "crates/fqe-runtime/tests/fixtures/p1/invalid-cycle.json": "sha256:4e4dc67127f30686946729451b1c6e499d53319069abf466cea9561860eb221a",
+    "crates/fqe-runtime/tests/fixtures/p1/invalid-entry-version.json": "sha256:46c4e799201612021d2c60cd115be72cf3efd6bc85f3aa4857927b2550740991",
+    "crates/fqe-runtime/tests/fixtures/p1/invalid-port.json": "sha256:8b3542a5fbd7ed63426817a362df1b2729d9983e2175d9865ec198180badd9d9",
+    "crates/fqe-runtime/tests/fixtures/p1/invalid-recursion.json": "sha256:3c2b84d526728a3a79533aaedce384898d64e270ca87a075591478987235bd58",
+    "crates/fqe-runtime/tests/fixtures/p1/invalid-relation.json": "sha256:42f326cd4cb24e5f6514278113e1c733648e035fb7bf309743746e0562a67acb",
+    "crates/fqe-runtime/tests/fixtures/p1/invalid-required.json": "sha256:437d34a50734d1c89f7cd7548f778fd68ef797531af043092abd4a01986d4330",
+    "crates/fqe-runtime/tests/fixtures/p1/invalid-signal-type.json": "sha256:6a2cdae64b83cfce2300cc985d0ca6af03a7272ad353a232f0374077cb3c0915",
+    "crates/fqe-runtime/tests/fixtures/p1/invalid-signature.json": "sha256:f87983fcbf00eb6246c33fe2b2165c48b43fe9e4f96542d9123fe1d4c9b1b8a5",
+    "crates/fqe-runtime/tests/fixtures/p1/invalid-unit.json": "sha256:6754f31be69df18012a50315f2de61da5bf34746dbb7c32d0bc2f2b7d924ea73",
+    "crates/fqe-runtime/tests/fixtures/p1/invalid-unknown-provider.json": "sha256:39f82e4b640b38ee9d30bc1838d28803b6bcde8f35ec1ab9c1b98815451cecdc",
+    "crates/fqe-runtime/tests/fixtures/p1/invalid-version.json": "sha256:faf464e678696708635bb07bfb8079924a5f9ab41d313d38e1c139840768d1bc",
+    "crates/fqe-runtime/tests/fixtures/p1/invalid.expected.tsv": "sha256:d65a0aaa802222555714d0766dac6fb6c0aef1d523500e2c76113deb14195fc7",
+    "crates/fqe-runtime/tests/fixtures/p1/parameters-108.json": "sha256:76ecbd2fc670ce24b11f1dbc0f8f69f4aecfd9f754105c471b55f94835ee99d0",
+    "crates/fqe-runtime/tests/fixtures/p1/provider-source.sha256": "sha256:caf861eb7ec682fd89559589c0847325520a41772f11e1408339c7d0167db2da",
+    "crates/fqe-runtime/tests/fixtures/p1/x001-data.json": "sha256:7496e11a010b39e0c106328abdf01c566578ff2a50d8b1831a2a4de3d8b13acb",
+    "crates/fqe-runtime/tests/fixtures/p1/x001-shift0.json": "sha256:70543053facad23928f240f0ae5475c44753aec2369c6eade4b4b0c4522f7f0a",
+    "crates/fqe-runtime/tests/fixtures/p1/x001.expected.tsv": "sha256:1586d50550bbdbff09d2eeddb8f979719b5ba57b1b56111c107c207e9a4516d1",
+    "crates/fqe-runtime/tests/fixtures/p1/x001.json": "sha256:77c60cad3dac3676a352814ff594b95110f80e268dd6484032f002c30acc011a",
+    "crates/fqe-runtime/tests/support/gate_providers.rs": "sha256:4a8427ed8f4936e78f96e583f422c5577f2d4355042087c85da6a1df6cf5e733"
+  }
+}

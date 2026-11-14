@@ -1,0 +1,20 @@
+# fqe.p1-financial-golden/1
+case	sequence	warmup	decision	rsi	signals
+g003	1	true	W	W	0
+g003	2	true	W	W	0
+g003	3	true	W	100000000000000	0
+g003	4	false	false	50000000000000	0
+g003	5	false	true	83333333333333	1
+g003	6	false	false	50000000000000	0
+g003-high	1	true	W	W	0
+g003-high	2	true	W	W	0
+g003-high	3	true	W	100000000000000	0
+g003-high	4	false	false	50000000000000	0
+g003-high	5	false	false	83333333333333	0
+g003-high	6	false	false	50000000000000	0
+g007	1	true	W	-	0
+g007	2	true	W	-	0
+g007	3	false	false	-	0
+g007	4	false	false	-	0
+g007	5	false	true	-	1
+g007	6	false	false	-	0

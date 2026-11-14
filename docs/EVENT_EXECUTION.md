@@ -76,4 +76,4 @@ cargo test --locked --offline -p fqe-runtime --test event_execution
 cargo run --locked --offline -p fqe-runtime --example events
 ```
 
-[P1-09](CLI_EXECUTION.md) exposes actual loaded CLI validation/run, bounded input/result codecs and diagnostics. P1-10 must prove an independent caller; P1-11 owns the complete P1 gate. P2 owns generalized scheduling/delays/cancellation/persistent state; P3 owns backtest accounting/local simulation; P4/P5/P6 own real Desk, language adapters, packaging and installed acceptance. This library path does not complete those milestones.
+[P1-09](CLI_EXECUTION.md) exposes actual loaded CLI validation/run, bounded input/result codecs and diagnostics. [P1-10](EXTERNAL_INVOCATION.md) adds an independent caller; [P1-11 acceptance](P1_ACCEPTANCE.md) owns the consolidated P1 gate, including loaded unknown-name function/predicate/reused-rule compositions. P2 owns generalized scheduling/delays/cancellation/persistent state; P3 owns backtest accounting/local simulation; P4/P5/P6 own real Desk, language adapters, packaging and installed acceptance. This library path does not complete those milestones.

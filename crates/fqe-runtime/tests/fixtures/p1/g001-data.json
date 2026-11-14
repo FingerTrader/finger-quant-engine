@@ -1,0 +1,34 @@
+{
+  "format": "fqe.market-data",
+  "schema_version": 1,
+  "events": [
+    {
+      "kind": "tick",
+      "sequence": "1",
+      "timestamp_ns": "1000",
+      "instrument": "DEMO",
+      "price": "90"
+    },
+    {
+      "kind": "tick",
+      "sequence": "2",
+      "timestamp_ns": "2000",
+      "instrument": "DEMO",
+      "price": "100"
+    },
+    {
+      "kind": "tick",
+      "sequence": "3",
+      "timestamp_ns": "3000",
+      "instrument": "DEMO",
+      "price": "110"
+    },
+    {
+      "kind": "tick",
+      "sequence": "4",
+      "timestamp_ns": "4000",
+      "instrument": "DEMO",
+      "price": "105"
+    }
+  ]
+}

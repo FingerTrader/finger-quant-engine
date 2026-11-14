@@ -1,6 +1,6 @@
 # P1 Universal Strategy Design
 
-Status: implementation target for P1/P2 with implemented experimental subsets: [P1-02 types/parameters](TYPE_PARAMETER_CONTRACT.md) and [P1-03 IR2 JSON model import](MODEL_LOADING.md). P1-04 also implements a [pure scalar provider registry](PROVIDER_REGISTRY.md). P1-03 imports bounded scalar declarations and prepares parameters; it does not compile/execute graphs. Remaining graph/module/workflow/runtime features below retain their planned status. [ADRs](ARCHITECTURE_DECISIONS.md) record accepted numeric/import choices; other choices remain evidence-gated. [Strategy contract](STRATEGY_CONTRACT.md) describes the separate legacy price-only evaluator. [Delivery plan](DELIVERY_PLAN.md) assigns targets to tasks.
+Status: P1/P2 design with implemented experimental P1 types, import, providers, expressions, indicators, pure graph/modules, compiled events, CLI and independent process invocation. [P1 acceptance](P1_ACCEPTANCE.md) maps executable golden evidence; [Project status](PROJECT_STATUS.md) owns closure. Generalized workflow/state, scheduling and recovery below remain P2 targets. [ADRs](ARCHITECTURE_DECISIONS.md) record accepted directions; unimplemented choices remain evidence-gated. [Strategy contract](STRATEGY_CONTRACT.md) describes the separate preserved legacy price-only evaluator. [Delivery plan](DELIVERY_PLAN.md) assigns targets to tasks.
 
 ## Definition, version and instance
 
@@ -103,7 +103,7 @@ Diagnostics require stable code, artifact/version, node/port/parameter path, exp
 
 ## Example strategies and golden fixtures
 
-These are normative semantic fixture specifications to implement in P1-03 through P1-11, not complete runnable fixture files. P1-03 now pins the experimental scalar declaration/import syntax; these broader golden strategies still require their owning implementation tasks. Store actual versioned artifacts/data/expected outputs under a tracked fixture directory during those tasks; include schema/function versions, seed/numeric policy and independent calculation notes.
+These normative semantic fixture specifications are mapped to actual versioned artifacts/data/expected outputs and independent calculation notes in [P1 acceptance](P1_ACCEPTANCE.md). G-001–G-005/G-007 and X-001 have executable P1 coverage; G-006 remains assigned to P2-06. The [suite inventory](../crates/fqe-runtime/tests/fixtures/p1/suite.json) indexes the tracked evidence, while [Project status](PROJECT_STATUS.md) alone establishes verification/closure. A fixture specification or importer alone does not prove execution.
 
 | Fixture ID | Model / data | Expected result | Gate |
 | --- | --- | --- | --- |
@@ -134,6 +134,6 @@ P1 succeeds only with real loaded artifacts, generic typed evaluation, registere
 
 P1-11 also requires the X-001 unknown-name provider and reusable-rule composition acceptance in EXTENSIBILITY_CONTRACT. The existing G-001–G-007 financial-indicator examples remain unchanged. External workers/plugins are still later gates; their future interfaces must preserve this generic descriptor/invocation boundary.
 
-P1-03 now provides the experimental scalar-graph IR2 [model JSON importer](MODEL_LOADING.md), exact values, content identity and immutable parameter preparation. This is separate from the legacy IR1 evaluator. Broader graph/module/workflow/runtime targets above remain planned until their task acceptance; only the tracked P1-03 scalar declaration fixture is currently importable, without execution.
+P1-03 provides the experimental scalar-graph IR2 [model JSON importer](MODEL_LOADING.md), exact values, content identity and immutable parameter preparation, separately from legacy IR1. Subsequent implemented tasks add [typed graphs/pure modules](GRAPH_COMPILER.md), [compiled event execution](EVENT_EXECUTION.md), [CLI files/results](CLI_EXECUTION.md) and [independent invocation](EXTERNAL_INVOCATION.md). [P1 acceptance](P1_ACCEPTANCE.md) consolidates the bounded generic strategy gate; generalized workflow/state, historical accounting, native Desk delivery and external language/plugin execution retain their later task acceptance.
 
 P1-05 implements the bounded in-memory [expression/crossing subset](EXPRESSION_CONTRACT.md), including Boolean/readiness tables and history staging. P1-06 implements [registered indicator formulas/precision](INDICATOR_CONTRACT.md); P1-07 adds the [provider/module graph compiler](GRAPH_COMPILER.md); per-event subscriptions and durable state retain later gates; the Rust AST is not an external schema.

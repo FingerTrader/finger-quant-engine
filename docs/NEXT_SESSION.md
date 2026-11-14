@@ -4,33 +4,33 @@ Updated2026-11-14 (Asia/Tokyo); derived from [Project status](PROJECT_STATUS.md)
 
 ## Recover first
 
-Read PROJECT_STATUS, DELIVERY_PLAN, ARCHITECTURE_DECISIONS, README, [Workflow](WORKFLOW.md), [authority](DOCUMENT_AUTHORITY.md), then current contracts. Verify Git status/main/upstream/history and real evidence; code/tests/Git override stale records. Main only, preserve unrelated work/history. User authorizes downstream implementation without routine confirmation; no publishing requested. Do not inherit old push receipts as authorization.
+Read PROJECT_STATUS, DELIVERY_PLAN, ARCHITECTURE_DECISIONS, README, [Workflow](WORKFLOW.md), [authority](DOCUMENT_AUTHORITY.md), then current contracts. Verify actual Git status/main/upstream/history/evidence; code/tests/Git override stale records. Main only, preserve unrelated work/history. User authorizes downstream implementation without routine confirmation; no publishing requested. Old push receipts are not authorization.
 
-P1-01–P1-10 COMPLETED; P1-11 READY; P1 gate and P2–P6 remain incomplete. Resolve actual HEAD with `git rev-parse HEAD`, latest status record with `git log -1 --format=%H -- docs/PROJECT_STATUS.md`. Reuse the existing pinned local toolchain; no installation needed.
+P1-01–P1-10 COMPLETED; P1-11 VERIFIED, evidence/closure pending. P2-01 NOT_STARTED until that closure, P2–P6 incomplete. Resolve HEAD with `git rev-parse HEAD` and latest status commit with `git log -1 --format=%H -- docs/PROJECT_STATUS.md`. Reuse the project-local pinned toolchain/cache; no installation needed.
 
-## Latest delivered behavior and checks
+## Latest implementation and checks
 
-P1-10 implementation evidence **5c7a7f6cdd1b0fe59bda7d740444da4f5299dcc3**, COMPLETED with synchronized local closure. No push requested/performed.
+P1-11 [acceptance](P1_ACCEPTANCE.md): versioned suite/index/38 pins, shared exact financial/provider/diagnostic tables,12 invalid artifacts, six loaded runtime gate tests and stdlib unified checker. New unknown-name checked-u64 function/predicate compose in a reusable rule instantiated twice; model/binding edits change exact signals through public generic APIs. No production core/CLI name branches or edits. Compilation/invalidation performs zero provider invocations, numeric failure/retry preserves committed event state, deterministic/prefix/identity/source tests pass. Stock CLI rejects unregistered X-001 deliberately; custom library catalog is explicit, not an external loader.
 
-P1-10 [external invocation](EXTERNAL_INVOCATION.md)/ADR-021: independent stdlib caller/seven request fixtures, strict versioned request/response and complete CLI result/diagnostic parsing, exact integer/type/readiness/source validation, explicit trusted executable without shell, bounded POSIX dual-pipe capture/deadline/group cleanup/direct-child reap. Consumer imports no engine modules and computes no financial expressions. Engine CLI/shared EventRuntime remains authoritative. Python is optional reference/test tooling; no future customer-runtime-download requirement is introduced.
+Verification2026-11-14 macOS ARM64, Rust/Cargo1.99.0, Python3.14.6: full gate status passed/exit0;181 Rust tests +23 independent external tests +11 real process scenarios PASS; fmt/check/strict all-target Clippy/locked-offline build, CLI demo/all six fqe-ir examples/runtime events PASS. Independent G-001–G-005/G-007/X-001 expectations, exact CLI/library/external parity within supported registries, changed model/parameters and repeated bytes/source IDs PASS. Docs checker37 Markdown/42 tasks/links/anchors/status DAG PASS; diff PASS. Initial new-test bound/diagnostic/source-path expectations were corrected; no outstanding failures. G-006 remains P2-06.
 
-Verification2026-11-14 macOS ARM64, Rust/Cargo1.99.0, Python3.14.6:175 Rust behavioral tests +23 independent external tests PASS; fmt/check/strict all-target Clippy/locked-offline build, CLI demo/all six fqe-ir examples/runtime events PASS. Full JSON parity with actual CLI and existing CLI/library byte parity, independent G-002/G-007 bar5 goldens, threshold/artifact changes without rebuild, u64::MAX/minimum i64/i128/exact units/text, deterministic reruns and empty0 PASS. Strict request/source/result/error/limits, actual source mutation, floods, timeout/closed/inherited pipes, child cleanup and broken caller output-pipe checks PASS. Docs checker36 Markdown/42 tasks and local links/anchors/status dependencies PASS; diff PASS. No remaining test failure. Initial short-deadline and test-readiness-assumption failures are recorded/resolved in status.
+No new dependency/manifests/lockfile/toolchain/production Rust/provider-old-source/golden changes. Approved reviewed cached packages only; no new advisory scan/installer/private upload/runtime download. New gate-only provider source4a8427ed8f4936e78f96e583f422c5577f2d4355042087c85da6a1df6cf5e733 is pinned; prior protected pins preserved. No Desk/SDK/accounting/worker/external repository writes. No sandbox/production-volume/platform expansion claim.
 
-No dependency/manifests/lockfile/toolchain/Rust/provider/golden changes. Existing approved cached dependencies only; no new scanner/advisory query/installer/private upload. Source pins remain unchanged. No Desk/SDK/worker/accounting/external repository work. Trusted local POSIX reference supervision is not sandboxing, stable FFI/IPC, Windows packaging, graceful runtime cancellation or installed Desk acceptance.
+Previous evidence: P1-10 `5c7a7f6cdd1b0fe59bda7d740444da4f5299dcc3`, P1-09 `9dbac2b14e85298c18131646219a178a4ef8ddea`, P1-08 `cea3f92df2027743711e73a84927396417689042`. Do not reimplement completed verified tasks.
 
-Previous evidence: P1-09 `9dbac2b14e85298c18131646219a178a4ef8ddea`, P1-08 `cea3f92df2027743711e73a84927396417689042`, P1-07 `c9a097e9a98ef91c3dd5c0f15df9639a72748260`, P1-06 `e772bf0a44f35a5b457cbe10c02eb8cc16689003`. Do not reimplement these verified tasks.
+## Pending closure and next P2-01 — Stateful Workflow and Lifecycle
 
-## Next implementation: P1-11 — Golden Suite and P1 Gate
+P1-11 is VERIFIED. Inspect/stage scoped tests/fixtures/runner/docs, record evidence commit, then synchronize only status/plan/handoff to COMPLETED and P2-01 READY in a closure commit. P1 gate passes only after that bookkeeping. No push requested.
 
-P1-10 is closed. First eligible task is P1-11; mark IN_PROGRESS and state scope/acceptance before editing. Read [P1 golden specifications](P1_STRATEGY_DESIGN.md#example-strategies-and-golden-fixtures), [extensibility](EXTENSIBILITY_CONTRACT.md), [provider registry](PROVIDER_REGISTRY.md), [compiler](GRAPH_COMPILER.md), [compiled events](EVENT_EXECUTION.md), [CLI exchange](CLI_EXECUTION.md), [external invocation](EXTERNAL_INVOCATION.md), plan acceptance and actual tests/artifacts.
+After closure, first eligible task is P2-01. Read [state](STATE_CONTRACT.md), [runtime](RUNTIME.md), [events](EVENT_CONTRACT.md), [compiled events](EVENT_EXECUTION.md), [P1/P2 design](P1_STRATEGY_DESIGN.md), [extensibility/state](EXTENSIBILITY_CONTRACT.md), [compiler](GRAPH_COMPILER.md), plan row and actual state/provider/event code. Mark IN_PROGRESS with a concrete scoped design/acceptance before edits; this task is substantially broader than the completed pure P1 graph.
 
-- Inventory existing versioned fixtures and valid/invalid evidence before adding code. Preserve G-001–G-007 definitions; G-006 remains P2-06, not a reason to implement workflow/state in this slice. G-003/G-004 loaded MACD/RSI and external parity already have substantial real evidence, but a complete gate needs an explicit consolidated report.
-- Prove X-001 with independently defined reviewed unknown-name typed provider/predicate and reusable rule compositions through generic public graph/event APIs, valid and invalid versions/signatures/units. No per-ID core/compiler/UI branches. Existing provider examples/import tests alone must not be relabeled as complete loaded generic gate acceptance.
-- Deliver versioned valid/invalid golden artifacts/data/expected results and independent calculation/source notes; expected files must not regenerate themselves during tests. Include G-007, changed model/parameters, loaded validation failures with no execution/state mutation, repeat determinism and source identity. Reuse current financial goldens/reference generators when applicable.
-- Consolidate library/CLI/external parity within each supported catalog; the CLI reference catalog does not dynamically load arbitrary test providers. An unknown-name in-process gate must state its public custom registry; do not add a provider-specific CLI branch or pretend to implement an external plugin loader.
-- Run all four Rust checks,23 external tests and docs/diff checks, write dated gate/limitations evidence, then close only when all P1 acceptance is actually met. No P2/Desk/worker/backtest/simulation completion from documentation alone.
+- Define typed strategy-state declarations and bounded workflow/State/Delay semantics with explicit schema/capabilities. Preserve existing artifacts and old evaluator/lifecycle; unsupported future constructs must fail rather than silently change meaning.
+- Separate immutable definition from instance-owned state. Guards read committed old state and current event outputs; writes become visible only at successful event commit. Specify deterministic transition/guard/effect ordering and reject conflicting writes/types/cycles. Delay is an explicit prior-event boundary, never permission for an ordinary same-event cycle.
+- Implement generic in-process X-002 stateful extension/rule instance isolation and lifecycle. Make portable state-schema/version/identity and unsupported snapshot/restore capabilities explicit. P2-04 owns durable snapshot codecs/restore acceptance; do not claim persistence from deep-fork memory or arbitrary language-object serialization.
+- Verify exact guard/effect old/new behavior, stop/error/restart semantics, failed-event all-state/history/cursor rollback and isolated repeated instances. Preserve once-per-event subscriptions, numeric/readiness rules, source diagnostics and existing P1 goldens. Stop semantics need a contract; P1 finish is currently terminal and failed step retryable, while legacy run errors are terminal Failed.
+- Keep scheduler/multi-market alignment(P2-02), generalized graph/state execution(P2-03), durable snapshots(P2-04), metrics(P2-05) and G-006 temporal full-gate acceptance(P2-06) in their owning tasks. Scope/dependency overlaps should be made explicit before implementation, not bypassed or declared done from this handoff.
 
-Expected P1-11 scope: consolidated independent goldens and test/acceptance report, minimal generic fixes only if actual tests reveal a defect, synchronized contracts/plan/status/handoff. Preserve indicator/builtin/test-provider source pins and prior canonical fixtures unless a concrete reviewed defect requires an explicit identity update. No new dependencies, generators, external repository writes, branch/worktree/reset/force-push.
+No speculative accounting, SDK, Desk UI, external language runtime/loader or new dependencies required by this handoff. If new wire/state capabilities are needed, version them and record actual decision/evidence. Preserve protected provider pins and old canonical/golden files unless a concrete defect requires reviewed identity changes.
 
 ## Commands
 
@@ -39,15 +39,10 @@ export CARGO_HOME="$PWD/.local-toolchain/cargo"
 export RUSTUP_HOME="$PWD/.local-toolchain/rustup"
 export PATH="$CARGO_HOME/bin:$PATH"
 export RUSTUP_AUTO_INSTALL=0
-cargo fmt --check
-cargo check --workspace --locked --offline
-cargo test --workspace --locked --offline
-cargo clippy --workspace --all-targets --locked --offline -- -D warnings
-cargo build --locked --offline -p fqe-cli
-python3 examples/external/caller.py --engine target/debug/fqe --request examples/external/requests/g002.json
-PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests/external -v
+PYTHONDONTWRITEBYTECODE=1 python3 scripts/check_p1_gate.py
+cargo test --locked --offline -p fqe-runtime --test p1_gate
 python3 scripts/check_docs.py
 git diff --check
 ```
 
-Record actual partial state/check failures before interruption. Evidence commit first, then three-document closure with its SHA; no self-hash. Publishing only when authorized, normal push and confirmed remote SHA. Last remote main independently read-confirmed `0ac5d7b163e77bddb5f69689a1455e3560aad872`; verify live Git state/count and newer dirty work before proceeding. Latest implementation evidence `5c7a7f6cdd1b0fe59bda7d740444da4f5299dcc3`. Local main is twenty-two commits ahead of that remote after this closure; verify the live count and actual HEAD. P1-10 work is committed locally; no publishing requested/performed.
+The full runner executes the four required Rust checks/build,23 external tests and11 actual process cases. `--skip-checks` reports partial only. It never rewrites expected files. Record actual failures/dirty work before interruption. Evidence first, then three-document closure with its SHA, no self-hash. Publishing requires authorization, normal push and confirmed remote SHA. Last remote main read-confirmed `0ac5d7b163e77bddb5f69689a1455e3560aad872`; current pre-evidence HEAD9fb28981f7d9b537a0160bbc99b07c58efc4d7fa, main22 commits ahead; P1-11 work is currently uncommitted. Recheck live before action.

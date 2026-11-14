@@ -91,6 +91,8 @@ The POSIX reference caller/tests use Python standard library only, verified with
 
 ## Tests and scope
 
+For the consolidated P1 check, run `PYTHONDONTWRITEBYTECODE=1 python3 scripts/check_p1_gate.py` with the pinned toolchain active. It executes the required Rust checks/build, independent caller suite, eleven actual CLI/external cases, source/fixture pins and docs/diff checks; stdout is a machine-readable report. [P1 acceptance](P1_ACCEPTANCE.md) maps G-001–G-005/G-007 and X-001 to actual independent goldens. `--skip-checks` is a partial process-only check and cannot establish a full gate pass. No expected fixture is regenerated during validation.
+
 Tests cover domain validation, strict price comparison, instrument matching, version rejection, repeatable runtime reports, input ordering, failed and terminal states, empty input, signal provenance, CLI output/exit codes, and protocol version-number compatibility.
 
 Current tests also cover loaded graph/event/indicator execution and exact CLI/independent local-process JSON interoperability. They do not verify financial accounting, Protobuf/worker transport interoperability, worker isolation, Desktop integration, or production workload limits because those features are not implemented. Dated counts and acceptance evidence belong in [Project status](PROJECT_STATUS.md).

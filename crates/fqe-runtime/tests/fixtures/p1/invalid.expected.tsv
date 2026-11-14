@@ -1,0 +1,14 @@
+# fqe.p1-invalid-golden/1
+file	stage	code	path
+invalid-required.json	compile	graph_parameter	$.bindings
+invalid-artifact.json	compile	registry_artifact	$.entries
+invalid-recursion.json	compile	compile_recursion	$.modules[0]
+invalid-version.json	load	event_version	$
+invalid-cycle.json	compile	compile_cycle	$.modules[0].graph.nodes[0]
+invalid-unit.json	compile	compile_signature	$.modules[0].graph.nodes[0]
+invalid-signal-type.json	compile	event_signal	$.signals
+invalid-unknown-provider.json	compile	registry_unknown	$.entries
+invalid-signature.json	compile	compile_signature	$.modules[0].graph.nodes[0]
+invalid-relation.json	compile	registry_parameter	$.modules[0].graph.nodes[1] via $.graph.nodes[0]
+invalid-entry-version.json	compile	registry_unknown	$.entries
+invalid-port.json	compile	compile_source	$.graph

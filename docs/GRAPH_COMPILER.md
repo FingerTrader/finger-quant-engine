@@ -1,6 +1,6 @@
 # Typed Graph Compiler and Pure Modules — Contract 1
 
-**Implemented, experimental P1-07.** [Graph import](../crates/fqe-ir/src/graph.rs) and [compiler](../crates/fqe-ir/src/compiler.rs) produce immutable content-pinned plans from real artifacts. [Provider registry](PROVIDER_REGISTRY.md) owns callable validation, [expressions](EXPRESSION_CONTRACT.md) owns pure AST evaluation and [indicators](INDICATOR_CONTRACT.md) owns incremental single-node state. [Project status](PROJECT_STATUS.md) owns progress. The separate [P1-08 event integration](EVENT_EXECUTION.md) now executes these plans with atomic multi-node state. CLI model execution, accounting and Desk integration remain downstream.
+**Implemented, experimental P1-07.** [Graph import](../crates/fqe-ir/src/graph.rs) and [compiler](../crates/fqe-ir/src/compiler.rs) produce immutable content-pinned plans from real artifacts. [Provider registry](PROVIDER_REGISTRY.md) owns callable validation, [expressions](EXPRESSION_CONTRACT.md) owns pure AST evaluation and [indicators](INDICATOR_CONTRACT.md) owns incremental single-node state. [Project status](PROJECT_STATUS.md) owns progress. The separate [P1-08 event integration](EVENT_EXECUTION.md) executes these plans with atomic multi-node state; [CLI execution](CLI_EXECUTION.md) and [P1 gate](P1_ACCEPTANCE.md) provide loaded invocation/consolidated generic evidence. Accounting and Desk integration remain downstream.
 
 ## Two explicit artifact formats
 

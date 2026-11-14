@@ -1,0 +1,23 @@
+# fqe.p1-x001-golden/1
+case	sequence	shifted	first	second	decision
+sum	1	100	false	false	false
+sum	2	105	true	false	true
+sum	3	110	true	false	true
+sum	4	111	true	false	true
+sum	5	115	true	false	true
+sum	6	120	true	true	false
+sum	7	130	false	false	false
+shift0	1	90	false	false	false
+shift0	2	95	false	false	false
+shift0	3	100	false	false	false
+shift0	4	101	true	false	true
+shift0	5	105	true	false	true
+shift0	6	110	true	true	false
+shift0	7	120	true	false	true
+lower108	1	100	false	false	false
+lower108	2	105	false	false	false
+lower108	3	110	true	false	true
+lower108	4	111	true	false	true
+lower108	5	115	true	false	true
+lower108	6	120	true	true	false
+lower108	7	130	false	false	false

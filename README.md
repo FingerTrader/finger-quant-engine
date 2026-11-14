@@ -12,7 +12,7 @@ Language and financial-function support are open-ended targets: Python/Java/Go a
 
 ## Project status
 
-The unique progress ledger is [PROJECT_STATUS](docs/PROJECT_STATUS.md). New sessions recover from it, [NEXT_SESSION](docs/NEXT_SESSION.md), [DELIVERY_PLAN](docs/DELIVERY_PLAN.md), [ADRs](docs/ARCHITECTURE_DECISIONS.md), then the current task contracts. P1 remains incomplete; the current demo does not meet universal strategy acceptance.
+The unique progress ledger is [PROJECT_STATUS](docs/PROJECT_STATUS.md). New sessions recover from it, [NEXT_SESSION](docs/NEXT_SESSION.md), [DELIVERY_PLAN](docs/DELIVERY_PLAN.md), [ADRs](docs/ARCHITECTURE_DECISIONS.md), then the current task contracts. [P1 acceptance](docs/P1_ACCEPTANCE.md) maps loaded generic strategy/golden evidence and remaining boundaries; the legacy demo alone does not establish universal strategy acceptance.
 
 This repository contains the initial engineering foundation, version `0.1.0`. It is not a production trading engine or a published SDK release.
 
@@ -30,6 +30,7 @@ This repository contains the initial engineering foundation, version `0.1.0`. It
 | Synchronous, deterministic in-memory event runtime and run state | Implemented, experimental API |
 | Offline CLI demo and loaded model validate/run with structured exact results | Implemented, experimental P1-09; [CLI contract](docs/CLI_EXECUTION.md) |
 | Independent local subprocess caller with exact result validation and bounded cleanup | Implemented, experimental P1-10 POSIX/Python-stdlib reference; [contract](docs/EXTERNAL_INVOCATION.md) |
+| Versioned P1 financial/unknown-name extension goldens and unified offline gate | Implemented, experimental P1-11 suite; [acceptance/evidence](docs/P1_ACCEPTANCE.md), task closure in PROJECT_STATUS |
 | Protocol version-number negotiation helper | Implemented, experimental |
 | Protocol Buffers schema | Experimental draft; no codec, generated bindings, or transport |
 | Local backtesting, accounting, execution simulation, optimization | Planned |
