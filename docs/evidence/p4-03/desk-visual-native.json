@@ -1,0 +1,96 @@
+{
+  "format": "finger-desk.fqe-visual-evidence/1",
+  "checks": [
+    "actual.native.240-bars",
+    "two.threshold.variants",
+    "exact.save.reselect",
+    "history.readonly",
+    "source.parameter.identity",
+    "actual.native.ema",
+    "actual.native.sma",
+    "actual.native.macd",
+    "actual.native.AND",
+    "actual.native.OR",
+    "reject.limit",
+    "reject.risk",
+    "reject.rsi.ema",
+    "reject.unknown.parameter",
+    "reject.unmapped.edge",
+    "reject.short",
+    "reject.tick",
+    "reject.invalid.period",
+    "reject.invalid.threshold",
+    "reject.dataset.binding"
+  ],
+  "positive": {
+    "input_id": "f28a719c512bf4260a459de5d38264b22cbba31d55a3aea7e8294ee7816f1c3f",
+    "result_id": "sha256:03f03cf1c412e7267a08b1089490f10b79e71962a3c31a5ae8227cec9fe82b0f",
+    "metrics": {
+      "fees": "0.00",
+      "final_equity": "9983.00",
+      "initial_equity": "10000.00",
+      "max_drawdown": "20.00",
+      "max_drawdown_ratio": "0.001999600080",
+      "net_profit": "-17.00",
+      "total_return": "-0.001700000000"
+    },
+    "account": {
+      "available_cash": "9882.00",
+      "available_long_quantity": "1.000",
+      "cash": "9882.00",
+      "cash_rounding_total": "0.000000000000000000",
+      "cost": "118.00",
+      "debt": "0.00",
+      "external_capital": "10000.00",
+      "fees": "0.00",
+      "quantity": "1.000",
+      "realized_gross": "0.00",
+      "reserved_cash": "0.00",
+      "reserved_quantity": "0.000",
+      "restricted_short_proceeds": "0.00"
+    },
+    "fills": [
+      {
+        "fee": "0.00",
+        "ledger_sequence": "3",
+        "number": "1",
+        "order": "p:22:entry",
+        "price": "118.00",
+        "quantity": "1.000",
+        "settled_gross": "118.00",
+        "side": "buy",
+        "source_bar": "23",
+        "timestamp_ns": "1704173400000000000"
+      }
+    ]
+  },
+  "zero_threshold": {
+    "result_id": "sha256:0f0423c1064eed8ad04d57e840d8ec62f7c183b38fbf96b29c964cfb41715a35",
+    "metrics": {
+      "fees": "0.00",
+      "final_equity": "10000.00",
+      "initial_equity": "10000.00",
+      "max_drawdown": "0.00",
+      "max_drawdown_ratio": "0.000000000000",
+      "net_profit": "0.00",
+      "total_return": "0.000000000000"
+    },
+    "account": {
+      "available_cash": "10000.00",
+      "available_long_quantity": "0.000",
+      "cash": "10000.00",
+      "cash_rounding_total": "0.000000000000000000",
+      "cost": "0.00",
+      "debt": "0.00",
+      "external_capital": "10000.00",
+      "fees": "0.00",
+      "quantity": "0.000",
+      "realized_gross": "0.00",
+      "reserved_cash": "0.00",
+      "reserved_quantity": "0.000",
+      "restricted_short_proceeds": "0.00"
+    }
+  },
+  "pass": true,
+  "completed_at": "2026-11-14T14:57:25.562542Z"
+}

@@ -1,0 +1,23 @@
+{
+  "format": "fqe.native-editor-observations/1",
+  "observed_at": "2026-11-14T14:59:15.005103+00:00",
+  "accepted": false,
+  "ide_full_build": "Built build/macos/Build/Products/Debug/finger_desk.app; Flutter 3.24.1 lib/main.dart macOS Debug",
+  "actual_app_pid": 33936,
+  "actual_helper_pid": 34681,
+  "helper_parent_pid": 33936,
+  "observed": [
+    "Existing visual/code/parameter tabs and backtest/run configuration preserved",
+    "Backtest configuration hosts native model/source/data controls",
+    "Default risk-node graph rejected explicitly by actual bundled engine",
+    "Explicit portable model choice opens original exact parameter form",
+    "Native preflight confirmation observed with threshold60; cancelled without starting"
+  ],
+  "not_proved": [
+    "Threshold90 keyboard edit did not reach visible form; confirmation60 was cancelled, not accepted as variant evidence",
+    "Generic compose/save/reselect/data selection/current stop/reopen and active-exit UI journey",
+    "No-login native journey",
+    "Frozen current source paired with completed native acceptance"
+  ],
+  "coordination": "UI changed back to canvas during parameter attempt. IDE Auto-test on observed, but no subsequent hot-restart line captured; exact cause not proven. Exclusive UI question pending. One accidentally added unsaved risk node remains to be undone after coordination; do not save it. Guarded toolbar undo was attempted again; observed count remained8. Native part completion summary sent; do not credit cleanup or variant acceptance."
+}

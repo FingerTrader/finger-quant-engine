@@ -45,9 +45,10 @@ This repository contains the initial engineering foundation, version `0.1.0`. It
 | Complete bounded financial continuation/private atomic files and full P3 offline gate | Implemented experimental native Rust; [recovery](docs/FINANCIAL_RECOVERY.md), [acceptance](docs/P3_ACCEPTANCE.md); closure in PROJECT_STATUS |
 | Other broker models | Planned |
 | Python / Java / Go workers and source-language compilers | Planned |
-| Versioned desktop stdio boundary, Dart client stub and native Sandbox feasibility | Implemented experimental P4-01; [boundary](docs/DESKTOP_BOUNDARY.md); actual Desk UI still planned |
+| Versioned desktop stdio boundary, Dart client stub and native Sandbox feasibility | Implemented experimental P4-01; [boundary](docs/DESKTOP_BOUNDARY.md); actual Desk backtest/run configuration integration active P4-03; native acceptance incomplete |
 | Application-owned native jobs, bounded lifecycle/output cursors and SDK-only service | Implemented experimental P4-02; [controls](docs/ENGINE_CONTROLS.md); full task closure in PROJECT_STATUS |
-| Plugins, persistent history storage, Trading SDK adapter | Planned |
+| Consumer immutable draft/run history | Implemented experimental active P4-03; final native acceptance incomplete |
+| Plugins, Trading SDK adapter | Planned |
 
 **Implemented** means executable code is present and tested. **Experimental** means the API or schema can change and has no compatibility guarantee. **Planned** means design intent only. These labels can overlap: an experimental component may have implemented code.
 

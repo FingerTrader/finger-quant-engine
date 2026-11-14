@@ -1,0 +1,27 @@
+00:00 +0: loading /Users/george/Desktop/finger_desk/test/quant/fqe_panel_test.dart
+00:00 +0: /Users/george/Desktop/finger_desk/test/quant/fqe_panel_test.dart: visible parameter edits apply without Enter; invalid values cannot run
+00:01 +1: /Users/george/Desktop/finger_desk/test/quant/fqe_panel_test.dart: preflight confirmation uses desktop dialog; cancel and confirm are distinct
+00:01 +2: /Users/george/Desktop/finger_desk/test/quant/fqe_panel_test.dart: generic descriptors render and node dialog is shared; errors are explicit
+00:02 +3: /Users/george/Desktop/finger_desk/test/quant/fqe_panel_test.dart: panel detach preserves editor draft and app service; light narrow enlarged text
+00:02 +4: loading /Users/george/Desktop/finger_desk/test/quant/fqe_integrated_editor_test.dart
+00:03 +4: /Users/george/Desktop/finger_desk/test/quant/fqe_integrated_editor_test.dart: graph default rejects unsupported rules; visible exact configuration commits without Enter
+00:05 +5: /Users/george/Desktop/finger_desk/test/quant/fqe_integrated_editor_test.dart: invalid graph capital survives panel recreation without starting
+00:05 +6: /Users/george/Desktop/finger_desk/test/quant/fqe_integrated_editor_test.dart: portable parameter changed during preflight rejects old input
+00:05 +7: /Users/george/Desktop/finger_desk/test/quant/fqe_integrated_editor_test.dart: existing editor keeps canvas/code/parameters and mounts engine inside backtest/run
+00:05 +8: /Users/george/Desktop/finger_desk/test/quant/fqe_integrated_editor_test.dart: offline research entry opens editor without login services and saves an independent draft
+00:06 +9: loading /Users/george/Desktop/finger_desk/test/quant/quant_exit_guard_test.dart
+00:06 +9: /Users/george/Desktop/finger_desk/test/quant/quant_exit_guard_test.dart: native exit waits for one shared shutdown attempt
+00:07 +10: /Users/george/Desktop/finger_desk/test/quant/quant_exit_guard_test.dart: synchronous cleanup failure also permits retry
+00:07 +11: /Users/george/Desktop/finger_desk/test/quant/quant_exit_guard_test.dart: failed cleanup cancels native exit and permits retry
+00:07 +12: loading /Users/george/Desktop/finger_desk/test/quant/quant_navigation_layout_test.dart
+00:09 +12: /Users/george/Desktop/finger_desk/test/quant/quant_navigation_layout_test.dart: quant navigation starts above content controls on every page
+00:17 +13: loading /Users/george/Desktop/finger_desk/test/quant/visual_strategy_document_test.dart
+00:18 +13: /Users/george/Desktop/finger_desk/test/quant/visual_strategy_document_test.dart: parameters, connections, history and saved draft stay consistent
+00:18 +14: /Users/george/Desktop/finger_desk/test/quant/visual_strategy_document_test.dart: new nodes can connect, invalid edges fail and deletion removes edges
+00:18 +15: /Users/george/Desktop/finger_desk/test/quant/visual_strategy_document_test.dart: corrupt drafts recover and invalid parameters are reported
+00:18 +16: loading /Users/george/Desktop/finger_desk/test/quant/quant_replay_order_events_test.dart
+00:20 +16: /Users/george/Desktop/finger_desk/test/quant/quant_replay_order_events_test.dart: derived order history preserves every lifecycle and selected frame
+00:20 +17: loading /Users/george/Desktop/finger_desk/test/quant/quant_replay_result_view_test.dart
+00:21 +17: /Users/george/Desktop/finger_desk/test/quant/quant_replay_result_view_test.dart: small losses remain visible with exact decimal sign and currency
+00:21 +18: /Users/george/Desktop/finger_desk/test/quant/quant_replay_result_view_test.dart: profit, flat and incomplete outcomes do not depend on rounded ratios
+00:21 +19: All tests passed!
