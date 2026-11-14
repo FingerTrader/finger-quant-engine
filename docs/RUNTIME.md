@@ -61,3 +61,7 @@ P2-02 adds a separate `schedule::MarketScheduler` over immutable fqe.schedule/1 
 ## Temporal instance coordinator
 
 P2-03 adds strict temporal-rule bindings and `instances::InstanceScheduler` over the existing market/workflow runtimes. The host owns per-lane latching count/event-time windows, watermark-complete timer phase, bounded atomic fanout and deterministic fair dispatch. Workflow/provider/crossing/temporal candidates commit together; a rejected lane is quarantined for explicit retry/cancel while other lanes progress. [Temporal scheduler](TEMPORAL_SCHEDULER.md) owns boundaries, manifest/alignment identity, overload, incomplete EOF and synchronous cancellation limits. Standalone event/workflow APIs and legacy error semantics are preserved.
+
+## Checkpointed coordinator profile
+
+P2-04 adds `checkpoint::CheckpointRuntime` over immutable coordinator seeds, with bounded typed command journals, explicit provider replay capability, source/implementation/schema/data compatibility and private reconstruction. Its quotas are preflighted before command mutation; old standalone runtime lifecycles/limits remain unchanged. [Checkpoint/restore](CHECKPOINT_RESTORE.md) owns representation, output cursors, side-effect restrictions, same-engine digest encoding, atomic local persistence and performance/platform limits. Internal reconstruction does not complete P2-05 user-facing replay/debug traces.

@@ -270,6 +270,9 @@ fn utype() -> TypeDescriptor {
     TypeDescriptor::new(1, ValueShape::Scalar, ScalarType::U64).unwrap()
 }
 fn memory_plan() -> (Arc<CompiledWorkflow>, Arc<Metrics>) {
+    memory_plan_with_permit(false)
+}
+fn memory_plan_with_permit(replay: bool) -> (Arc<CompiledWorkflow>, Arc<Metrics>) {
     let metrics = Arc::new(Metrics::default());
     let mut b = RegistryBuilder::new();
     let mut d = DescriptorDraft::pure(
@@ -293,6 +296,13 @@ fn memory_plan() -> (Arc<CompiledWorkflow>, Arc<Metrics>) {
         Arc::new(Factory(Arc::clone(&metrics))),
     )
     .unwrap();
+    if replay {
+        b.permit_checkpoint_replay(&EntryKey {
+            id: "independent.memory".into(),
+            version: "1".into(),
+        })
+        .unwrap();
+    }
     let registry = b.freeze().unwrap();
     let loaded = LoadedWorkflow::from_bytes(MEMORY.as_bytes()).unwrap();
     let p = Arc::new(loaded.compile(&registry, vec![]).unwrap());
@@ -447,5 +457,87 @@ fn temporal_failure_discards_candidate_provider_crossing_and_rule_state_together
     assert_eq!(metrics.steps.load(Ordering::Relaxed), 3);
     assert_eq!(metrics.live.load(Ordering::Relaxed), 1);
     host.cancel("memory").unwrap();
+    assert_eq!(metrics.live.load(Ordering::Relaxed), 0);
+}
+#[test]
+fn checkpoint_requires_explicit_provider_capability_before_factory_and_restores_opted_in_extension()
+{
+    use fqe_ir::{
+        checkpoint::SnapshotCommand, exchange::MarketRecord, schedule::ScheduleDefinition,
+    };
+    use fqe_runtime::{
+        checkpoint::{CheckpointRuntime, CheckpointSeed, CommandValue, LaneSeed},
+        instances::InstanceLimits,
+    };
+    let make_seed = |workflow| {
+        Arc::new(CheckpointSeed {
+            schedule: Arc::new(
+                ScheduleDefinition::from_bytes(include_bytes!(
+                    "../../fqe-ir/tests/fixtures/schedule-temporal-ticks.json"
+                ))
+                .unwrap(),
+            ),
+            host_run: "caps".into(),
+            limits: InstanceLimits {
+                instances: 1,
+                pending_total: 8,
+                pending_per_instance: 8,
+            },
+            lanes: vec![LaneSeed {
+                id: "custom".into(),
+                stream: "demo.ticks".into(),
+                run: "custom.run".into(),
+                workflow,
+                temporal: None,
+            }],
+        })
+    };
+    let (unapproved, metrics) = memory_plan();
+    assert_eq!(
+        CheckpointRuntime::new(make_seed(unapproved))
+            .err()
+            .unwrap()
+            .code,
+        "checkpoint_capability"
+    );
+    assert_eq!(metrics.creates.load(Ordering::Relaxed), 0);
+    let (approved, metrics) = memory_plan_with_permit(true);
+    let seed = make_seed(approved);
+    let mut original = CheckpointRuntime::new(Arc::clone(&seed)).unwrap();
+    for (seq, n) in [(1, 11), (2, 12), (3, 14)] {
+        let InputEvent::Tick(e) = tick(seq, n) else {
+            panic!()
+        };
+        original
+            .execute(SnapshotCommand::Ingest {
+                stream: "demo.ticks".into(),
+                record: MarketRecord::Tick(e),
+            })
+            .unwrap();
+    }
+    original
+        .execute(SnapshotCommand::Seal {
+            stream: "demo.ticks".into(),
+        })
+        .unwrap();
+    original.execute(SnapshotCommand::Drive).unwrap();
+    original.execute(SnapshotCommand::Drive).unwrap();
+    let bytes = original.checkpoint().unwrap();
+    let mut restored = CheckpointRuntime::restore(seed, &bytes).unwrap();
+    for _ in 0..10 {
+        let a = original.execute(SnapshotCommand::Drive).unwrap();
+        let b = restored.execute(SnapshotCommand::Drive).unwrap();
+        assert_eq!(a, b);
+        if matches!(a.result, Ok(CommandValue::NoWork)) {
+            break;
+        }
+    }
+    assert_eq!(
+        count(original.workflow("custom").unwrap(), "fast", "count"),
+        3
+    );
+    assert_eq!(metrics.live.load(Ordering::Relaxed), 2);
+    drop(original);
+    drop(restored);
     assert_eq!(metrics.live.load(Ordering::Relaxed), 0);
 }

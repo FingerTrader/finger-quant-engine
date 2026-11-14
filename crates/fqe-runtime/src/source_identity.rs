@@ -1,0 +1,193 @@
+//! Explicit source manifest binds checkpoint outcome encoding to the complete implementation/toolchain.
+use fqe_ir::model::ContentId;
+const SOURCES: &[(&str, &[u8])] = &[
+    (
+        "crates/fqe-runtime/src/checkpoint_file.rs",
+        include_bytes!("checkpoint_file.rs").as_slice(),
+    ),
+    (
+        "Cargo.lock",
+        include_bytes!("../../../Cargo.lock").as_slice(),
+    ),
+    (
+        "Cargo.toml",
+        include_bytes!("../../../Cargo.toml").as_slice(),
+    ),
+    (
+        "crates/fqe-core/Cargo.toml",
+        include_bytes!("../../fqe-core/Cargo.toml").as_slice(),
+    ),
+    (
+        "crates/fqe-core/src/bars.rs",
+        include_bytes!("../../fqe-core/src/bars.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-core/src/lib.rs",
+        include_bytes!("../../fqe-core/src/lib.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-core/src/numeric.rs",
+        include_bytes!("../../fqe-core/src/numeric.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-core/src/types.rs",
+        include_bytes!("../../fqe-core/src/types.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-ir/Cargo.toml",
+        include_bytes!("../../fqe-ir/Cargo.toml").as_slice(),
+    ),
+    (
+        "crates/fqe-ir/src/builtins.rs",
+        include_bytes!("../../fqe-ir/src/builtins.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-ir/src/catalog.rs",
+        include_bytes!("../../fqe-ir/src/catalog.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-ir/src/checkpoint.rs",
+        include_bytes!("../../fqe-ir/src/checkpoint.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-ir/src/compiler.rs",
+        include_bytes!("../../fqe-ir/src/compiler.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-ir/src/event_plan.rs",
+        include_bytes!("../../fqe-ir/src/event_plan.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-ir/src/exchange.rs",
+        include_bytes!("../../fqe-ir/src/exchange.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-ir/src/expressions.rs",
+        include_bytes!("../../fqe-ir/src/expressions.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-ir/src/graph.rs",
+        include_bytes!("../../fqe-ir/src/graph.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-ir/src/indicators.rs",
+        include_bytes!("../../fqe-ir/src/indicators.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-ir/src/lib.rs",
+        include_bytes!("../../fqe-ir/src/lib.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-ir/src/loading.rs",
+        include_bytes!("../../fqe-ir/src/loading.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-ir/src/model.rs",
+        include_bytes!("../../fqe-ir/src/model.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-ir/src/parameters.rs",
+        include_bytes!("../../fqe-ir/src/parameters.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-ir/src/registry.rs",
+        include_bytes!("../../fqe-ir/src/registry.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-ir/src/schedule.rs",
+        include_bytes!("../../fqe-ir/src/schedule.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-ir/src/temporal.rs",
+        include_bytes!("../../fqe-ir/src/temporal.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-ir/src/workflow.rs",
+        include_bytes!("../../fqe-ir/src/workflow.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-runtime/Cargo.toml",
+        include_bytes!("../Cargo.toml").as_slice(),
+    ),
+    (
+        "crates/fqe-runtime/src/checkpoint.rs",
+        include_bytes!("checkpoint.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-runtime/src/events.rs",
+        include_bytes!("events.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-runtime/src/instances.rs",
+        include_bytes!("instances.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-runtime/src/lib.rs",
+        include_bytes!("lib.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-runtime/src/report.rs",
+        include_bytes!("report.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-runtime/src/schedule.rs",
+        include_bytes!("schedule.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-runtime/src/source_identity.rs",
+        include_bytes!("source_identity.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-runtime/src/temporal.rs",
+        include_bytes!("temporal.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-runtime/src/workflow.rs",
+        include_bytes!("workflow.rs").as_slice(),
+    ),
+    (
+        "rust-toolchain.toml",
+        include_bytes!("../../../rust-toolchain.toml").as_slice(),
+    ),
+];
+pub(crate) fn engine_id() -> ContentId {
+    fqe_ir::checkpoint::engine_identity(SOURCES)
+}
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn checkpoint_source_manifest_covers_all_engine_rust_files() {
+        use std::{collections::BTreeSet, path::Path};
+        let root = Path::new(env!("CARGO_MANIFEST_DIR"))
+            .parent()
+            .unwrap()
+            .parent()
+            .unwrap();
+        let included = super::SOURCES
+            .iter()
+            .map(|(name, _)| *name)
+            .collect::<BTreeSet<_>>();
+        assert_eq!(
+            included.len(),
+            super::SOURCES.len(),
+            "duplicate engine source pin"
+        );
+        fn walk(root: &Path, path: &Path, included: &BTreeSet<&str>) {
+            for entry in std::fs::read_dir(path).unwrap() {
+                let path = entry.unwrap().path();
+                if path.is_dir() {
+                    walk(root, &path, included)
+                } else if path.extension().is_some_and(|e| e == "rs") {
+                    let name = path.strip_prefix(root).unwrap().to_str().unwrap();
+                    assert!(
+                        included.contains(name),
+                        "missing checkpoint source pin: {name}"
+                    );
+                }
+            }
+        }
+        for name in ["fqe-core", "fqe-ir", "fqe-runtime"] {
+            walk(root, &root.join("crates").join(name).join("src"), &included);
+        }
+    }
+}

@@ -73,7 +73,7 @@ pub struct MarketData {
 fn instrument(v: Value, p: &str) -> Result<InstrumentId> {
     InstrumentId::new(text(v, p)?).map_err(|_| error("data_instrument", p, "invalid instrument"))
 }
-fn record(v: Value, p: &str) -> Result<MarketRecord> {
+pub(crate) fn record(v: Value, p: &str) -> Result<MarketRecord> {
     let mut o = Obj::new(v, p)?;
     let kind = text(o.take("kind")?, p)?;
     let sequence = integer(o.take("sequence")?, p)?;

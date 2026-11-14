@@ -119,6 +119,7 @@ Commit `Cargo.lock` alongside dependency changes. The lockfile contains five wor
 - [Stateful workflow execution](docs/WORKFLOW_EXECUTION.md)
 - [Multi-market scheduler and alignment](docs/MARKET_SCHEDULER.md)
 - [Temporal windows and instance scheduling](docs/TEMPORAL_SCHEDULER.md)
+- [Bounded checkpoint and restore](docs/CHECKPOINT_RESTORE.md)
 - [Runtime](docs/RUNTIME.md)
 - [Local CLI execution](docs/CLI_EXECUTION.md)
 - [Independent external invocation](docs/EXTERNAL_INVOCATION.md)

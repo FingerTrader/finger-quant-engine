@@ -42,5 +42,14 @@ pub fn reference(trigger: &Trigger) -> Result<Registry, ModelError> {
         })?;
         indicators::register(&mut builder, "reference", price)?;
     }
+    // This catalog contains only the reviewed deterministic in-process implementations.
+    // Independent registries must make their own explicit reconstruction-capability decision.
+    let reviewed = builder
+        .descriptors()
+        .map(|d| d.declaration().key.clone())
+        .collect::<Vec<_>>();
+    for key in reviewed {
+        builder.permit_checkpoint_replay(&key)?;
+    }
     builder.freeze()
 }

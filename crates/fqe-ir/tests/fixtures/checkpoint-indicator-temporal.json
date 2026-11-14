@@ -1,0 +1,37 @@
+{
+  "format": "fqe.temporal-rules",
+  "schema_version": 1,
+  "id": "independent.temporal-window",
+  "version": "1",
+  "requirements": [
+    "temporal.windows/1"
+  ],
+  "windows": [
+    {
+      "id": "count",
+      "arm": {
+        "event": "decision"
+      },
+      "predicate": {
+        "event": "decision"
+      },
+      "span": {
+        "kind": "closed-bar-count",
+        "bars": "3"
+      }
+    },
+    {
+      "id": "time",
+      "arm": {
+        "event": "decision"
+      },
+      "predicate": {
+        "event": "decision"
+      },
+      "span": {
+        "kind": "event-time",
+        "duration_ns": "3000"
+      }
+    }
+  ]
+}

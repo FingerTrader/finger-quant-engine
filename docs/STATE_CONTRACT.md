@@ -67,3 +67,7 @@ The P2-02 [market scheduler](MARKET_SCHEDULER.md) owns separate per-stream accep
 ## Temporal and lane ownership
 
 P2-03 adds lane-owned typed window/timer memory, immutable manifest/bindings, bounded pending FIFOs, status and round-robin control. Candidate workflow and temporal state publish together; rejected evaluation retains the pending head and all committed computational history while marking only that lane Blocked. Cancel clears its queue/windows and releases providers; EOF returns incomplete count windows rather than inventing bars. [Temporal scheduler](TEMPORAL_SCHEDULER.md) specifies exact semantics. None of these Rust views supplies snapshot import or complete provider serialization; P2-04 must capture all domains and output identities together.
+
+## Bounded logical reconstruction checkpoints
+
+P2-04 adds a separate [bounded checkpoint representation](CHECKPOINT_RESTORE.md) that reconstructs every owned state domain from exact typed commands under explicit deterministic side-effect-free provider permits. Versioned pins bind engine/schema/artifacts/parameters/data and produced outputs; restore validates a separate candidate and suppresses historical receipts. This includes provider/crossing/rule memory and scheduler/lane/window state, not merely the inspection maps above. Native buffer import, long/unbounded-history checkpoints and migration remain unsupported; standalone state-view/checkpoint APIs keep their original scope.

@@ -1,0 +1,25 @@
+{
+  "format": "fqe.schedule",
+  "schema_version": 1,
+  "id": "independent.market-alignment",
+  "version": "1",
+  "requirements": [
+    "market.schedule/1"
+  ],
+  "calendar": "utc-epoch-fixed/1",
+  "queue_capacity": "32",
+  "streams": [
+    {
+      "id": "demo.bars",
+      "dataset_id": "sha256:50ff262c144f016a372b4bc54426dd44a220b4710988b3e329885a3085f7d896",
+      "domain": {
+        "kind": "closed_bar",
+        "instrument": "DEMO",
+        "timeframe_ns": "1000",
+        "price_scale": 12,
+        "volume_scale": 0
+      },
+      "gap_policy": "reject"
+    }
+  ]
+}

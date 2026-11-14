@@ -37,6 +37,12 @@ pub enum CompiledCall {
     Incremental(Arc<PreparedIncremental>),
 }
 impl CompiledCall {
+    pub fn permits_checkpoint_replay(&self) -> bool {
+        match self {
+            Self::Pure(p) => p.permits_checkpoint_replay(),
+            Self::Incremental(p) => p.permits_checkpoint_replay(),
+        }
+    }
     pub fn descriptor(&self) -> &Descriptor {
         match self {
             Self::Pure(p) => p.descriptor(),

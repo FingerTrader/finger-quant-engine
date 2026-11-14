@@ -486,6 +486,7 @@ enum Implementation {
 struct Registration {
     descriptor: Arc<Descriptor>,
     implementation: Implementation,
+    checkpoint_replay: bool,
 }
 /// Reviewed in-process state. Fork must deeply copy all mutable instance history.
 /// This is a trust contract, not isolation or a persistent snapshot format.
@@ -512,6 +513,26 @@ pub struct RegistryBuilder {
 impl RegistryBuilder {
     pub fn new() -> Self {
         Self::default()
+    }
+    pub fn descriptors(&self) -> impl Iterator<Item = &Descriptor> {
+        self.entries.values().map(|e| e.descriptor.as_ref())
+    }
+    /// Explicit trusted-host opt-in for deterministic, side-effect-free reconstruction.
+    /// Not native provider serialization and not part of the existing numeric registry identity.
+    pub fn permit_checkpoint_replay(&mut self, key: &EntryKey) -> Result<()> {
+        let entry = self
+            .entries
+            .get_mut(key)
+            .ok_or_else(|| error("registry_unknown", "$.checkpoint", "entry not registered"))?;
+        if !entry.descriptor.declaration().deterministic {
+            return Err(error(
+                "registry_checkpoint",
+                "$.checkpoint",
+                "replay requires deterministic provider",
+            ));
+        }
+        entry.checkpoint_replay = true;
+        Ok(())
     }
     /// Registration and discovery do not call provider code.
     pub fn register(&mut self, descriptor: Descriptor, provider: Arc<dyn Provider>) -> Result<()> {
@@ -559,6 +580,7 @@ impl RegistryBuilder {
             Registration {
                 descriptor: Arc::new(descriptor),
                 implementation,
+                checkpoint_replay: false,
             },
         );
         Ok(())
@@ -675,6 +697,7 @@ impl Registry {
             parameter_bytes: bytes,
             model_pin: None,
             registry_id: self.content_id,
+            checkpoint_replay: e.checkpoint_replay,
         })
     }
     /// Bind and validate without creating or advancing state.
@@ -717,6 +740,7 @@ impl Registry {
             parameters,
             parameter_bytes,
             registry_id: self.content_id,
+            checkpoint_replay: e.checkpoint_replay,
         })
     }
     /// Creates a fresh owned state; never usable through repeated pure AST calls.
@@ -930,8 +954,12 @@ pub struct PreparedCall {
     parameter_bytes: usize,
     model_pin: Option<ModelNodePin>,
     registry_id: ContentId,
+    checkpoint_replay: bool,
 }
 impl PreparedCall {
+    pub fn permits_checkpoint_replay(&self) -> bool {
+        self.checkpoint_replay
+    }
     pub fn descriptor(&self) -> &Descriptor {
         &self.descriptor
     }
@@ -1194,8 +1222,12 @@ pub struct PreparedIncremental {
     parameters: BoundParameters,
     parameter_bytes: usize,
     registry_id: ContentId,
+    checkpoint_replay: bool,
 }
 impl PreparedIncremental {
+    pub fn permits_checkpoint_replay(&self) -> bool {
+        self.checkpoint_replay
+    }
     pub fn descriptor(&self) -> &Descriptor {
         &self.descriptor
     }
