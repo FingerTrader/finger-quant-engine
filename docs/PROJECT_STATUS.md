@@ -4,10 +4,11 @@
 
 ## Current position
 
-- Phase: **P1 — Universal Strategy Foundation, COMPLETED**. The P1 golden/generic-engine gate passed. **P2-01–P2-03 COMPLETED; P2-04 VERIFIED**; P2–P6 remain incomplete and no later phase gate has passed.
+- Phase: **P1 — Universal Strategy Foundation, COMPLETED**. The P1 golden/generic-engine gate passed. **P2-01–P2-04 COMPLETED; P2-05 READY**; P2–P6 remain incomplete and no later phase gate has passed.
 - Completed: GOV-01/GOV-02/GOV-03 and P1-01 through P1-11; local evidence and closure records synchronized.
-- Latest implementation: **P2-03 — Time Windows, Timers & Instance Scheduling**, COMPLETED. Evidence `f73082c86622ce40311d7e9ec91eef08402d681f`; typed bound temporal windows, deterministic timers, bounded fair isolated workflow lanes and joint provider/rule/temporal rollback.215 Rust +23 external tests/11 process cases/full checks PASS. P2-02 evidence `daeeb181d99236094daa3272fd4efa3855ddca06`.
-- Next eligible implementation: **P2-04 — Snapshot / Restore**, VERIFIED. Versioned atomic complete state/cursor/output checkpoints, compatible pinned identities and every-event X-002 split-run parity. User authorizes continuing downstream work without routine confirmation; publishing is not requested.
+- Previous implementation: **P2-03 — Time Windows, Timers & Instance Scheduling**, COMPLETED. Evidence `f73082c86622ce40311d7e9ec91eef08402d681f`; typed bound temporal windows, deterministic timers, bounded fair isolated workflow lanes and joint provider/rule/temporal rollback.215 Rust +23 external tests/11 process cases/full checks PASS. P2-02 evidence `daeeb181d99236094daa3272fd4efa3855ddca06`.
+- Latest implementation: **P2-04 — Snapshot / Restore**, COMPLETED; evidence `4dffdfe235eba1f698a34b3e0df6c2198a066ba3`, complete bounded reconstruction/atomic persistence;229 Rust/23 external/11 process cases PASS.
+- Next eligible implementation: **P2-05 — Replay & Debug Trace**, READY. Deterministic replay, bounded source/event diagnostics and trace parity. User authorizes continuing downstream work without routine confirmation; publishing is not requested.
 - P1-02 acceptance met: evaluated numeric policy/limits, strict type/unit/scale checks, unsupported-shape rejection, full binding matrix and tests. Evidence `a653c105fba5ea6ada15395abc22cc8f82cc4472` and local closure recorded below; publishing not requested.
 - Actual root: `/Users/george/Desktop/finger-quant-engine`; main tracking origin/main; remote `https://github.com/FingerTrader/finger-quant-engine.git`.
 - Rust source baseline / latest pre-governance commit: `342d8aa76b48d32fa9c9110609b371eac52b8d86` (foundation). Previous commit: `cbcebad`.
@@ -35,8 +36,9 @@
 | P2-01 | COMPLETED | Typed workflow modules/State/Delay, atomic provider/rule rollback and lifecycle;195 Rust/23 external/11 process cases PASS; evidence `52f6e9ea4a7bc2e4a687796eaf4af2752aee7c11`; local closure |
 | P2-02 | COMPLETED | Bounded fixed-UTC multi-market scheduler/watermarks/atomic as-of publication;205 Rust/23 external/11 process cases PASS; evidence `daeeb181d99236094daa3272fd4efa3855ddca06`; local closure |
 | P2-03 | COMPLETED | Typed temporal windows/timers, bounded fair isolated lanes, joint candidate rollback;215 Rust/23 external/11 process cases PASS; evidence `f73082c86622ce40311d7e9ec91eef08402d681f`; local closure |
-| P2-04 | VERIFIED | Bounded deterministic replay-state checkpoint profile, explicit provider opt-in, full state reconstruction/output suppression, strict compatibility/integrity and atomic local persistence |
-| P2-05, P2-06 | NOT_STARTED | Prior P2 dependencies/gate first |
+| P2-04 | COMPLETED | Bounded complete reconstruction/explicit capability/strict pins/output cursors/atomic persistence;229 Rust/23 external/11 process cases PASS; evidence `4dffdfe235eba1f698a34b3e0df6c2198a066ba3`; local closure |
+| P2-05 | READY | P2-04 complete; deterministic user replay/bounded trace/divergence diagnostics next |
+| P2-06 | NOT_STARTED | Prior P2 dependencies/gate first |
 | P3-01, P3-02, P3-03, P3-04, P3-05, P3-06, P3-07 | NOT_STARTED | P2 gate first |
 | P4-01, P4-02, P4-03, P4-04, P4-05 | NOT_STARTED | P3 gate first |
 | P5-01, P5-02, P5-03, P5-04, P5-05 | NOT_STARTED | P4 gate first; Python → Java → Go |
@@ -44,7 +46,7 @@
 | P6-01, P6-02, P6-03, P6-04, P6-05, P6-06 | NOT_STARTED | P5 gate first |
 | P6-03.01 | NOT_STARTED | Java-indicator/Go-predicate graph after P6-02; prerequisite of parent P6-03 |
 
-Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 14 COMPLETED, 1 VERIFIED, 27 NOT_STARTED. P2-04 is first eligible; none is BLOCKED. P1 gate passed; later phase gates remain open. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
+Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 15 COMPLETED, 1 READY, 26 NOT_STARTED. P2-05 is first eligible; none is BLOCKED. P1 gate passed; later phase gates remain open. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
 
 ## Delivered baseline and limitations
 
@@ -311,3 +313,5 @@ IMPLEMENTED → VERIFIED. [Checkpoint/restore](CHECKPOINT_RESTORE.md)/ADR-025 im
 Full offline `python3 scripts/check_p1_gate.py` PASS at2026-11-14T10:54:07Z:229 Rust tests,23 external tests,11 actual process cases, protected source/golden pins, fmt/check/test/strict all-target clippy/build/docs/diff. Fourteen added tests cover independent Python canonical/checksum bytes, strict corruption/version/identity/schema/parameter/capability/quota negatives, source-manifest coverage, every-command split X-002/fairness/queues/blocked/retry/cancel and actual MACD/RSI/crossing/count/time state. Custom-provider opt-in restores history and releases state; unsupported admission creates zero factories. Real child exit73 after temp-file sync before rename preserves the old valid checkpoint. Checkpoint example PASS: restore8 commands/output cursor2 and compare continuation outputs3..11/finish12. Docs41 Markdown/522 links/42 tasks before this evidence entry; macOS ARM64/Rust1.99.0/Python3.14.6.
 
 No new dependency/manifest/lockfile/toolchain, installer, financial provider/golden changes or third-party scan/private upload. Explicit limits: trusted deterministic side-effect-free provider permits, strict same-engine source/outcome encoding, bounded history/reconstruction cost; no native compact long-history codec/migration or external client acknowledgement/exactly-once guarantee. Standalone checkpoint APIs remain unsupported. P2-05 user replay/debug and P2-06 complete temporal gate remain separate. Evidence commit and synchronized closure are next; continue automatically, no push authorization.
+
+Final intended/staged/protected-source diff review PASS. Evidence committed as `4dffdfe235eba1f698a34b3e0df6c2198a066ba3`. This three-document closure marks P2-04 COMPLETED/P2-05 READY. Remote main read-confirmed `0ac5d7b163e77bddb5f69689a1455e3560aad872`;32 local commits including closure unpushed. Publishing not requested/performed; continue automatically.
