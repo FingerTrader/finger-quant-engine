@@ -72,7 +72,7 @@ impl Trigger {
             .map_err(|_| error("event_type", "$.trigger", "invalid field type"))
     }
 }
-fn trigger(v: Value, p: &str) -> Result<Trigger> {
+pub(crate) fn trigger(v: Value, p: &str) -> Result<Trigger> {
     let mut o = Obj::new(v, p)?;
     let kind = text(o.take("kind")?, p)?;
     let instrument = InstrumentId::new(text(o.take("instrument")?, p)?)
@@ -102,7 +102,7 @@ fn trigger(v: Value, p: &str) -> Result<Trigger> {
     o.end()?;
     Ok(t)
 }
-fn trigger_json(t: &Trigger) -> Value {
+pub(crate) fn trigger_json(t: &Trigger) -> Value {
     match t {
         Trigger::Tick { instrument } => json!({"kind":"tick","instrument":instrument.as_str()}),
         Trigger::ClosedBar {

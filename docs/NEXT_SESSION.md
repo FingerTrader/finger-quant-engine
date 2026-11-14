@@ -4,7 +4,7 @@ Recover [status](PROJECT_STATUS.md), [plan](DELIVERY_PLAN.md), [ADRs](ARCHITECTU
 
 ## Current evidence
 
-P1-01–P1-11 and P2-01 COMPLETED; P1 phase gate passed. P2-02 READY; no P2 phase gate passed. Latest implementation evidence `52f6e9ea4a7bc2e4a687796eaf4af2752aee7c11`; resolve current HEAD and latest status commit from Git. Main26 commits ahead after this closure, remote last read-confirmed `0ac5d7b163e77bddb5f69689a1455e3560aad872`; recheck live before publishing. No push authorization.
+P1-01–P1-11 and P2-01 COMPLETED; P1 phase gate passed. P2-02 VERIFIED; no P2 phase gate passed. Latest implementation evidence `52f6e9ea4a7bc2e4a687796eaf4af2752aee7c11`; resolve current HEAD and latest status commit from Git. Main26 commits ahead after this closure, remote last read-confirmed `0ac5d7b163e77bddb5f69689a1455e3560aad872`; recheck live before publishing. No push authorization.
 
 P2-01 adds [workflow execution](WORKFLOW_EXECUTION.md)/ADR-022 and `fqe-ir/src/workflow.rs`, `fqe-runtime/src/workflow.rs`, private EventRuntime outer transaction. Strict fqe.workflow/1 composes single-trigger event plan with typed parameterized rule instances, host-owned cells/mode/one-event Delay, old-state guards/effects, deterministic equal-priority conflict rejection, whole-event provider/crossing/rule/cursor commit. Boundary finish/stop/abort releases owned provider state; fresh terminal restart needs new run ID. No complete checkpoint: inspection is typed/versioned and explicitly restorable=false; checkpoint returns unsupported. One control region/equal priority and flat module DAG are intentional bounds, not full workflow-format support.
 
@@ -35,3 +35,9 @@ git diff --check
 ```
 
 Record actual code/checks/errors/dirty state before interruption. Evidence commit while VERIFIED, then synchronized status/plan/handoff closure recording that SHA. Only an authorized normal push plus matching remote SHA establishes publishing. Continue directly to next eligible task after closure.
+
+Active P2-02 checkpoint: scoped fqe.schedule/1 fixed-UTC streams/watermarks/atomic as-of merge selected; implementing new IR/runtime scheduler modules and tests. Existing P2-01 is committed and complete. Preserve inclusive watermark promises and distinguish source sequence from globally assigned publication sequence.
+
+P2-02 implementation checkpoint: new `fqe-ir/src/schedule.rs`, `fqe-runtime/src/schedule.rs`, strict schedule fixture/canonical tests and eight scheduler runtime tests. Focused tests/clippy PASS (2 IR+8 runtime); docs/MARKET_SCHEDULER.md and ADR-023 drafted. Required full workspace/P1 gate/docs/diff still pending. Identifier validation exposure and event trigger codec visibility reuse existing behavior. No dependency/lockfile changes.
+
+Verification checkpoint: P2-02 IMPLEMENTED → VERIFIED; full gate PASS205 Rust/23 external/11 process cases,39 Markdown/484 links/42 projections. Evidence commit and three-document closure pending; then continue P2-03 windows/timers/fair instance scheduling automatically.

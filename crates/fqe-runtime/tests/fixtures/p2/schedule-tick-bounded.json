@@ -1,0 +1,22 @@
+{
+  "format": "fqe.schedule",
+  "schema_version": 1,
+  "id": "independent.market-alignment",
+  "version": "1",
+  "requirements": [
+    "market.schedule/1"
+  ],
+  "calendar": "utc-epoch-fixed/1",
+  "queue_capacity": "1",
+  "streams": [
+    {
+      "id": "demo.ticks",
+      "dataset_id": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "domain": {
+        "kind": "tick",
+        "instrument": "DEMO"
+      },
+      "gap_policy": "not-applicable"
+    }
+  ]
+}

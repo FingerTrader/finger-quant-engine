@@ -1,0 +1,25 @@
+{
+  "format": "fqe.schedule",
+  "schema_version": 1,
+  "id": "independent.market-alignment",
+  "version": "1",
+  "requirements": [
+    "market.schedule/1"
+  ],
+  "calendar": "utc-epoch-fixed/1",
+  "queue_capacity": "32",
+  "streams": [
+    {
+      "id": "a.fast",
+      "dataset_id": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "domain": {
+        "kind": "closed_bar",
+        "instrument": "AAA",
+        "timeframe_ns": "10",
+        "price_scale": 0,
+        "volume_scale": 0
+      },
+      "gap_policy": "report"
+    }
+  ]
+}

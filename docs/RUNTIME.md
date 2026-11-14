@@ -53,3 +53,7 @@ P1-09 adds `report::run_report` over the same EventRuntime and fqe.market-data/1
 ## Stateful workflows
 
 P2-01 adds `workflow::WorkflowRuntime` over the existing compiled event runtime, with fqe.workflow/1 reusable stateful scalar rules, per-instance typed cells/modes/Delay, whole-event commit and boundary stop/abort/fresh restart. Rejected events are retryable; terminal state release is in-process ownership, not asynchronous cancellation. The library and runnable workflow example use the same generic expression arithmetic and registry. [Workflow execution](WORKFLOW_EXECUTION.md) owns admission limits, phase order, signal origin, typed non-restorable state views and unsupported capabilities. The existing CLI and external process consumer continue to accept fqe.event-plan/1 only.
+
+## Multi-market scheduling
+
+P2-02 adds a separate `schedule::MarketScheduler` over immutable fqe.schedule/1 definitions: bounded multi-symbol/timeframe ingress, inclusive source watermarks, stable total order and committed as-of views. Dispatch exposes only closed/published data and commits publication after a successful transactional consumer. Existing EventRuntime/WorkflowRuntime retain their single-trigger formats; explicit stream routing can feed them global logical sequences while ScheduledEvent preserves original source identity. [Market scheduler](MARKET_SCHEDULER.md) owns calendar/gap/late/duplicate/backpressure/tie rules and the callback transaction boundary. Timers/fair multi-instance scheduling remain P2-03.

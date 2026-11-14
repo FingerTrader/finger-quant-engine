@@ -181,3 +181,5 @@ mod tests {
         assert_eq!(rule.evaluate(&tick), None);
     }
 }
+
+pub mod schedule;

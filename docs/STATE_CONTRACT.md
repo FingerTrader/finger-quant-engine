@@ -59,3 +59,7 @@ The P1-08 event runner owns fresh per-node IncrementalInstance state, one Expres
 ## Stateful rule instances
 
 P2-01 adds a separate experimental fqe.workflow/1 profile with host-owned typed/versioned per-instance cells, one-matching-event Delay, mode and generic rule modules. Guards/effects/public outputs see committed old cells; successful events publish all provider/crossing/rule/cursor updates atomically. Conflicts and late errors roll back; stop/abort/finish release owned provider state and fresh restart requires a new run. Typed state inspection is explicitly non-restorable; complete snapshots remain P2-04. [Workflow execution](WORKFLOW_EXECUTION.md) owns exact formats, bounds, warmup and lifecycle; the legacy semantics above remain scoped to the legacy runtime.
+
+## Scheduler ingress versus publication
+
+The P2-02 [market scheduler](MARKET_SCHEDULER.md) owns separate per-stream accepted ingress cursors/watermarks, a bounded pending queue and globally committed publication/alignment state. An invalid ingress changes none; a consumer error preserves the pending event, logical sequence and alignment. Accepted buffered ingress is not undone by a publication failure. No cursor/queue inspection is a restorable checkpoint; P2-04 must capture these alongside all strategy/provider/crossing state.

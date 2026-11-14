@@ -1,0 +1,11 @@
+# fqe.market-alignment-golden/1
+logical_sequence	timestamp_ns	stream	source_sequence
+1	10	a.fast	5
+2	10	b.fast	1
+3	10	demo.ticks	100
+4	20	a.fast	6
+5	20	b.fast	2
+6	30	a.fast	7
+7	30	a.slow	80
+8	30	b.fast	3
+9	30	demo.ticks	200

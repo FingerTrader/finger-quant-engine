@@ -155,7 +155,8 @@ pub struct ModelDefinition {
     draft: ModelDraft,
 }
 
-pub(crate) fn identifier(value: &str, path: &str) -> Result<(), ModelError> {
+/// Validate the shared bounded opaque identifier profile without constructing a runtime.
+pub fn identifier(value: &str, path: &str) -> Result<(), ModelError> {
     if value.is_empty()
         || value.len() > 128
         || !value
