@@ -1,0 +1,14 @@
+{
+  "format": "fqe.research-managed-cancel-check/1",
+  "status": "passed",
+  "peer_sha256": "d2d5b5f5be33d3395164292de5c4b5500942a113dbb6488a900cd118f9fe395c",
+  "attempts": [
+    {
+      "delay": 0.2,
+      "phase": "cancelled",
+      "processed": 6032
+    }
+  ],
+  "result_id": "sha256:d4c63e8bd15f949084c0afeb1e690f8fac1ac1d22045ba94b2c51e7e3250b5e5",
+  "processed": 6032
+}
