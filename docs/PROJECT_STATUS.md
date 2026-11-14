@@ -1,6 +1,6 @@
 # Project Status
 
-**Unique authoritative progress ledger.** Updated 2026-11-14 (Asia/Tokyo). Read [Next session](NEXT_SESSION.md), [Delivery plan](DELIVERY_PLAN.md), [ADRs](ARCHITECTURE_DECISIONS.md) and current contracts before editing. Actual code/tests/Git override stale records; authority rules: [Document authority](DOCUMENT_AUTHORITY.md).
+**Unique authoritative progress ledger.** Updated 2026-11-15 (Asia/Tokyo). Read [Next session](NEXT_SESSION.md), [Delivery plan](DELIVERY_PLAN.md), [ADRs](ARCHITECTURE_DECISIONS.md) and current contracts before editing. Actual code/tests/Git override stale records; authority rules: [Document authority](DOCUMENT_AUTHORITY.md).
 
 ## Current position
 
@@ -10,7 +10,7 @@
 - Previous implementation: **P2-04 — Snapshot / Restore**, COMPLETED; evidence `4dffdfe235eba1f698a34b3e0df6c2198a066ba3`, complete bounded reconstruction/atomic persistence;229 Rust/23 external/11 process cases PASS.
 - Previous implementation: **P2-05 — Replay & Debug Trace**, COMPLETED; evidence `8c2b39f83c03fbcb0794c18a5fef4d92e998a5ee`;238 Rust/23 external/11 process cases PASS.
 - Latest implementation: **P2-06 — Temporal Strategy Gate**, COMPLETED; evidence `d272c4d78445f984686d9025e7cb29c0de9fc544`;244 Rust/23 external/11 process/55 independent rows/full P2 gate PASS.
-- Next eligible implementation: **P4-03 — Desktop Client & Local State**, IN_PROGRESS. P4-02 verified/closed; integrate actual Desk binding/editor/state and native offline journey. User authorizes continuing downstream work without routine confirmation; publishing is not requested.
+- Next eligible implementation: **P4-03 — Desktop Client & Local State**, IN_PROGRESS. P4-02 verified/closed; integrate actual Desk binding/editor/state and native offline journey. User authorizes continuing downstream work without routine confirmation; current engine checkpoints were explicitly authorized for GitHub publishing on 2026-11-15.
 - P1-02 acceptance met: evaluated numeric policy/limits, strict type/unit/scale checks, unsupported-shape rejection, full binding matrix and tests. Evidence `a653c105fba5ea6ada15395abc22cc8f82cc4472` and local closure recorded below; publishing not requested.
 - Actual root: `/Users/george/Desktop/finger-quant-engine`; main tracking origin/main; remote `https://github.com/FingerTrader/finger-quant-engine.git`.
 - Rust source baseline / latest pre-governance commit: `342d8aa76b48d32fa9c9110609b371eac52b8d86` (foundation). Previous commit: `cbcebad`.
@@ -521,3 +521,7 @@ P4-03 accepted editor slice: Desk backtest/run configuration now hosts the nativ
 P4-03 final continuation verification:20 actual native visual cases/19 Flutter regressions PASS, scoped analyzer zero issues, no dependency/lock changes. Source snapshot and guarded approved-baseline deltas are preserved under the linked progress evidence, not a Desk commit or final paired native candidate. No Rust changes;341 Rust/23 external full gate remains current. Remote main freshly verified0ac5d7b163e77bddb5f69689a1455e3560aad872; local checkpoint only, publishing not requested.
 
 Local editor checkpoint `6e10348` records the exact first-party consumer source snapshot, guarded integration deltas,20 native visual checks/19 Flutter regressions/analyzer and partial native observations. It is not task closure. P4-03 stays IN_PROGRESS; Desk files remain uncommitted, final native/UI coordination remains open; no push.
+
+## GitHub delivery 2026-11-15
+
+User explicitly requested publishing the current engine repository. Normal `git push origin main` succeeded from0ac5d7b to69b5120; an independent `git ls-remote origin refs/heads/main` confirmed `69b5120ff34b1b6f086d7bbce7d43e74fafbc164`, matching local HEAD, with a clean/synchronized checkout before this delivery record. The prior58 local commits are delivered. This documentation record is included in the same authorized publishing operation; verify latest HEAD/remote separately rather than using a self-referential SHA. Desk checkout files remain uncommitted and were not pushed. P4-03 stays IN_PROGRESS; publishing does not close pending native acceptance. Earlier no-publishing notes describe historical authorization only.

@@ -1,6 +1,6 @@
 # Next Session
 
-Recover [status](PROJECT_STATUS.md), [plan](DELIVERY_PLAN.md), [ADRs](ARCHITECTURE_DECISIONS.md), [workflow](WORKFLOW.md), README/current contracts and actual Git. Main only; no worktree/agents. Continue downstream automatically unless a real problem needs coordination. Publishing is not authorized; local checkpoints are allowed.
+Recover [status](PROJECT_STATUS.md), [plan](DELIVERY_PLAN.md), [ADRs](ARCHITECTURE_DECISIONS.md), [workflow](WORKFLOW.md), README/current contracts and actual Git. Main only; no worktree/agents. Continue downstream automatically unless a real problem needs coordination. User explicitly authorized publishing the current engine checkpoints on 2026-11-15. Normal push and independent remote confirmation succeeded for69b5120; see the current delivery record in PROJECT_STATUS. This does not grant blanket authorization for future publishing.
 
 ## Current task
 
@@ -43,3 +43,5 @@ Current source/delta/20 native visual cases/current native observations are stor
 Final continuation checks:20 actual native visual cases PASS;19 targeted Flutter cases PASS in desk-editor-flutter-tests.log; scoped analyzer no issues in desk-editor-analyze.log. Docs/diff must pass before local checkpoint. Rust remains unchanged from341/23 full gate. Remote main freshly confirmed0ac5d7b163e77bddb5f69689a1455e3560aad872; no publishing authorization or push.
 
 Local editor checkpoint `6e10348` records the exact first-party consumer source snapshot, guarded integration deltas,20 native visual checks/19 Flutter regressions/analyzer and partial native observations. It is not task closure. P4-03 stays IN_PROGRESS; Desk files remain uncommitted, final native/UI coordination remains open; no push.
+
+Latest delivery supersedes earlier no-push notes: engine main through69b5120ff34b1b6f086d7bbce7d43e74fafbc164 was pushed and independently confirmed on GitHub2026-11-15. This delivery-record update is part of that same publishing request; compare current HEAD to remote for the final recorded SHA. Desk remains dirty/uncommitted and untouched by publishing. P4-03 remains IN_PROGRESS with native/UI acceptance pending.
