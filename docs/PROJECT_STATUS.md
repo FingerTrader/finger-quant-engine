@@ -10,7 +10,7 @@
 - Previous implementation: **P2-04 — Snapshot / Restore**, COMPLETED; evidence `4dffdfe235eba1f698a34b3e0df6c2198a066ba3`, complete bounded reconstruction/atomic persistence;229 Rust/23 external/11 process cases PASS.
 - Previous implementation: **P2-05 — Replay & Debug Trace**, COMPLETED; evidence `8c2b39f83c03fbcb0794c18a5fef4d92e998a5ee`;238 Rust/23 external/11 process cases PASS.
 - Latest implementation: **P2-06 — Temporal Strategy Gate**, COMPLETED; evidence `d272c4d78445f984686d9025e7cb29c0de9fc544`;244 Rust/23 external/11 process/55 independent rows/full P2 gate PASS.
-- Next eligible implementation: **P3-02 — Virtual Accounts & Ledger**, VERIFIED. P3-01 exact financial/history inputs completed; balanced journal/reservations/P&L/replay and independent cash-long/short comparison next. User authorizes continuing downstream work without routine confirmation; publishing is not requested.
+- Next eligible implementation: **P3-03 — Order Lifecycle & Fill Engine**, READY. Financial history and authoritative ledger closed; explicit intent policy, deterministic market/limit fills, costs and lifecycle next. User authorizes continuing downstream work without routine confirmation; publishing is not requested.
 - P1-02 acceptance met: evaluated numeric policy/limits, strict type/unit/scale checks, unsupported-shape rejection, full binding matrix and tests. Evidence `a653c105fba5ea6ada15395abc22cc8f82cc4472` and local closure recorded below; publishing not requested.
 - Actual root: `/Users/george/Desktop/finger-quant-engine`; main tracking origin/main; remote `https://github.com/FingerTrader/finger-quant-engine.git`.
 - Rust source baseline / latest pre-governance commit: `342d8aa76b48d32fa9c9110609b371eac52b8d86` (foundation). Previous commit: `cbcebad`.
@@ -42,15 +42,16 @@
 | P2-05 | COMPLETED | Bounded trace/replay/source divergence and off/full/exhausted parity;238 Rust/23 external/11 process PASS; evidence `8c2b39f83c03fbcb0794c18a5fef4d92e998a5ee`; local closure |
 | P2-06 | COMPLETED | Actual G-006/X-002/55-row oracle/source pins and full P2 gate PASS;244 Rust/23 external/11 process cases; evidence `d272c4d78445f984686d9025e7cb29c0de9fc544`; local closure |
 | P3-01 | COMPLETED | Exact financial/history/input profile;257 Rust/23 external/11 process/full P2 gate PASS; evidence `f7d87ed730a74664cb6dc4182fbc6cac62c007e6`; local closure |
-| P3-02 | VERIFIED | Bounded atomic balanced journal, explicit gross-basis cash-long/proceeds-restricted-short profiles, reservations/valuation/replay and independent synthetic comparisons |
-| P3-03, P3-04, P3-05, P3-06, P3-07 | NOT_STARTED | Prior P3 dependencies/gate first |
+| P3-02 | COMPLETED | Bounded authoritative balanced ledger/holds/valuation/replay and independent5-case16-row comparisons;267 Rust/full gate PASS; evidence `954d08462eab2195fbb4d4ed27a60367df49ae4f` |
+| P3-03 | READY | P3-02 closed; explicit simulation lifecycle/fills/costs next |
+| P3-04, P3-05, P3-06, P3-07 | NOT_STARTED | Prior P3 dependencies/gate first |
 | P4-01, P4-02, P4-03, P4-04, P4-05 | NOT_STARTED | P3 gate first |
 | P5-01, P5-02, P5-03, P5-04, P5-05 | NOT_STARTED | P4 gate first; Python → Java → Go |
 | P5-05.01 | NOT_STARTED | Real unlisted-language onboarding after P5-04; prerequisite of parent P5-05 |
 | P6-01, P6-02, P6-03, P6-04, P6-05, P6-06 | NOT_STARTED | P5 gate first |
 | P6-03.01 | NOT_STARTED | Java-indicator/Go-predicate graph after P6-02; prerequisite of parent P6-03 |
 
-Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 18 COMPLETED, 1 VERIFIED, 23 NOT_STARTED. P3-02 is first eligible; none is BLOCKED. P1/P2 gates passed; P3–P6 gates remain open. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
+Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 19 COMPLETED, 1 READY, 22 NOT_STARTED. P3-03 is first eligible; none is BLOCKED. P1/P2 gates passed; P3–P6 gates remain open. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
 
 ## Delivered baseline and limitations
 
@@ -375,3 +376,5 @@ Full `PYTHONDONTWRITEBYTECODE=1 python3 scripts/check_p2_gate.py` PASS2026-11-14
 [Ledger contract](LEDGER.md)/ADR-028 own exact profiles, checked gross/fee/basis/rounding, balanced money/quantity postings, cash/hold/short-proceeds/position/valuation views, capacity/identity/atomicity and full same-engine/config receipt replay. Tests compare every independent oracle row and selected legacy cash/flat-net fields, independently sum all journal postings, restore every prefix and continue all action kinds, exercise0.05 steps/max funds/quantities, partial lots/half-even residual sweep, invalid actions, tampered journal/config/engine and8192/1024 capacity. No full Desk Decimal34/intermediate-cost equivalence claim: FQE fees are separately expensed and partial basis rounds to money steps; actual Desk execution remains P4. Short profile is accounting-only with restricted proceeds, no margin/borrow/liquidation. Native DTOs have no stable wire/durable append or financial full-run checkpoint yet.
 
 No dependency/manifest/lock/toolchain/protected provider/old P1/P2 golden changes, installers, scanners, private uploads or Desk writes/execution. Source identity includes new ledger implementation; financial lots API separates partial execution from minimum order admission. Final intended diff/protected source review pending evidence commit, then three-doc closure and continue P3-03 automatically.
+
+P3-02 intended/staged/protected-source review PASS; evidence `954d08462eab2195fbb4d4ed27a60367df49ae4f` committed. This closure marks P3-02 COMPLETED/P3-03 READY. Remote main remains0ac5d7b163e77bddb5f69689a1455e3560aad872;40 local commits including closure. Publishing not requested; continue automatically.
