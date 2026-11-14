@@ -636,6 +636,7 @@ pub struct PreparedTransition {
     pub path: String,
 }
 pub struct PreparedInstance {
+    pub parameters: BoundParameters,
     pub id: String,
     pub module: EntryKey,
     pub state_schema: EntryKey,
@@ -854,6 +855,7 @@ fn prepare(
     let outputs = expression_plan(m.outputs.iter(), &slots, bound, true, budget, &p)?
         .expect("nonempty outputs");
     Ok(PreparedInstance {
+        parameters: bound.clone(),
         id: i.id.clone(),
         module: m.key.clone(),
         state_schema: m.state_schema.clone(),

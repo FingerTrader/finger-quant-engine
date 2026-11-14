@@ -69,6 +69,7 @@ pub struct CompiledOutput {
     pub source: ResolvedSource,
 }
 pub struct CompiledPlan {
+    parameters: BoundParameters,
     model: ContentId,
     registry: ContentId,
     canonical: Vec<u8>,
@@ -78,6 +79,10 @@ pub struct CompiledPlan {
     outputs: Vec<CompiledOutput>,
 }
 impl CompiledPlan {
+    /// Actual immutable top-level bindings used by this compilation (already included in identity).
+    pub fn parameters(&self) -> &BoundParameters {
+        &self.parameters
+    }
     pub fn content_id(&self) -> ContentId {
         self.content_id
     }
@@ -620,6 +625,7 @@ fn compile(
     }
     let content_id = graph::digest(PLAN_PREFIX, &canonical);
     Ok(CompiledPlan {
+        parameters: bound.clone(),
         model,
         registry: registry.content_id(),
         canonical,

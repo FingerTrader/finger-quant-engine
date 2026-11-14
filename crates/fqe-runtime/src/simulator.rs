@@ -96,6 +96,13 @@ pub struct SignalOrigin {
 pub enum IntentOrigin {
     Manual,
     Signal(SignalOrigin),
+    /// Explicit host policy over a typed observation, not an invented strategy signal.
+    Policy {
+        source: SignalSource,
+        sequence: u64,
+        timestamp_ns: u64,
+        binding: String,
+    },
 }
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum OrderKind {
@@ -413,6 +420,34 @@ impl SimulationBroker {
         Ok(intent)
     }
     fn signal_key(&self, intent: &OrderIntent) -> Result<Option<String>> {
+        if let IntentOrigin::Policy {
+            source,
+            sequence,
+            timestamp_ns,
+            binding,
+        } = &intent.origin
+        {
+            id(binding)?;
+            let last = self
+                .last
+                .as_ref()
+                .ok_or_else(|| err("simulation_frontier", "no closed bar"))?
+                .input();
+            if binding.len() > 64
+                || Some(source) != self.config.signal_source.as_ref()
+                || *sequence != last.sequence
+                || *timestamp_ns != last.close_ns
+            {
+                return Err(err(
+                    "simulation_signal",
+                    "policy origin is not current configured source",
+                ));
+            }
+            return Ok(Some(format!(
+                "policy\n{}\n{}\n{}\n{}",
+                source.run, source.execution_id, sequence, binding
+            )));
+        }
         let IntentOrigin::Signal(origin) = &intent.origin else {
             return Ok(None);
         };

@@ -1,53 +1,61 @@
 # Local backtesting
 
-Status: backtesting remains planned. The implemented experimental [financial/history inputs](FINANCIAL_HISTORY.md) validate local CSV, exact units, immutable selection and pinned strategy/run inputs; the loaded history example evaluates a strategy and produces no trading performance.
-
-Implementation and local optimization are gated by P3-01–P3-07 in [Delivery plan](DELIVERY_PLAN.md). [Project status](PROJECT_STATUS.md) is the only progress authority; this guide describes requirements, not delivery claims.
+Implemented experimental P3-05 native Rust batch profile, `fqe_runtime::backtest::PreparedBacktest`. [Project status](PROJECT_STATUS.md) owns acceptance/closure. This contract owns orchestration, financial manifests/reports and portfolio metrics. [Financial/history inputs](FINANCIAL_HISTORY.md), [ledger](LEDGER.md), [orders](ORDER_SIMULATION.md) and [margin](MARGIN_PROFILES.md) own their underlying semantics. Local optimization and complete persisted pipeline continuation retain P3-06/P3-07 acceptance; no backtest CLI command, stable FFI/wire API, actual Flutter/Desk integration or installed bundle is delivered here.
 
 ## Scope and independence
 
-Backtesting will replay user-selected historical data on the user's device. Offline datasets and strategies must be usable without Flutter Desktop or a Finger Trader login. Data acquisition is a separate adapter concern; no dataset downloader is implemented.
+A run consumes an immutable validated HistorySelection and an already compiled EventPlan or Workflow, explicit ordered policy bindings, SimulationConfig, run ID, seed and RunControl. All strategy and financial computation stays on the user's device, without Flutter, login, trading account, SDK, network, downloader or third-party worker. Seed is recorded, with no stochastic behavior in this profile. One instrument/currency/account, either the original cash-long model or separately selected margin-long model, is supported. Signed histories, gaps incompatible with the continuous event runtime and metadata mismatches reject preparation. Never silently switch financial backends.
 
-Experimental [virtual ledger](LEDGER.md) supplies accounting postings and valuation, with independent public comparison fixtures; the experimental [simulated order model](ORDER_SIMULATION.md) supplies opt-in intent conversion/lifecycle/fills/costs. Full portfolio orchestration/reporting remains planned.
+Limits: at most256 source bars including selection warmup,16 uniquely named policy bindings (IDs<=64 ASCII identifier bytes), and existing broker/ledger/model quotas. Source/strategy inputs retain their original loader limits. The financial manifest is at most262144 bytes and must pass the shared strict input decoder's depth/item/collection quotas before provider factories run. The result is at most4MiB, depth<=32 and262144 JSON items; floating JSON numbers are rejected. These are bounded experimental research runs, not long-history storage, production throughput or constant-memory claims. A model with many outputs can exceed the result quota and return an error.
 
-The Rust engine will own replay ordering and validation. Clients may configure and display runs without owning financial semantics.
+## Phases and explicit policies
 
-## Planned pipeline
+Each source bar follows four phases: incoming open matches previously submitted orders using the previous closed volume; the existing EventRuntime/WorkflowRuntime evaluates the now-closed bar; policies run in caller-specified order; authoritative ledger equity is sampled at that close. This is an offline closed-bar delivery convention, not real-time open notification. Future high/low/close/volume cannot influence an earlier decision or open fill. Order/reference/admission/cost/risk limitations remain exactly those of the selected model.
 
-```text
-local dataset + metadata
-  -> validated ordered market events
-  -> typed IR or local language worker
-  -> signal / explicit order-intent policy
-  -> local execution model and accounting
-  -> reproducible report
-```
+PolicySource supports actual Long signals, a named typed Boolean event output, or a named typed Boolean workflow-instance output. LongSignal means any actual Long in this observation, at most one action per binding/bar; Flat signals never count. Output existence/Boolean type is checked during preparation, without indicator-name switches. Missing/Warmup/Error/false never fire. Engine or selection warmup suppresses all intents, while strategy state/previous liquidity still warm up. Every binding records a decision including warmup/not-ready-or-false/position-or-pending/flat-or-pending/residual-below-minimum/submitted. Not-ready-or-false is intentionally a shared outcome; the exact readiness/value is in the observation.
 
-A signal cannot become a fill implicitly. Strategy evaluation, signal-to-order policy, execution modeling, and portfolio accounting require separate contracts. The independent Trading SDK is not required to replay local data.
+BuyIfFlat requires zero position and no live buy, with explicit validated quantity and positive cash cap. CloseLong submits currently unreserved long quantity; an already reserved position or flat account skips, and a residual below the ordinary order minimum is explicitly skipped rather than falsely closed. Margin forced liquidation has its separately specified minimum-bypass behavior. Multiple bindings execute sequentially and can produce different effects when reordered; the ordered list is pinned. No signal automatically becomes a fill.
 
-## Required inputs
+Each policy-generated market intent carries configured run/execution identity, source sequence/time and binding ID through IntentOrigin::Policy. The broker checks current source/frontier and rejects duplicate binding/bar origins even with a fresh order ID. This is trusted native-host provenance, not cryptographic authentication of hostile callers. Order IDs `p:<source-sequence>:<binding>` link decisions, orders, fills and journal sequences. Submitted can subsequently be financially rejected; report order status/rejection and execution events retain that distinction. No fabricated Long is used for a Boolean-output policy.
 
-A future run manifest must identify the strategy artifact and parameters, engine/IR/protocol versions where applicable, dataset content identity, time range, timestamp semantics, instrument metadata, tick/lot/currency scales, initial balances, fee model, execution model, seeds, and corporate-action treatment.
+## Controls and failure ownership
 
-Specify handling for gaps, duplicate data, out-of-order events, same-time events, missing instruments, calendar boundaries, and data revisions. Dataset adapters must validate these properties before a report can claim reproducibility.
+Complete processes the full selection. StopAfter/CancelAfter count source bars including warmup and stop before the next bar;0 yields an explicit empty-result baseline, and a prefix equal to the full count retains the requested stopped/cancelled status. An AtomicBool cancellation handle is checked with Acquire ordering between bars; it does not interrupt a provider in the middle of an event. A caller can share that flag from another thread. Cancellation latency therefore depends on the current bounded event and is not a hard real-time guarantee.
 
-## Financial correctness gates
+The batch owns its runtime/broker/observations/report candidate. Input/provider/financial/quota/encoding errors return no report or externally accessible partial financial state; rerunning starts from the same immutable preparation. Trusted provider side-effect restrictions still apply. An explicit successful stop/cancel produces the committed prefix, calls Finish to cancel/release pending orders and repay free cash, and preserves fills/open positions/debt. End of data is not an implicit liquidation, write-off or profit realization. Runner terminal Completed is distinct from order/risk terminal status. Cancelled may retain open risk. Native broker every-command replay is useful for verification; it is not yet complete persisted strategy/policy/cursor/financial pipeline restoration.
 
-Before publishing performance results, implement and test:
+## Frozen inputs and exact reports
 
-- Exact financial numeric and rounding rules appropriate to each instrument.
-- Cash, positions, realized/unrealized P&L, fees, and any supported leverage or margin.
-- Order lifecycle, fill timing, liquidity assumptions, and slippage.
-- Prevention of look-ahead and survivorship assumptions that invalidate a strategy result.
-- Auditable event-to-order-to-fill-to-ledger provenance.
-- Deterministic reference fixtures with hand-computed expected outcomes.
+Sorted compact JSON `fqe.backtest-inputs`, schema_version1, includes engine version and complete source-derived engine ID; run/seed; P3-01 immutable history-run inputs (all source/spec/revision/selection/range/warmup/instrument/scales/steps/calendar/raw-adjustment pins); actual bound top-level parameters and their content ID; workflow instance actual bound parameters; account/profile/initial cash; actual execution model, timeframe, participation, fees, minimum fee, slippage, signal source, risk rates and broker quotas; ordered policy definitions; control, metric model, phase convention and report limits. Nested `history_inputs` remains honestly labeled historical-inputs-only/not-selected; the root financial_execution selects the full financial model. Module/provider argument/source identities are already covered by the compiled execution/registry/artifact pins. Compilation now exposes its immutable actual bindings without changing canonical plan encoding.
 
-Unsupported asset classes and accounting assumptions must be explicit. The initial positive integer price model does not yet supply a complete financial data model.
+Manifest ID = SHA256 of `FQE-BACKTEST-INPUTS/1` + newline + exact manifest bytes. Result ID = SHA256 of `FQE-BACKTEST-RESULT/1` + newline + exact result bytes. IDs are returned by the native API, not self-included in their hashed object. JSON keys are sorted; array order is semantic. Financial values use exact fixed-scale decimal strings; all quantities/times/sequences/limits/seed/ratios use exact strings, except integer schema_version and Boolean flags. Never convert these strings through floating point for accounting.
 
-## Planned outputs
+`fqe.backtest-result`, schema_version1, embeds the complete manifest/ID, processed count and terminal, full typed observations/readiness/workflow transitions/signals, each policy decision, final orders, fills, every balanced journal entry (transaction/action/postings/audit/after), execution-event stream, final account, margin status, final marked valuation, performance close-equity curve, metrics and explicit warnings. Opening journal provenance references this same full financial manifest and engine ID. Source datasets/strategies remain external content-pinned artifacts, not copied into reports. This export is an experimental result schema; no public external financial decoder, migration, durability protocol or stable Rust layout promise exists yet. P4 owns the selected client boundary and bounded strict consumption.
 
-A report should include the full run manifest, validated input summary, warnings, state transitions, order/fill/ledger artifacts, metrics with formulas, and terminal status. Metrics and charts must derive from the same authoritative ledger.
+## Authoritative formulas
 
-## Parameter optimization
+Money valuation/settlement uses the ledger's instrument money step and documented rounding. Each performance close samples cash, debt, quantity, equity and cumulative fees after policies. Reservations do not reduce equity; loans add cash and debt equally. Warmup has no orders/funding/fees and is excluded from the performance curve. Initial equity is initial account cash at the performance boundary. No external capital flows occur inside this runner.
 
-Local parameter optimization is also planned. Each trial must identify its parameter set, dataset split, seed, resource budget, and engine version. Out-of-sample evaluation and reproducible trial comparison should precede a search UI. There is currently no optimizer, trial scheduler, metric ranking, or backtest CLI command.
+| Metric | Exact definition |
+| --- | --- |
+| Marked market value | Ledger half-away-from-zero money-step settlement of close price × signed quantity |
+| Equity | cash + marked market value − debt; a flat account uses cash − debt even at a valid zero close |
+| Unrealized | marked market value − remaining gross inventory cost |
+| Net profit | final equity − initial cash = realized gross + unrealized − fees |
+| Fees | Final cumulative authoritative ledger fee expense |
+| Total return | (final equity − initial equity) / initial equity when initial>0; otherwise null |
+| Peak | Maximum of initial equity and all performance equities through this close |
+| Absolute drawdown | peak − current equity; max_drawdown is the largest value, or0 for no samples |
+| Drawdown ratio | (peak − equity) / peak at each positive peak; max of those ratios, null if no positive peak exists |
+
+Ratios are fractions, not percentages, rounded only at output to scale12 with half-even ties. Negative equity may yield drawdown>1; no clamping hides debt. Maximum monetary and relative drawdown can occur at different closes. Empty/no-trade runs retain initial equity,0 fees/profit/drawdown and return0 if initial>0; a zero initial baseline yields null return and null drawdown ratio unless a later positive peak exists. Terminal valuation is independently derived again from the final ledger and reconciled against final sampled equity/profit. Finish may change cash/debt equally through repayment; the last curve point intentionally remains the pre-Finish phase snapshot with unchanged equity.
+
+Drawdown uses close samples only, without intrabar extrema. No inferred annualization, Sharpe, benchmark, trade win rate, survivorship correction or corporate-action adjustment is reported. These require separately specified conventions/data.
+
+## Executable evidence
+
+`cargo run --locked --offline -p fqe-runtime --example backtest` loads the seven-bar public CSV/spec and real MACD/RSI model with explicit Boolean exit. Long5 submits buy, open6 fills2 at3 plus0.50 fee; exit6 submits sell, open7 fills2 at2 less0.50 fee. Initial100 ends cash/equity97, debt/quantity/holds0, fees1, net−3, return−0.03, max drawdown3/0.03. The event and workflow variants reproduce the financial result. `-- --json` exports the actual exact report to stdout.
+
+Thirteen backtest integration tests cover loaded strategy/financial provenance, every native broker receipt split, byte-identical reruns, nine independent rational metric cases (including negative equity/zero baseline/empty/half-even ties), bound parameter90 no-trade, controls/release/open holdings, strict policy/type/metadata/source/quota admission, selection/engine warmup, workflow Boolean and Flat-signal controls, future-data variation, late failure/retry and margin debt. `tests/reference/p3_backtest_oracle.py --check` validates frozen independent Fraction expectations; `--report <actual-export.json>` additionally checks real JSON canonical hashes, binding, seven equity values, fills, balanced journals/conservation and provenance. Golden authoring is explicit `--write`, never part of checks.
+
+No new packages, manifest/lockfile/toolchain changes, scanners/private uploads or Desk edits/execution are needed. Full P1/P2 regression, ledger/margin oracles and P3-07 financial gate remain required. Optimizer, full persisted financial continuation, long-history/performance acceptance, client UI/bundle and other-language/plugin paths retain their downstream tasks.

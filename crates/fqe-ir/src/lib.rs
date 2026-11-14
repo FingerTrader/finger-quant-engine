@@ -191,3 +191,6 @@ pub mod checkpoint;
 /// Exact bounded historical specifications, inputs and immutable selections.
 pub mod history;
 mod history_csv;
+
+/// Bounded exact financial JSON encoding using existing reviewed codecs.
+pub mod financial_exchange;

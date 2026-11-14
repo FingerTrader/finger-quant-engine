@@ -2,6 +2,10 @@
 use fqe_ir::model::ContentId;
 const SOURCES: &[(&str, &[u8])] = &[
     (
+        "crates/fqe-ir/src/financial_exchange.rs",
+        include_bytes!("../../fqe-ir/src/financial_exchange.rs").as_slice(),
+    ),
+    (
         "crates/fqe-runtime/src/margin.rs",
         include_bytes!("margin.rs").as_slice(),
     ),
@@ -166,8 +170,20 @@ const SOURCES: &[(&str, &[u8])] = &[
         include_bytes!("lib.rs").as_slice(),
     ),
     (
+        "crates/fqe-runtime/src/backtest.rs",
+        include_bytes!("backtest.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-runtime/src/backtest_encoding.rs",
+        include_bytes!("backtest_encoding.rs").as_slice(),
+    ),
+    (
         "crates/fqe-runtime/src/report.rs",
         include_bytes!("report.rs").as_slice(),
+    ),
+    (
+        "crates/fqe-runtime/src/portfolio.rs",
+        include_bytes!("portfolio.rs").as_slice(),
     ),
     (
         "crates/fqe-runtime/src/schedule.rs",

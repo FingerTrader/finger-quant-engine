@@ -186,3 +186,8 @@ pub mod simulator;
 
 /// Explicit margin profile arithmetic and risk lifecycle.
 pub mod margin;
+
+pub mod portfolio;
+
+pub mod backtest;
+mod backtest_encoding;
