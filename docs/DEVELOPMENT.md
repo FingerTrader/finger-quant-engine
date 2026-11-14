@@ -64,7 +64,7 @@ The initialization baseline was verified on macOS ARM64 with Rust 1.99.0:
 | Clippy with --locked --offline -- -D warnings | Passed |
 | Offline CLI demo | Completed: 3 events, 2 signals |
 
-The toolchain installer came from the official Rust distribution host and its SHA-256 matched the host's checksum. Public Rust/Rustup metadata, licenses, and GitHub advisories were reviewed; the returned Rust advisories describe versions older than this pin. The Cargo lockfile contains only five local workspace packages. No private dependency data was uploaded to external scanning services.
+The toolchain installer came from the official Rust distribution host and its SHA-256 matched the host's checksum. Public Rust/Rustup metadata, licenses, and GitHub advisories were reviewed; the returned Rust advisories describe versions older than this pin. At initialization the Cargo lockfile contained only five local workspace packages; P1-03 adds reviewed pinned registry libraries as recorded below. No private dependency data was uploaded to external scanning services.
 
 A local secret-pattern review found no matches in commit candidates, and relative document links were checked. These checks are limited evidence, not an exhaustive security audit. Other operating systems, protobuf interoperability, financial accounting, worker isolation, and production workloads remain unverified.
 
@@ -100,7 +100,7 @@ This is optional and proves syntax only. It does not implement or test encoding/
 
 ## Dependency and supply-chain rules
 
-The initial Cargo manifests use only workspace path dependencies and the Rust standard library. There are no registry dependencies, build.rs files, install hooks, or generated bindings. `Cargo.lock` must remain committed, including for this CLI workspace.
+P1-03 adds serde 1.0.228, serde_json 1.0.145 and sha2 0.10.9 to fqe-ir, with 21 locked registry packages. Review/features/build scripts/public advisory evidence: [dependency review](P1_03_DEPENDENCY_REVIEW.md). Fetch locked dependencies once with `cargo fetch --locked`, then use locked/offline checks. No repository build script or generated Protobuf binding is introduced; approved dependency build scripts execute during builds. `Cargo.lock` must remain committed, including for this CLI workspace.
 
 Before adding a dependency, establish need, inspect public package metadata, maintainers/repository, release age, license, scripts/native/code-generation behavior, and known advisory signals. Follow supply-chain review requirements before running unfamiliar installers or generators. Keep manifests and lockfile aligned.
 
@@ -111,3 +111,5 @@ Do not upload private source, manifests, package names, dependency graphs, or lo
 `target/`, `.local-toolchain/`, `data/`, `runs/`, environment files, and private key extensions are ignored. Use synthetic fixtures in tracked tests; keep datasets, credentials, accounts, and private reports out of commits.
 
 Before pushing, inspect `git diff --check`, all intended staged files, the lockfile, secret-like content, and the remote branch tip. Fetch and preserve new remote commits; use a normal fast-forward push to main. Keep existing README intent and repository license. No registry publishing or GitHub release automation is configured.
+
+The model import example is `cargo run --locked --offline -p fqe-ir --example load_model`; it imports/prepares declarations only. See [Model loading](MODEL_LOADING.md) for exact JSON and identity/resource contracts.

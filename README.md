@@ -20,6 +20,7 @@ This repository contains the initial engineering foundation, version `0.1.0`. It
 | --- | --- |
 | Cargo Workspace and validated core types | Implemented |
 | Checked decimal values, scalar/unit descriptors and immutable parameter bindings | Implemented, experimental P1-02 subset; [contract](docs/TYPE_PARAMETER_CONTRACT.md) |
+| Bounded JSON model import, canonical content identity and pinned parameter preparation | Implemented, experimental P1-03 subset; [contract](docs/MODEL_LOADING.md); no graph execution |
 | Typed IR: a single-instrument price comparison producing signals | Implemented, experimental API |
 | Synchronous, deterministic in-memory event runtime and run state | Implemented, experimental API |
 | Offline CLI demonstration and behavioral tests | Implemented |
@@ -35,7 +36,7 @@ The demonstration evaluates three synthetic price events and emits two signals. 
 
 ## Quick start
 
-Install the Rust toolchain declared in [rust-toolchain.toml](rust-toolchain.toml), including rustfmt and Clippy. A platform linker is required (Xcode Command Line Tools on macOS). No third-party Cargo packages, Python, Java, Go, Flutter, or `protoc` are needed for the Rust foundation.
+Install the Rust toolchain declared in [rust-toolchain.toml](rust-toolchain.toml), including rustfmt and Clippy. A platform linker is required (Xcode Command Line Tools on macOS). Reviewed registry libraries are pinned in Cargo.lock. Fetch them once with `cargo fetch --locked`; subsequent builds/examples work offline. Python, Java, Go, Flutter and `protoc` are not required by the Rust examples.
 
 ```sh
 cargo run --locked --offline -p fqe-cli -- demo
@@ -52,7 +53,7 @@ signal source_sequence=2 timestamp_ns=2000 instrument=DEMO:ASSET kind=long
 signal source_sequence=3 timestamp_ns=3000 instrument=DEMO:ASSET kind=long
 ```
 
-After the toolchain is installed, the current Rust build and demo need no network. No data download, account authentication, or telemetry is implemented.
+After the toolchain and locked dependencies are cached, the current Rust build and demo need no network. No data download, account authentication, or telemetry is implemented.
 
 For the project-local toolchain used during initialization, see [Development](docs/DEVELOPMENT.md#project-local-toolchain).
 
@@ -80,7 +81,7 @@ cargo clippy --workspace --all-targets
 python3 scripts/check_docs.py
 ```
 
-Commit `Cargo.lock` alongside dependency changes. The current lockfile contains only these five workspace packages. See [Development](docs/DEVELOPMENT.md) for offline verification and dependency rules.
+Commit `Cargo.lock` alongside dependency changes. The lockfile contains five workspace packages and 21 reviewed registry packages (16 active on the verified target); [dependency review](docs/P1_03_DEPENDENCY_REVIEW.md). See [Development](docs/DEVELOPMENT.md) for offline verification and dependency rules.
 
 ## Governance and recovery
 
@@ -99,6 +100,7 @@ Commit `Cargo.lock` alongside dependency changes. The current lockfile contains 
 - [Architecture](docs/ARCHITECTURE.md)
 - [Strategy contract](docs/STRATEGY_CONTRACT.md)
 - [Type/parameter subset and numeric decision](docs/TYPE_PARAMETER_CONTRACT.md)
+- [External model loading and content identity](docs/MODEL_LOADING.md)
 - [Event contract](docs/EVENT_CONTRACT.md)
 - [State contract](docs/STATE_CONTRACT.md)
 - [Runtime](docs/RUNTIME.md)

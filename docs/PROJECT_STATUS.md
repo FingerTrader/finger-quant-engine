@@ -5,9 +5,9 @@
 ## Current position
 
 - Phase: **P1 — Universal Strategy Foundation, incomplete**. P2–P6 NOT_STARTED. No functional phase gate has passed.
-- Completed: GOV-01 architecture governance, GOV-02 Desk planning, GOV-03 extensibility planning, P1-01 baseline audit and P1-02 type/parameter implementation. No implementation task is currently active.
-- Latest implementation: **P1-02 — Universal Types & Parameter Schema**, COMPLETED. Checked decimal primitives, versioned scalar/unit subset, readiness, validated schemas and immutable bindings delivered; no graph/codec/worker/accounting implementation.
-- Next eligible implementation task: **P1-03 — Versioned Definition & Model Loading**, READY; not started.
+- Completed: GOV-01 architecture governance, GOV-02 Desk planning, GOV-03 extensibility planning, P1-01 baseline audit and P1-02 type/parameter implementation. P1-03 is VERIFIED pending evidence/closure commit.
+- Latest implementation: **P1-03 — Versioned Definition & Model Loading**, VERIFIED. Immutable declarations, strict bounded IR2 JSON import, exact values, canonical/source identities and content-pinned parameter preparation delivered; no graph execution or Flutter integration.
+- Active task closure: P1-03 checks passed; record evidence commit and synchronized closure before marking COMPLETED or starting dependent P1-04. Owner-approved dependency/build-script/public-only advisory scope was reviewed before first execution.
 - P1-02 acceptance met: evaluated numeric policy/limits, strict type/unit/scale checks, unsupported-shape rejection, full binding matrix and tests. Evidence `a653c105fba5ea6ada15395abc22cc8f82cc4472` and local closure recorded below; publishing not requested.
 - Actual root: `/Users/george/Desktop/finger-quant-engine`; main tracking origin/main; remote `https://github.com/FingerTrader/finger-quant-engine.git`.
 - Rust source baseline / latest pre-governance commit: `342d8aa76b48d32fa9c9110609b371eac52b8d86` (foundation). Previous commit: `cbcebad`.
@@ -23,7 +23,7 @@
 | GOV-03 | COMPLETED | Open extensibility contract/ADR and 42-task refinement; checks below passed; evidence `5e9f770c01e513598478f4cbdd42a9a5278fb804`; local closure, not pushed; no implementation capability credited |
 | P1-01 | COMPLETED | [Baseline audit](BASELINE_AUDIT.md): all crate/contract inventory, 17 tests, gap/task mapping and document checks; evidence `f07fe8ccd4c12b46783b67ff0a2421172d05d5dc` |
 | P1-02 | COMPLETED | Checked decimal/type/parameter APIs, contract/ADR and 36 tests/full checks/two examples; evidence `a653c105fba5ea6ada15395abc22cc8f82cc4472`; local closure, not pushed |
-| P1-03 | READY | P1-02 COMPLETED; bounded external model-loading acceptance below; no implementation begun |
+| P1-03 | VERIFIED | Strict bounded import/identity/binding/compatibility contract; 56 tests and full checks; evidence commit/closure pending |
 | P1-04, P1-05, P1-06, P1-07, P1-08, P1-09, P1-10, P1-11 | NOT_STARTED | Dependencies in DELIVERY_PLAN |
 | P2-01, P2-02, P2-03, P2-04, P2-05, P2-06 | NOT_STARTED | P1 gate first |
 | P3-01, P3-02, P3-03, P3-04, P3-05, P3-06, P3-07 | NOT_STARTED | P2 gate first |
@@ -33,15 +33,17 @@
 | P6-01, P6-02, P6-03, P6-04, P6-05, P6-06 | NOT_STARTED | P5 gate first |
 | P6-03.01 | NOT_STARTED | Java-indicator/Go-predicate graph after P6-02; prerequisite of parent P6-03 |
 
-Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 2 COMPLETED (audit and type/parameter implementation), 1 READY, 39 NOT_STARTED. P1-02 is the first completed implementation task; no functional phase gate has passed. No stage task is currently active or BLOCKED. Open technical choices are future work, not evidence that a ready task cannot begin. No P1 implementation gap is closed by planning it. GOV-01/GOV-02 verification counts remain historical to their original 40-task plans.
+Stage-task totals: **42 = 40 parent tasks + 2 child tasks**: 2 COMPLETED, 1 VERIFIED, 39 NOT_STARTED. P1-03 is the only task awaiting closure; none is BLOCKED. No functional phase gate has passed. GOV-01/GOV-02 historical counts refer to their original 40-task plans.
 
 ## Delivered baseline and limitations
 
-Five Rust crates exist with workspace-only dependencies: validated domain values, experimental price-only IR, synchronous one-shot runtime, protocol version-number helper/draft schema and offline CLI demo. These predate the six-stage plan and remain preserved. Technical maturity: implemented but experimental, not stable/public SDK release.
+Five Rust crates preserve the initial foundation: validated domain values, experimental price-only IR, synchronous one-shot runtime, protocol version-number helper/draft schema and offline CLI demo. These predate the six-stage plan and remain preserved. Technical maturity: implemented but experimental, not stable/public SDK release.
 
-An experimental P1-02 decimal/type/parameter layer now exists in new fqe-core/fqe-ir modules, verified and locally committed. It is separate from the legacy evaluator. No universal graph/indicator/compiler/model loader, generalized state scheduler/snapshot, backtester/virtual ledger/optimizer, Desktop boundary, SDK adapter, language worker or plugin runtime exists. Signals are observations, not orders/fills/performance. The `.proto` is not a codec or transport. [Audit](BASELINE_AUDIT.md) links exact sources/tests and every gap.
+An experimental P1-02 decimal/type/parameter layer exists in fqe-core/fqe-ir. P1-03 adds the separately versioned IR2 bounded JSON importer, immutable model declarations, exact numeric values, canonical/source identity and content-pinned prepared bindings. [Model loading](MODEL_LOADING.md) owns supported/unsupported semantics; [dependency review](P1_03_DEPENDENCY_REVIEW.md) records three direct libraries and all 21 resolved registry packages. Offline builds require previously cached toolchain and locked dependencies.
 
-## Actual verification evidence
+No universal graph evaluator/indicator/compiler, generalized state scheduler/snapshot, backtester/virtual ledger/optimizer, Desktop boundary, SDK adapter, language worker or plugin runtime exists. Signals are observations, not orders/fills/performance. The `.proto` remains a draft, not a codec or transport. [Audit](BASELINE_AUDIT.md) records the dated pre-P1-02 foundation rather than current feature totals.
+
+## Historical baseline verification evidence
 
 2026-11-14, macOS ARM64, existing project-local Rust 1.99.0; no dependency/install changes:
 
@@ -89,7 +91,7 @@ Delivery: evidence `5e9f770c01e513598478f4cbdd42a9a5278fb804` committed; this fo
 ## Open questions and risks
 
 1. P1-02 implements the bounded decimal/type/parameter contract under ADR-013. Indicator working/output scales, formula rounding/decision tolerances and financial tick/lot/currency policy remain P1-06/P3-01 work. The legacy evaluator remains positive-u64-only.
-2. External model format/Protobuf codec: P1-03; code generation/dependencies need supply-chain review before use.
+2. ADR-014 selects experimental model JSON; Protobuf mapping/transport/generators remain P4-01/P5-01 choices with separate review.
 3. State workflow/snapshot semantics: P2; counters are not resumable strategy state.
 4. Desktop FFI/IPC, worker transport, plugin execution/isolation: open tasks/experiments in ADR register, no selected mechanism claimed.
 5. Ledger realism, data leakage, exact financial results and real platform compatibility remain separate acceptance gates.
@@ -108,8 +110,22 @@ Delivery: evidence `5e9f770c01e513598478f4cbdd42a9a5278fb804` committed; this fo
 - `python3 scripts/check_docs.py`: PASS: 26 Markdown files, 211 local links/anchors, 42 stage tasks; task dependencies/status projections consistent. `git diff --check` passed. Legacy core/IR source differs only by module exports; runtime/CLI/protocol code, original tests, manifests/lockfile, toolchain and LICENSE are unchanged. No Desk source or app execution in this slice.
 - No third-party dependency changes, downloads/installers/generators or network advisory/scanner calls. Existing stdlib/workspace code and pinned toolchain only; Cargo.lock remains five local packages. No private source/manifests/graphs uploaded. The API remains experimental; indicator accuracy, model decoding, accounting, workers/plugins and Desk integration need their own gates.
 
-Delivery: implementation/test/contract evidence committed as `a653c105fba5ea6ada15395abc22cc8f82cc4472`; this follow-up records COMPLETED closure (resolve its containing commit by the status-log command). Local only, no GitHub push requested. Remote main was checked on 2026-11-14 at `0ac5d7b163e77bddb5f69689a1455e3560aad872`; this is not a publication receipt for P1-02 or the preceding local governance commits. P1-03 is READY, unstarted. P1 is incomplete.
+Delivery: implementation/test/contract evidence committed as `a653c105fba5ea6ada15395abc22cc8f82cc4472`; this follow-up records COMPLETED closure (resolve its containing commit by the status-log command). Local only, no GitHub push requested. Remote main was checked on 2026-11-14 at `0ac5d7b163e77bddb5f69689a1455e3560aad872`; this is not a publication receipt for P1-02 or the preceding local governance commits. At that closure P1-03 was READY, unstarted. P1 remains incomplete.
 
-## Next implementation acceptance — P1-03
+## P1-03 model-loading verification
 
-P1-02 is closed. Evaluate and implement bounded external definitions/model loading with explicit definition/instance/version separation, canonical descriptor/artifact identity, parameter declarations and capability requirements. Preserve exact full-width signed decimal coefficients/u64 values, absent versus null, duplicate schema/binding/entry keys and all P1-02 validation. Reject unknown required versions/types/shapes/capabilities and malformed/oversized/deep inputs before execution. Record the existing Desk visual/hosted compatibility dispositions without modifying Desk in this loader slice. Registry resolution/compiler/runtime/worker/financial behavior stays with its owning later tasks. Any new codec/hash dependency or generator needs supply-chain review before execution; no codec is preselected. Detailed scope/commands: [NEXT_SESSION](NEXT_SESSION.md).
+2026-11-14, macOS ARM64, existing project-local Rust 1.99.0. Owner explicitly approved the dependency/build-script/public-name advisory request. No toolchain/installer or Desk changes.
+
+- Delivered fqe-ir model.rs/loading.rs, public declaration/loading tests, actual valid/duplicate/truncated JSON files, independent canonical JSON/SHA-256 fixture, runnable load_model example, import/legacy compatibility contract and ADR-014. Schema 1 / IR2 is separate from legacy IR1. Metadata/descriptions/provider pins participate in identity. Same-author-version content changes cannot reuse pinned bindings.
+- Required checks PASS: `cargo fmt --check`; `cargo check --workspace --locked --offline`; `cargo test --workspace --locked --offline`: **56 behavioral tests = 36 previous + 8 declaration + 12 loading**, 0 failed/ignored, 0 doc tests; `cargo clippy --workspace --all-targets --locked --offline -- -D warnings`.
+- Offline CLI demo PASS (three events/two observations). Parameter example PASS (default 2/override 5/rejected 0). Real-file loader example PASS (period 2/5, null rejected, no execution).
+- Fixture source SHA-256 `44536cad09580b72e54b0c9e19c97ff512475918c835b4230140efecffc7fcd2`; canonical-v1 SHA-256 `f858a78dd2b1075cf9cb5ddeee42703df5976157432ec93bc3ed67c255ee7256`; independent Python json/hashlib expected bytes/digests match Rust import and re-import.
+- Wire binding tests repeat required/default/omission/null/type/unit/scale/range/enum and exact i64/u64/i128 behavior; malformed/truncated/UTF-8/trailing/duplicate data, unsupported versions/features and bounded byte/depth/item/string/reader cases reject. Unknown provider names are portable declarations; provider existence/signatures/cycles are not import guarantees.
+- Three direct packages serde 1.0.228 / serde_json 1.0.145 / sha2 0.10.9 plus 18 transitive lockfile resolutions reviewed; all 21 archive checksums verified, current public owners/repositories/licenses/release age/scripts inspected and OSV name/version-only queries returned no matching advisories. Locked fetch succeeded; active-feature graph has 16 registry packages, no derive/asm. Advisory/source-review limitations remain in the dependency report. No private manifest/code/lockfile/graph uploaded.
+- Current document checker PASS: 28 Markdown / 245 local links/anchors / 42 tasks; whitespace checks PASS. Final counts are refreshed at closure. Initial compile found an iterator API mismatch/unused import; corrected before all checks passed. No outstanding build/test failure.
+- Legacy core/numeric/types/parameters/evaluator/runtime/CLI/protocol behavior, LICENSE and toolchain remain preserved; only fqe-ir dependencies/exports and scoped new model/import artifacts changed. No registry/compiler/worker/simulator or Flutter run added.
+- Evidence commit pending; P1-03 VERIFIED until recorded. Remote main read-confirmed at `0ac5d7b163e77bddb5f69689a1455e3560aad872`; no publish requested or attempted. Current local changes belong to P1-03; six preceding local commits remain unpushed.
+
+## Next implementation acceptance — P1-04
+
+After P1-03 closure, implement shared versioned node/function/provider descriptors and deterministic registries. Resolve namespaced ID/version/signature, typed named ports and parameter contracts generically. Prove X-001 unknown-name function and predicate injection through the same in-process interface as built-ins; reject duplicate/version/type/arity/capability/unsupported-shape failures and cover multi-input/output signatures and deterministic registry identity. No per-name compiler branch or external artifact loader. Detailed scope is [Next session](NEXT_SESSION.md); remain within [Extensibility](EXTENSIBILITY_CONTRACT.md) and the 42-task dependency plan.

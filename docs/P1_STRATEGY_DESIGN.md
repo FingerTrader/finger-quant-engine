@@ -1,6 +1,6 @@
 # P1 Universal Strategy Design
 
-Status: implementation target for P1/P2, **not an implemented file format**. The experimental [P1-02 type/parameter subset](TYPE_PARAMETER_CONTRACT.md) now has executable Rust APIs/tests; all remaining universal graph/model/runtime features below retain their planned status. Accepted architectural constraints come from [ADRs](ARCHITECTURE_DECISIONS.md); representation/codec/numeric choices stay open until their owning tasks validate them. [Current Strategy contract](STRATEGY_CONTRACT.md) remains the accurate description of the experimental price-only model. [Delivery plan](DELIVERY_PLAN.md) assigns every target below to an executable task.
+Status: implementation target for P1/P2 with two implemented experimental subsets: [P1-02 types/parameters](TYPE_PARAMETER_CONTRACT.md) and [P1-03 IR2 JSON model import](MODEL_LOADING.md). The latter imports bounded scalar declarations and prepares parameters; it does not compile/execute graphs. Remaining graph/module/workflow/runtime features below retain their planned status. [ADRs](ARCHITECTURE_DECISIONS.md) record accepted numeric/import choices; other choices remain evidence-gated. [Strategy contract](STRATEGY_CONTRACT.md) describes the separate legacy price-only evaluator. [Delivery plan](DELIVERY_PLAN.md) assigns targets to tasks.
 
 ## Definition, version and instance
 
@@ -103,7 +103,7 @@ Diagnostics require stable code, artifact/version, node/port/parameter path, exp
 
 ## Example strategies and golden fixtures
 
-These are normative semantic fixture specifications to implement in P1-03 through P1-11, not currently importable files. The external syntax is deliberately not frozen before P1-03. Store actual versioned artifacts/data/expected outputs under a tracked fixture directory during those tasks; include schema/function versions, seed/numeric policy and independent calculation notes.
+These are normative semantic fixture specifications to implement in P1-03 through P1-11, not complete runnable fixture files. P1-03 now pins the experimental scalar declaration/import syntax; these broader golden strategies still require their owning implementation tasks. Store actual versioned artifacts/data/expected outputs under a tracked fixture directory during those tasks; include schema/function versions, seed/numeric policy and independent calculation notes.
 
 | Fixture ID | Model / data | Expected result | Gate |
 | --- | --- | --- | --- |
@@ -133,3 +133,5 @@ G-006 must include RSI true only at k+1 (still emits at k+3), true first/only at
 P1 succeeds only with real loaded artifacts, generic typed evaluation, registered MACD/RSI, compiled validation, external-call parity, independent golden results and committed evidence. A `.proto` sketch, Rust-constructed demo, registry interface placeholder or this design document alone cannot satisfy it. See [Audit gaps](BASELINE_AUDIT.md) and the P1-11 gate.
 
 P1-11 also requires the X-001 unknown-name provider and reusable-rule composition acceptance in EXTENSIBILITY_CONTRACT. The existing G-001–G-007 financial-indicator examples remain unchanged. External workers/plugins are still later gates; their future interfaces must preserve this generic descriptor/invocation boundary.
+
+P1-03 now provides the experimental scalar-graph IR2 [model JSON importer](MODEL_LOADING.md), exact values, content identity and immutable parameter preparation. This is separate from the legacy IR1 evaluator. Broader graph/module/workflow/runtime targets above remain planned until their task acceptance; only the tracked P1-03 scalar declaration fixture is currently importable, without execution.

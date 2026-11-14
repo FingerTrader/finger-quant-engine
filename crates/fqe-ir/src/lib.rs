@@ -2,6 +2,8 @@
 
 use std::fmt;
 
+pub mod loading;
+pub mod model;
 pub mod parameters;
 
 use fqe_core::{InstrumentId, MarketTick, PriceTicks, Signal, SignalKind};

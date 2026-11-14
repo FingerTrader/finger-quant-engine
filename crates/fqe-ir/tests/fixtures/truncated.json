@@ -1,0 +1,122 @@
+{
+  "format": "fqe.model",
+  "schema_version": 1,
+  "ir_version": 2,
+  "id": "example.model",
+  "version": "1.0.0",
+  "parameters": {
+    "version": 1,
+    "entries": [
+      {
+        "key": "period",
+        "type": {
+          "version": 1,
+          "shape": "scalar",
+          "kind": "u64"
+        },
+        "required": false,
+        "default": {
+          "type": {
+            "version": 1,
+            "shape": "scalar",
+            "kind": "u64"
+          },
+          "value": "2"
+        },
+        "constraints": {
+          "lower": {
+            "value": {
+              "type": {
+                "version": 1,
+                "shape": "scalar",
+                "kind": "u64"
+              },
+              "value": "1"
+            },
+            "inclusive": true
+          },
+          "upper": {
+            "value": {
+              "type": {
+                "version": 1,
+                "shape": "scalar",
+                "kind": "u64"
+              },
+              "value": "10"
+            },
+            "inclusive": true
+          }
+        },
+        "description": "Period"
+      }
+    ]
+  },
+  "requirements": [
+    "model.scalar-graph/1",
+    "parameters/1",
+    "values/1"
+  ],
+  "entries": [
+    {
+      "key": {
+        "id": "example.unknown-provider",
+        "version": "1.0.0"
+      },
+      "descriptor_version": 1,
+      "role": "provider",
+      "artifact": "sha256:1212121212121212121212121212121212121212121212121212121212121212"
+    }
+  ],
+  "graph": {
+    "nodes": [
+      {
+        "id": "source",
+        "entry": {
+          "id": "example.unknown-provider",
+          "version": "1.0.0"
+        },
+        "arguments": {
+          "period": {
+            "parameter": "period"
+          },
+          "maximum": {
+            "literal": {
+              "type": {
+                "version": 1,
+                "shape": "scalar",
+                "kind": "u64"
+              },
+              "value": "18446744073709551615"
+            }
+          }
+        },
+        "inputs": [],
+        "outputs": [
+          {
+            "name": "value",
+            "type": {
+              "version": 1,
+              "shape": "scalar",
+              "kind": "u64"
+            }
+          }
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "name": "result",
+        "source": {
+          "node": "source",
+          "port": "value"
+        }
+      }
+    ]
+  },
+  "metadata": {
+    "label": "离线模型"
+  },
+  "modules": [],
+  "workflow": {},
+  "state": [],
+  "depen

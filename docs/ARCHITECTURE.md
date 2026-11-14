@@ -32,12 +32,12 @@ Arrows mean Cargo dependency. The protocol crate has no dependency on the runtim
 | Crate | Responsibility | Excluded responsibility |
 | --- | --- | --- |
 | fqe-core | Validated instrument IDs, positive integer prices, input events, signal values | UI, network, accounts, execution |
-| fqe-ir | Version validation, typed price expressions, stateless rule evaluation | Arbitrary language parsing or execution |
+| fqe-ir | Legacy typed price rules; validated parameters and bounded IR2 JSON model import/identity | Arbitrary language parsing or execution |
 | fqe-runtime | One-shot ordered event consumption, lifecycle, signal provenance | Accounting, async scheduling, durable jobs |
 | fqe-protocol | Draft schema source and version-number compatibility helper | Serialization, RPC, IPC server |
 | fqe-cli | Offline demonstration, help, version, process exit codes | Strategy file ingestion, backtest command, service daemon |
 
-The current dependency graph contains only workspace path dependencies and Rust's standard library. There are no Cargo build scripts or native extensions.
+The workspace adds reviewed pinned Serde/JSON/SHA libraries in fqe-ir for bounded model import. Dependency build scripts and exact feature scope are recorded in the [review](P1_03_DEPENDENCY_REVIEW.md). No repository build script, generated wire binding or external extension loader is introduced.
 
 ## Implemented data flow
 
@@ -82,3 +82,5 @@ Future adapters must make external data access and execution authority explicit.
 - Preserve dependency direction. The core must never import Flutter, a worker language runtime, or broker-specific models.
 
 See the [roadmap](ROADMAP.md) for gated implementation phases.
+
+P1-03 implements experimental IR2 model JSON import, canonical identity and content-pinned parameter preparation. [Model loading](MODEL_LOADING.md) owns those contracts; registry/signature/cycle validation and execution remain future gates. This JSON decision does not select Protobuf or Desktop/worker transport.

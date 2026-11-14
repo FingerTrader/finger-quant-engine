@@ -1,6 +1,6 @@
 # Strategy contract
 
-Status: a small typed IR and evaluator are implemented experimentally. P1-02 also implements an independent [type/parameter subset](TYPE_PARAMETER_CONTRACT.md), exposed through fqe-core numeric/types and fqe-ir parameters, with its own contract versions. It is not yet consumed by the legacy strategy evaluator. Serialized strategy ingestion, source compilers, and worker execution are planned.
+Status: a small typed IR and evaluator are implemented experimentally. P1-02 also implements an independent [type/parameter subset](TYPE_PARAMETER_CONTRACT.md), exposed through fqe-core numeric/types and fqe-ir parameters, with its own contract versions. It is not yet consumed by the legacy strategy evaluator. P1-03 implements separate experimental [IR2 JSON model ingestion](MODEL_LOADING.md), canonical content identity and parameter preparation. Graph compilation/execution, source compilers and workers remain planned.
 
 The universal target contract is [P1 strategy design](P1_STRATEGY_DESIGN.md): definition/instance separation, types/parameters, registered nodes/functions, typed graph, explicit workflow/state, modules and requirements. It does not change the current API below. The [Extensibility contract](EXTENSIBILITY_CONTRACT.md) defines the planned open descriptor/provider/rule boundary: new conforming names use generic signatures rather than new Rust enum variants; unsupported host types/events still require versioned evolution. Implementation gaps and owning tasks are in [Baseline audit](BASELINE_AUDIT.md); progress belongs to [Project status](PROJECT_STATUS.md).
 
@@ -53,3 +53,5 @@ Before a decoder can be considered implemented, it must reject unsupported versi
 Future versions may add explicit parameter schemas, indicator types, historical windows, boolean composition, instrument metadata, state declarations, resource limits, and execution permissions. Each extension needs semantics, validation, compatibility policy, and conformance fixtures before publication.
 
 Strategy IR version is distinct from package version and protocol version. Version 1 is an experimental development marker, not a stable compatibility promise. Do not advertise an importable strategy format or language SDK until its parser and compatibility tests exist.
+
+P1-03 now provides the experimental scalar-graph IR2 [model JSON importer](MODEL_LOADING.md), exact values, content identity and immutable parameter preparation. This is separate from the legacy IR1 evaluator. Broader graph/module/workflow/runtime targets above remain planned until their task acceptance; only the tracked P1-03 scalar declaration fixture is currently importable, without execution.
