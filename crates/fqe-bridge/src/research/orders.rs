@@ -463,7 +463,8 @@ impl Broker {
                         .limit
                         .map_or(price, |p| if buy { mind(price, p) } else { maxd(price, p) });
                     let free = add(self.free_margin()?, order.held)?;
-                    let budget = mind(order.cap, mind(self.entry_budget()?, maxd(free, whole(0)?)));
+                    let entry_budget = self.entry_budget()?;
+                    let budget = mind(order.cap, mind(entry_budget, maxd(free, whole(0)?)));
                     quantity = self.budget_quantity(symbol, price, budget, Some(quantity))?;
                     if order.tif == "FOK"
                         && quantity.coefficient() < wide(order.remaining)?.coefficient()
@@ -472,7 +473,18 @@ impl Broker {
                         continue;
                     }
                     if self.instruments[symbol].quantity(quantity, false).is_err() {
-                        self.cancel(index, "rejected_insufficient_margin", b.open_ns)?;
+                        let reason = if wide(free)?.coefficient()
+                            < wide(mind(order.cap, entry_budget))?.coefficient()
+                        {
+                            "rejected_insufficient_margin"
+                        } else if wide(order.remaining)?.coefficient()
+                            < wide(order.quantity)?.coefficient()
+                        {
+                            "cancelled_entry_budget"
+                        } else {
+                            "rejected_entry_budget"
+                        };
+                        self.cancel(index, reason, b.open_ns)?;
                         continue;
                     }
                 }

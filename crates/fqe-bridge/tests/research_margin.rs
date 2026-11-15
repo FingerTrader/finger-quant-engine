@@ -292,3 +292,28 @@ fn below_minimum_partial_notional_is_not_misreported_as_insufficient_margin() {
     assert_eq!(r["metrics"]["final_equity"], "100000.00");
     assert_eq!(r["account"]["cash_hub"]["reserved_cash"], "0.00");
 }
+
+#[test]
+fn exhausted_partial_entry_budget_cancels_only_the_tail_not_account_margin() {
+    let mut p = partial_input(false, false);
+    let csv = p["streams"][0]["csv"].as_str().unwrap();
+    let mut lines = csv.lines();
+    let mut rows = vec![lines.next().unwrap().to_owned()];
+    for (index, line) in lines.enumerate() {
+        let mut fields: Vec<_> = line.split(',').collect();
+        if index >= 2 {
+            fields[4..8].fill("200.00");
+        }
+        rows.push(fields.join(","));
+    }
+    p["streams"][0]["csv"] = json!(rows.join("\n") + "\n");
+    let r = run(&p);
+    // Costs2000 +4000 +4000 exhaust the frozen10000 budget after6,000 units.
+    // The original10,000-unit target cannot be filled further at the higher open.
+    assert_eq!(r["fills"].as_array().unwrap().len(), 3);
+    assert_eq!(r["orders"][0]["status"], "cancelled_entry_budget");
+    assert_eq!(r["orders"][0]["remaining"], "4000.000");
+    assert_eq!(r["orders"][0]["cash_cap_remaining"], "0.00");
+    assert_eq!(r["metrics"]["final_equity"], "300000.00");
+    assert_eq!(r["account"]["margin"]["available"], "288000.000000000000");
+}
