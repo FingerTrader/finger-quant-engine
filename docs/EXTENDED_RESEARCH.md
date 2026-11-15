@@ -1,5 +1,7 @@
 # Extended native research profile
 
+Scoped 2026-11-15 addition: [linear shared-margin research](LINEAR_RESEARCH_MARGIN.md) defines explicit leverage/equity-percentage sizing, accounting and liquidation under a separate experimental profile. Existing profiles retain their rules.
+
 Owner-approved 2026-11-15. Experimental optional `research.graph/1`, separate from legacy Event/Workflow/cash-long source and report profiles. This is a scoped extension of DESK_UNIFIED_AUTHORING.md, not a completion claim for P4-03 or its children. Source model is a bounded typed graph derived atomically from the same Desk semantic project; native compilation validates every node, wire, setting, parameter and pure-function AST. Layout is excluded. Unknown or unrepresentable semantics reject. Original authoring remains available unchanged.
 
 The native profile owns data visibility, pure computation, order lifecycle and accounting. Shared-currency, exact-money-step instruments share one funded cash hub; per-instrument/direction VirtualLedger accounts transfer funds through paired native Funding postings. Gross-basis restricted-short accounting is reused. Short sales retain proceeds; new positions require fully funded collateral (no invented leverage/borrow/derivative profile). `margin` in current Desk authoring enables the restricted-short research profile, not broker leverage. Net rejects implicit reversals; hedge keeps distinct long/short legs. Cross-currency conversion is outside this version and explicitly rejects.

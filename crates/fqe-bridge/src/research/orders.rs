@@ -1,5 +1,7 @@
 //! Native shared-capital broker. All cash/position postings use VirtualLedger.
 use super::*;
+mod margin;
+pub use margin::{MARGIN_PROFILE, MarginConfig};
 // Retain a bounded order history large enough for ordinary multi-day research.
 pub const MAX_RESEARCH_ORDERS: usize = 8192;
 type GraphViews = (
@@ -59,6 +61,7 @@ pub struct Broker {
     pub marks: BTreeMap<String, Decimal>,
     pub fees: Decimal,
     pub initial: Decimal,
+    pub margin: Option<MarginConfig>,
     serial: u64,
     fee_bps: Decimal,
     slippage: Decimal,
@@ -92,10 +95,15 @@ impl Broker {
             context.get("initialCash").map(String::as_str).unwrap_or(""),
             ms,
         )?)?;
+        let margin = MarginConfig::parse(context)?;
         let hub = VirtualLedger::new(AccountConfig {
             account: "research.cash".into(),
             instrument,
-            profile: LedgerProfile::CashLong,
+            profile: if margin.is_some() {
+                LedgerProfile::MarginLong
+            } else {
+                LedgerProfile::CashLong
+            },
             initial_cash: initial,
         })
         .map_err(ledger_error)?;
@@ -157,6 +165,7 @@ impl Broker {
             marks: BTreeMap::new(),
             fees: parse("0", ms)?,
             initial,
+            margin,
             serial: 0,
             fee_bps,
             slippage,
@@ -263,6 +272,7 @@ impl Broker {
     pub fn cancel(&mut self, index: usize, reason: &str, time: u64) -> Result<()> {
         self.release(index, time)?;
         self.orders[index].status = reason.into();
+        self.repay_clearing(time)?;
         self.events.push(o([
             ("kind", s("order")),
             ("order", order_json(&self.orders[index])),
@@ -286,14 +296,25 @@ impl Broker {
             .any(|o| Self::active(o) && o.symbol == symbol && o.side == side && o.entry == entry)
     }
     pub fn submit(&mut self, mut order: Order, time: u64) -> Result<()> {
-        if self.orders.len() >= MAX_RESEARCH_ORDERS {
+        let system = order.node == "__fqe.margin";
+        let quota = MAX_RESEARCH_ORDERS
+            + if system {
+                2 * self.instruments.len()
+            } else {
+                0
+            };
+        if self.orders.len() >= quota {
             return Err(failure("research_order_quota", "$.orders"));
         }
         let instrument = self
             .instruments
             .get(&order.symbol)
             .ok_or_else(|| failure("research_symbol", &order.symbol))?;
-        instrument.quantity(order.quantity, false)?;
+        if system {
+            instrument.quantity_lots(order.quantity, false)?;
+        } else {
+            instrument.quantity(order.quantity, false)?;
+        }
         if let Some(p) = order.limit
             && instrument.price(p)?.coefficient() <= 0
         {
@@ -309,7 +330,17 @@ impl Broker {
         } else {
             parse("0", self.ms)?
         };
-        if held.coefficient() > self.hub.view().available_cash.coefficient() {
+        if self.margin.is_some() {
+            if !system && self.margin.as_ref().expect("margin").status != "healthy" {
+                order.status = "rejected_margin_liquidation".into();
+            } else if order.entry
+                && wide(held)?.coefficient() > wide(self.free_margin()?)?.coefficient()
+            {
+                order.status = "rejected_insufficient_margin".into();
+            } else if order.entry {
+                self.ensure_clearing_cash(held, time)?;
+            }
+        } else if held.coefficient() > self.hub.view().available_cash.coefficient() {
             order.status = "rejected_insufficient_cash".into();
         }
         let accepted = Self::active(&order);
@@ -362,6 +393,16 @@ impl Broker {
         previous_volume: Decimal,
     ) -> Result<()> {
         let b = bar.input();
+        if self.margin.is_some() {
+            self.marks.insert(
+                symbol.into(),
+                align(
+                    bar_value(&b.open)?,
+                    self.instruments[symbol].declaration().price_step,
+                    FinancialRounding::Exact,
+                )?,
+            );
+        }
         let mut liquidity = step_floor(
             div(mul(previous_volume, whole(10000)?)?, whole(10000)?)?,
             wide(self.instruments[symbol].declaration().quantity_step)?,
@@ -412,6 +453,25 @@ impl Broker {
                 if !order.entry {
                     quantity = mind(quantity, wide(self.quantity(&order.symbol, &order.side)?)?);
                 }
+                if quantity.coefficient() > 0 && order.entry && self.margin.is_some() {
+                    let price = self.quote(symbol, open, buy)?;
+                    let price = order
+                        .limit
+                        .map_or(price, |p| if buy { mind(price, p) } else { maxd(price, p) });
+                    let free = add(self.free_margin()?, order.held)?;
+                    let budget = mind(order.cap, mind(self.entry_budget()?, maxd(free, whole(0)?)));
+                    quantity = self.budget_quantity(symbol, price, budget, Some(quantity))?;
+                    if order.tif == "FOK"
+                        && quantity.coefficient() < wide(order.remaining)?.coefficient()
+                    {
+                        self.cancel(index, "cancelled_time_in_force", b.open_ns)?;
+                        continue;
+                    }
+                    if self.instruments[symbol].quantity(quantity, false).is_err() {
+                        self.cancel(index, "rejected_insufficient_margin", b.open_ns)?;
+                        continue;
+                    }
+                }
                 if quantity.coefficient() > 0 {
                     let mut trial = self.clone();
                     match trial.fill(index, quantity, open, b.open_ns, b.sequence) {
@@ -425,10 +485,19 @@ impl Broker {
                                 "research_cash_cap",
                                 "research_insufficient_cash",
                                 "research_minimum",
+                                "research_insufficient_margin",
                             ]
                             .contains(&e.code) =>
                         {
-                            self.cancel(index, "rejected_execution_funds", b.open_ns)?;
+                            self.cancel(
+                                index,
+                                if self.margin.is_some() {
+                                    "rejected_insufficient_margin"
+                                } else {
+                                    "rejected_execution_funds"
+                                },
+                                b.open_ns,
+                            )?;
                         }
                         Err(e) => return Err(e),
                     }
@@ -478,7 +547,15 @@ impl Broker {
         let before = self.legs[&key].ledger.view();
         let previous_q = absd(before.quantity)?;
         self.release(index, time)?;
-        let consumed = add(wide(gross)?, wide(fee)?)?;
+        let exposure = i.notional(price, quantity, FinancialRounding::Ceiling)?;
+        let consumed = self.entry_cost(
+            if self.margin.is_some() {
+                exposure
+            } else {
+                gross
+            },
+            fee,
+        )?;
         let cost = align(
             consumed,
             i.declaration().money_step,
@@ -506,6 +583,7 @@ impl Broker {
         }
         // Restricted short proceeds are unavailable for new orders. Releasing the
         // covered basis/collateral is part of the atomic trade, not spendable twice.
+        let clearing_cost = add(gross, fee)?;
         let available = self.legs[&key].ledger.view().cash.coefficient();
         let retained_basis =
             if !order.entry && order.side == "short" && after_quantity.coefficient() > 0 {
@@ -522,7 +600,7 @@ impl Broker {
                 0
             };
         let needed = if buy {
-            (cost
+            (clearing_cost
                 .coefficient()
                 .checked_add(
                     retained_basis
@@ -533,10 +611,11 @@ impl Broker {
                 - available)
                 .max(0)
         } else if order.entry {
-            cost.coefficient()
+            clearing_cost.coefficient()
         } else {
             0
         };
+        self.ensure_clearing_cash(Decimal::new(needed, self.ms).map_err(numeric_error)?, time)?;
         if needed > self.hub.view().available_cash.coefficient() {
             return Err(failure("research_insufficient_cash", &order.id));
         }
@@ -590,6 +669,10 @@ impl Broker {
         if Self::active(&self.orders[index]) && order.entry {
             let remaining = self.orders[index].cap;
             self.reserve(index, remaining, time)?;
+        }
+        self.repay_clearing(time)?;
+        if self.margin.is_some() && order.entry && self.free_margin()?.coefficient() < 0 {
+            return Err(failure("research_insufficient_margin", &order.id));
         }
         let leg = self.legs.get_mut(&key).expect("leg");
         if order.entry {
@@ -652,10 +735,11 @@ impl Broker {
                 leg.low = Some(mind(leg.low.unwrap_or(close), bar_value(&b.low)?));
             }
         }
+        self.check_maintenance(b.close_ns)?;
         Ok(())
     }
     pub fn equity(&self) -> Result<Decimal> {
-        let mut total = self.hub.view().cash;
+        let mut total = sub(self.hub.view().cash, self.hub.view().debt)?;
         for ((symbol, _), leg) in &self.legs {
             let v = leg.ledger.view();
             let equity = if v.quantity.coefficient() == 0 {
@@ -690,7 +774,7 @@ impl Broker {
                 ])
             })
             .collect();
-        Ok(o([
+        let mut snapshot = o([
             ("cash_hub", account(&self.hub.view())),
             ("equity", ds(self.equity()?)),
             ("equity_basis", s("latest-available-closed-marks")),
@@ -705,7 +789,14 @@ impl Broker {
                         .collect(),
                 ),
             ),
-        ]))
+        ]);
+        if self.margin.is_some() {
+            snapshot
+                .as_object_mut()
+                .expect("object")
+                .insert("margin".into(), self.margin_snapshot()?);
+        }
+        Ok(snapshot)
     }
     pub fn graph_views(&self, time: u64) -> Result<GraphViews> {
         let mut positions = BTreeMap::new();
@@ -749,7 +840,11 @@ impl Broker {
                 (
                     "cash".into(),
                     Slot {
-                        value: Some(Atom::Number(wide(self.hub.view().available_cash)?)),
+                        value: Some(Atom::Number(wide(if self.margin.is_some() {
+                            self.free_margin()?
+                        } else {
+                            self.hub.view().available_cash
+                        })?)),
                         stamp: time,
                     },
                 ),

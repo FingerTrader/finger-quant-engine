@@ -137,6 +137,7 @@ pub fn bridge_id() -> String {
         include_bytes!("research/mod.rs").as_slice(),
         include_bytes!("research/graph.rs").as_slice(),
         include_bytes!("research/orders.rs").as_slice(),
+        include_bytes!("research/orders/margin.rs").as_slice(),
         include_bytes!("research/optimization.rs").as_slice(),
         include_bytes!("managed.rs").as_slice(),
         include_bytes!("bin/peer.rs").as_slice(),

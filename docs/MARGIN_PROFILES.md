@@ -1,5 +1,7 @@
 # Margin-long simulation and financial risk profiles
 
+Scoped 2026-11-15 addition: [linear shared-margin research](LINEAR_RESEARCH_MARGIN.md) defines explicit leverage/equity-percentage sizing, accounting and liquidation under a separate experimental profile. Existing profiles retain their rules.
+
 Implemented experimental P3-04 native Rust profile. [Project status](PROJECT_STATUS.md) owns closure. This contract extends [Ledger](LEDGER.md) and [Order simulation](ORDER_SIMULATION.md), retaining one authoritative account book and the previous-volume next-open matching convention. It does not implement a broker SDK or imply that an exchange/broker uses these rules.
 
 ## Explicit supported profile

@@ -150,6 +150,10 @@ Authority: [Charter](PROJECT_CHARTER.md) → this ADR register → scoped contra
 
 **Status:** ACCEPTED 2026-11-15 under the owner request to resolve Desk/FQE precision mismatch. **Scope refinement:** extends the Decimal storage bound in ADR-013 from18 to20, without expanding the public scalar/type descriptor bound18. **Decision:** quantity and money scales0..8, price0..12; retain the full product and cash rounding audit at max(18, price_scale + quantity_scale), with checked i128 arithmetic and unchanged value/step bounds. Divide aligned basis units before multiplying partial-close ratios. **Reason:** Desk imports valid8-digit product specifications; rejecting these at6 digits is an implementation limitation. **Alternatives:** silently rounding saved datasets, only relaxing UI validation, or adding arbitrary-precision dependencies. **Consequences:** [financial precision acceptance](FINANCIAL_PRECISION_8.md) covers native and consumer delivery; old6-digit inputs preserve results, engine identity changes and same-engine checkpoints remain strict. This does not close P4-03.03 or authorize unrelated phases.
 
+## ADR-039 — Explicit Linear Shared-Margin Research Sizing
+
+**Status:** ACCEPTED scoped experimental implementation direction 2026-11-15 under the owner's request for leverage and per-entry account-equity sizing. **Decision:** add a separate opt-in research profile with bounded integer leverage, conservative margin-plus-fee budgeting from current equity, VirtualLedger postings and explicit marked maintenance/subsequent-open liquidation rules. Preserve legacy cash and financed-long profiles. **Alternatives:** displaying leverage without execution, silently interpreting fixed quantities as account percentages, or multiplying P&L after execution. **Consequences:** [linear research margin](LINEAR_RESEARCH_MARGIN.md) owns current simulation rules and independent acceptance; no exchange/live derivative conformance, funding, FX or phase completion follows.
+
 ## Open decision register
 
 | Decision still open | Owning tasks | Evidence required to accept a choice |

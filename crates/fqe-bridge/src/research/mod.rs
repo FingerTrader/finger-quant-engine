@@ -224,6 +224,9 @@ impl Prepared {
         if graph.context.keys().any(|k| {
             ![
                 "accountMode",
+                "capitalModel",
+                "leverage",
+                "entryPercent",
                 "dataset",
                 "direction",
                 "end",
@@ -433,7 +436,7 @@ impl Prepared {
                     .engine_id),
             ),
             ("bridge_id", s(crate::bridge_id())),
-            ("profile", s(PROFILE)),
+            ("profile", s(broker.profile())),
             ("run", input["run"].clone()),
             ("seed", input["seed"].clone()),
             (
@@ -484,7 +487,7 @@ impl Prepared {
             ("execution_id", s(&self.execution_id)),
             ("registry_id", s(crate::bridge_id())),
             ("manifest_id", s(&self.manifest_id)),
-            ("profile", s(PROFILE)),
+            ("profile", s(self.broker.profile())),
             (
                 "source_bars",
                 s(self
@@ -641,7 +644,14 @@ impl Prepared {
                         ("source_sequence", s(bar.input().sequence)),
                         ("timestamp_ns", s(time)),
                         ("equity", ds(equity)),
-                        ("cash", ds(self.broker.hub.view().cash)),
+                        (
+                            "cash",
+                            ds(if self.broker.margin.is_some() {
+                                self.broker.settled_balance()?
+                            } else {
+                                self.broker.hub.view().cash
+                            }),
+                        ),
                         ("fees", ds(self.broker.fees)),
                     ]));
                 }
@@ -710,7 +720,7 @@ impl Prepared {
         let result = o([
             ("format", s("fqe.backtest-result")),
             ("schema_version", V::from(1)),
-            ("profile", s(PROFILE)),
+            ("profile", s(self.broker.profile())),
             (
                 "terminal",
                 s(if cancelled { "cancelled" } else { "completed" }),
@@ -780,6 +790,7 @@ impl Prepared {
             for i in 0..self.broker.orders.len() {
                 let o = &self.broker.orders[i];
                 if Broker::active(o)
+                    && o.node != "__fqe.margin"
                     && (scope == "all"
                         || (o.symbol == symbol && (scope == "symbol" || o.tag == tag)))
                 {
@@ -825,7 +836,34 @@ impl Prepared {
         } else if quantity.coefficient() == 0 || self.broker.pending(&symbol, side, false) {
             return Ok("flat_or_pending_exit".into());
         }
-        let mut q = if entry || n.get("closeMode")? == "quantity" {
+        if entry
+            && self
+                .broker
+                .margin
+                .as_ref()
+                .is_some_and(|r| r.status != "healthy")
+        {
+            return Ok("margin_liquidation".into());
+        }
+        let margin_cap = if entry && self.broker.margin.is_some() {
+            Some(self.broker.entry_budget()?)
+        } else {
+            None
+        };
+        let mut q = if let Some(cap) = margin_cap {
+            let mark = self
+                .broker
+                .marks
+                .get(&symbol)
+                .copied()
+                .ok_or_else(|| failure("research_mark", &symbol))?;
+            self.broker.budget_quantity(
+                &symbol,
+                self.broker.quote(&symbol, mark, side == "long")?,
+                cap,
+                None,
+            )?
+        } else if entry || n.get("closeMode")? == "quantity" {
             let Some(q) = self.value(n, "quantity", values)? else {
                 return Ok("quantity_not_ready".into());
             };
@@ -873,7 +911,9 @@ impl Prepared {
                 None
             },
         );
-        let cap = if entry {
+        let cap = if let Some(cap) = margin_cap {
+            cap
+        } else if entry {
             align(
                 num(n.get("cashCap")?)?,
                 i.declaration().money_step,
@@ -1103,6 +1143,9 @@ pub fn prepare(input: &V) -> Result<Prepared> {
 pub fn capabilities() -> V {
     o([
         ("profile", s(PROFILE)),
+        ("linear_margin", V::Bool(true)),
+        ("margin_profile", s(orders::MARGIN_PROFILE)),
+        ("max_leverage", s(1000)),
         ("artifact_kind", s("research")),
         ("max_source_bars", s(MAX_BARS)),
         ("max_orders", s(orders::MAX_RESEARCH_ORDERS)),
