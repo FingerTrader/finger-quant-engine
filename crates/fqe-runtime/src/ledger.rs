@@ -277,6 +277,10 @@ impl VirtualLedger {
     fn ms(&self) -> u8 {
         self.config.instrument.declaration().money_step.scale()
     }
+    // Preserve the old 18-digit audit spelling for existing instruments.
+    fn rounding_scale(&self) -> u8 {
+        18.max(self.config.instrument.declaration().price_step.scale() + self.qs())
+    }
     fn qs(&self) -> u8 {
         self.config.instrument.declaration().quantity_step.scale()
     }
@@ -346,7 +350,7 @@ impl VirtualLedger {
             realized_gross: self.money(s.realized)?,
             fees: self.money(s.fees)?,
             external_capital: self.money(s.capital)?,
-            cash_rounding_total: decimal(s.rounding, 18)?,
+            cash_rounding_total: decimal(s.rounding, self.rounding_scale())?,
         })
     }
     /// Mark is a caller-supplied positive price. This computes views and never changes journal state.
@@ -568,14 +572,15 @@ impl VirtualLedger {
                 candidate.cost = add(candidate.cost, cost_delta)?;
                 candidate.fees = add(candidate.fees, fee)?;
                 candidate.realized = add(candidate.realized, profit)?;
-                let exact18 = exact_gross
-                    .rescale(18, Rounding::Exact)
+                let exact_audit = exact_gross
+                    .rescale(self.rounding_scale(), Rounding::Exact)
                     .map_err(|_| error("ledger_overflow", "gross precision"))?;
-                let rounded18 = gross
-                    .rescale(18, Rounding::Exact)
+                let rounded_audit = gross
+                    .rescale(self.rounding_scale(), Rounding::Exact)
                     .map_err(|_| error("ledger_overflow", "money precision"))?;
                 // Residual is actual cash flow minus its unrounded equivalent, including side.
-                let residual = -sign * add(rounded18.coefficient(), neg(exact18.coefficient())?)?;
+                let residual =
+                    -sign * add(rounded_audit.coefficient(), neg(exact_audit.coefficient())?)?;
                 candidate.rounding = add(candidate.rounding, residual)?;
                 postings = vec![
                     self.posting(MoneyAccount::Cash, flow)?,
@@ -591,7 +596,7 @@ impl VirtualLedger {
                     exact_gross,
                     settled_gross: gross,
                     allocated_basis: self.money(allocation)?,
-                    cash_rounding: decimal(residual, 18)?,
+                    cash_rounding: decimal(residual, self.rounding_scale())?,
                 });
             }
         }
@@ -638,15 +643,18 @@ impl VirtualLedger {
 }
 /// Proportional partial close basis, half-even to a money step; final close sweeps all residual basis.
 fn allocated_basis(cost: i128, quantity: i128, total: i128, step: i128) -> Result<i128> {
-    let numerator = cost
+    // Cost is step-aligned and 0 < quantity < total. Split before multiplying:
+    // the remainder product is bounded by total^2 (<= 1e28 at quantity scale 8).
+    let units = cost / step;
+    let tail = (units % total)
         .checked_mul(quantity)
-        .ok_or_else(|| error("ledger_overflow", "allocation numerator"))?;
-    let denominator = total
-        .checked_mul(step)
-        .ok_or_else(|| error("ledger_overflow", "allocation denominator"))?;
-    let mut q = numerator / denominator;
-    let rem = numerator % denominator;
-    if rem > denominator - rem || (rem == denominator - rem && q % 2 != 0) {
+        .ok_or_else(|| error("ledger_overflow", "allocation remainder"))?;
+    let mut q = (units / total)
+        .checked_mul(quantity)
+        .and_then(|n| n.checked_add(tail / total))
+        .ok_or_else(|| error("ledger_overflow", "allocation units"))?;
+    let rem = tail % total;
+    if rem > total - rem || (rem == total - rem && q % 2 != 0) {
         q = add(q, 1)?;
     }
     q.checked_mul(step)

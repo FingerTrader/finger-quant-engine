@@ -1,5 +1,7 @@
 # Delivery Plan
 
+Eight-digit precision follow-up (2026-11-15, owner-authorized): quantity/money scales0..8, exact20-digit financial products and overflow-safe partial-close allocation verified. Public scalar/type descriptors remain0..18. Required Rust checks PASS (364 tests); paired Desk/native regression PASS (52 tests), including saved6/8-digit datasets and unchanged legacy financial oracles. Reviewed native helper rebuilt/prepared and two packaging checks PASS. Evidence: [precision acceptance](FINANCIAL_PRECISION_8.md). Existing P4-03.03 remains IN_PROGRESS; unrelated Marketplace/native-journey drafts are preserved and excluded from this scoped publication.
+
 Authority: [Charter](PROJECT_CHARTER.md), [ADRs](ARCHITECTURE_DECISIONS.md), technical contracts. [Project status](PROJECT_STATUS.md) is the unique progress authority; status cells here are its synchronized projection. Status definitions and completion rules are in [Workflow](WORKFLOW.md). No task ID is reused. Dependencies mean **COMPLETED**, not merely code present. All tasks use local computation and synthetic/publicly distributable fixtures without login.
 
 ## Execution rules

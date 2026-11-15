@@ -83,8 +83,8 @@ impl HistorySpec {
                 )
             })?;
         let ps = scale(i.take("price_scale")?, 12, "$.instrument.price_scale")?;
-        let qs = scale(i.take("quantity_scale")?, 6, "$.instrument.quantity_scale")?;
-        let ms = scale(i.take("money_scale")?, 6, "$.instrument.money_scale")?;
+        let qs = scale(i.take("quantity_scale")?, 8, "$.instrument.quantity_scale")?;
+        let ms = scale(i.take("money_scale")?, 8, "$.instrument.money_scale")?;
         let price_step = numeric(i.take("price_step")?, ps, "$.instrument.price_step")?;
         let quantity_step = numeric(i.take("quantity_step")?, qs, "$.instrument.quantity_step")?;
         let money_step = numeric(i.take("money_step")?, ms, "$.instrument.money_step")?;

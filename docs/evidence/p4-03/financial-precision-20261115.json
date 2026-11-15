@@ -1,0 +1,35 @@
+{
+  "date": "2026-11-15",
+  "scope": "P4-03.03 owner-directed precision repair; parent remains IN_PROGRESS",
+  "engine_baseline": "4d6f0d50712f637c87bce3f89ee1696b0a5d308f",
+  "checks": {
+    "rust_fmt": "PASS",
+    "rust_check_locked_offline": "PASS",
+    "rust_tests": 364,
+    "rust_clippy_strict": "PASS",
+    "desk_related_tests": 52,
+    "desk_native_precision_digits": [
+      3,
+      6,
+      8
+    ],
+    "stage_signature_tests": 2
+  },
+  "native": {
+    "prepared_sha256": "9495574b2d4fb027817e9efc16bea712a9b97f5993f615ce8e1c2a4845594a20",
+    "bridge_id": "sha256:8a76f589794965f2efcb17bf99310a353564b3fa049108b7c38bca58df8bec22",
+    "financial_engine_id": "sha256:671dd5fa77f8f55d5306ae13c48999127d9bcc476b6acb22de0cf5deabd89088"
+  },
+  "logs_sha256": {
+    "fqe-precision-tests.log": "9da77b837e92eb25a25f4f283b8bbb6a5101f7acdb70d83fd0fc0d9a2c79268c",
+    "fqe-precision-check.log": "c7922bae15c6e0164b978db9a8229f378f810da555884ccdc2e88a4f78569192",
+    "fqe-precision-clippy.log": "fd1b6663284752b6015938c3e91a65c36f4aae44964a13ec6b0809c3e4b4c6fd",
+    "desk-precision-regression-final.log": "8cf0d91bfa21305157d1a7ffbcf10e61c0d398a2038187c5e3a6dd3abf127012",
+    "desk-fqe-stage-tests.log": "3e16ceefce80f097ccdff0d9ae39f20d11bfec6dfc7eb17c279d21e7fa974c38"
+  },
+  "limitations": [
+    "No installed desktop UI acceptance or overall P4 closure asserted.",
+    "Unrelated working tree drafts excluded.",
+    "No dependency or lockfile changes, new advisory uploads or toolchain installation."
+  ]
+}

@@ -62,7 +62,7 @@ fn power(n: u8) -> i128 {
 }
 impl FinancialInstrument {
     pub fn new(d: InstrumentDraft) -> Result<Self> {
-        if d.price_step.scale() > 12 || d.quantity_step.scale() > 6 || d.money_step.scale() > 6 {
+        if d.price_step.scale() > 12 || d.quantity_step.scale() > 8 || d.money_step.scale() > 8 {
             return Err(FinancialError::Scale);
         }
         if [d.price_step, d.quantity_step, d.money_step]

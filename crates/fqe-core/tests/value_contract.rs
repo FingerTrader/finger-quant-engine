@@ -30,7 +30,7 @@ fn decimal_is_exact_above_javascript_integer_precision_and_across_signs() {
     assert_eq!(decimal(-5, 3).to_string(), "-0.005");
     assert_eq!(decimal(0, 2).to_string(), "0.00");
     assert_eq!(decimal(1, 18).to_string(), "0.000000000000000001");
-    assert_eq!(Decimal::new(1, 19), Err(NumericError::UnsupportedScale(19)));
+    assert_eq!(Decimal::new(1, 21), Err(NumericError::UnsupportedScale(21)));
     assert_eq!(
         Decimal::new(0, u8::MAX),
         Err(NumericError::UnsupportedScale(u8::MAX))

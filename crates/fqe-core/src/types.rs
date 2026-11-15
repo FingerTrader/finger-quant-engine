@@ -2,11 +2,10 @@
 
 use std::fmt;
 
-use crate::{
-    InstrumentId,
-    numeric::{Decimal, MAX_SCALE},
-};
+use crate::{InstrumentId, numeric::Decimal};
 
+// Public scalar/type contract remains 0..18; wider storage is for finance.
+const MAX_SCALE: u8 = 18;
 pub const VALUE_CONTRACT_VERSION: u32 = 1;
 pub const MAX_TEXT_BYTES: usize = 4096;
 

@@ -226,3 +226,30 @@ fn csv_quoting_and_crlf_preserve_values_but_oversized_rows_and_bad_quotes_are_re
         assert!(HistoricalDataset::from_csv(spec(SPEC), bad.as_bytes(), None).is_err());
     }
 }
+
+#[test]
+fn eight_digit_history_is_exact_and_ninth_digit_specs_are_rejected() {
+    let mut value: serde_json::Value = serde_json::from_slice(SPEC).unwrap();
+    for field in ["quantity_scale", "money_scale"] {
+        value["instrument"][field] = 8.into();
+    }
+    for field in ["quantity_step", "money_step", "minimum_quantity"] {
+        value["instrument"][field] = "0.00000001".into();
+    }
+    let s = spec(&serde_json::to_vec(&value).unwrap());
+    let csv = String::from_utf8(CSV.to_vec())
+        .unwrap()
+        .replace("100.000", "100.00000001");
+    let data = HistoricalDataset::from_csv(s, csv.as_bytes(), None).unwrap();
+    assert_eq!(
+        data.bars()[0].input().volume.numeric_coefficient().unwrap(),
+        10_000_000_001
+    );
+    assert_eq!(data.spec().instrument().declaration().money_step.scale(), 8);
+    for field in ["quantity_scale", "money_scale"] {
+        let mut invalid = value.clone();
+        invalid["instrument"][field] = 9.into();
+        let e = HistorySpec::from_bytes(&serde_json::to_vec(&invalid).unwrap()).unwrap_err();
+        assert_eq!(e.code, "history_scale");
+    }
+}

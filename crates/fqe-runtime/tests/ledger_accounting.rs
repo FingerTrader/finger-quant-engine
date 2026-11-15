@@ -742,3 +742,99 @@ fn every_journal_split_continues_identically_through_funding_hold_partial_releas
         reconcile(&restored);
     }
 }
+
+fn precision_account(cash: &str) -> AccountConfig {
+    let mut instrument = config("0", LedgerProfile::CashLong)
+        .instrument
+        .declaration()
+        .clone();
+    instrument.price_step = d("0.000000000001", 12);
+    instrument.quantity_step = d("0.00000001", 8);
+    instrument.money_step = d("0.00000001", 8);
+    instrument.minimum_quantity = d("0.00000001", 8);
+    instrument.minimum_notional = d("0", 8);
+    AccountConfig {
+        account: "precision.account".into(),
+        instrument: fqe_core::finance::FinancialInstrument::new(instrument).unwrap(),
+        profile: LedgerProfile::CashLong,
+        initial_cash: d(cash, 8),
+    }
+}
+fn precision_trade(side: TradeSide, price: &str, qty: &str, fee: &str) -> LedgerAction {
+    LedgerAction::Trade {
+        side,
+        price: d(price, 12),
+        quantity: d(qty, 8),
+        fee: d(fee, 8),
+        release: None,
+    }
+}
+#[test]
+fn twenty_digit_trade_audit_and_residual_are_preserved_without_implicit_rounding() {
+    let c = precision_account("10");
+    let mut ledger = VirtualLedger::new(c.clone()).unwrap();
+    ledger
+        .apply(transaction(
+            "open",
+            precision_trade(TradeSide::Buy, "1.000000000001", "1.00000001", "0.00000001"),
+        ))
+        .unwrap();
+    let audit = ledger.journal().last().unwrap().trade.as_ref().unwrap();
+    assert_eq!(audit.exact_gross.to_string(), "1.00000001000100000001");
+    assert_eq!(audit.cash_rounding.to_string(), "0.00000000000100000001");
+    assert_eq!(ledger.view().cash, d("8.99999998", 8));
+    ledger
+        .apply(transaction(
+            "partial",
+            precision_trade(TradeSide::Sell, "1.000000000001", "0.00000001", "0"),
+        ))
+        .unwrap();
+    assert_eq!(ledger.view().quantity, d("1", 8));
+    assert_eq!(ledger.view().cost, d("1", 8));
+    assert_eq!(
+        ledger.view().cash_rounding_total.to_string(),
+        "0.00000000000100000000"
+    );
+    assert_eq!(
+        ledger.value_at(d("1.000000000001", 12)).unwrap().equity,
+        d("9.99999999", 8)
+    );
+    reconcile(&ledger);
+    assert_eq!(
+        VirtualLedger::replay(c, ledger.journal()).unwrap().view(),
+        ledger.view()
+    );
+}
+#[test]
+fn eight_digit_partial_close_at_value_limits_does_not_overflow_allocation_intermediate() {
+    let mut ledger = VirtualLedger::new(precision_account("1000000000000000000")).unwrap();
+    ledger
+        .apply(transaction(
+            "open",
+            precision_trade(TradeSide::Buy, "1000000000000", "999999.99999999", "0"),
+        ))
+        .unwrap();
+    ledger
+        .apply(transaction(
+            "partial",
+            precision_trade(TradeSide::Sell, "1000000000000", "0.00000001", "0"),
+        ))
+        .unwrap();
+    assert_eq!(
+        ledger
+            .journal()
+            .last()
+            .unwrap()
+            .trade
+            .as_ref()
+            .unwrap()
+            .allocated_basis,
+        d("10000", 8)
+    );
+    assert_eq!(ledger.view().quantity, d("999999.99999998", 8));
+    assert_eq!(
+        ledger.value_at(d("1000000000000", 12)).unwrap().equity,
+        d("1000000000000000000", 8)
+    );
+    reconcile(&ledger);
+}

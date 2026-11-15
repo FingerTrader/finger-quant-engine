@@ -1,0 +1,7 @@
+# Eight-digit financial precision acceptance
+
+Owner-directed follow-up under P4-03.03 on 2026-11-15. Quantity/money support0..8 digits; price remains0..12. Exact financial products may use20 digits in Decimal storage; public scalar descriptors remain0..18. Values, step checks, explicit rounding and immutable dataset semantics remain unchanged. Legacy combined precision<=18 retains18-digit cash rounding audit spelling. Wider instruments use their combined precision, without rounding away audit residuals. Native engine identity changes; same-engine checkpoint rejection remains intentional.
+
+Implementation: core numeric storage, financial instrument/history limits and overflow-safe partial-close basis allocation; paired Desk input limits and reviewed helper pin. No dependency, manifest or lockfile changes.
+
+Verification PASS: cargo fmt --check; cargo check --workspace --locked --offline; cargo test --workspace --locked --offline (364 passed); strict all-target Clippy; documentation/whitespace checks. Four new Rust cases cover8-digit history,9-digit rejection,20-digit products/ties, exact signed residuals and extreme partial-close allocation. Paired Desk regression:52 passed across11 files, including actual saved3/6/8-digit datasets through the rebuilt peer, unchanged independent native cash/short oracles and persistent replay. Two native staging/signature checks passed. See [machine evidence](evidence/p4-03/financial-precision-20261115.json). No installed desktop UI or P4 stage closure is claimed.

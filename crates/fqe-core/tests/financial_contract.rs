@@ -149,3 +149,64 @@ fn gregorian_utc_and_microsecond_mapping_are_exact_at_leaps_epoch_and_full_width
     assert_eq!(utc::micro_to_ns(u64::MAX), Err(TimeError::Overflow));
     assert_eq!(utc::ns_to_micro_exact(1), Err(TimeError::Precision));
 }
+
+#[test]
+fn eight_digit_money_and_quantity_keep_twenty_digit_products_and_explicit_rounding() {
+    let make = |ps, qs, ms| {
+        FinancialInstrument::new(InstrumentDraft {
+            instrument: InstrumentId::new("DEMO").unwrap(),
+            currency: CurrencyCode::new("USD").unwrap(),
+            price_step: decimal("0.000000000001", ps),
+            quantity_step: Decimal::new(1, qs).unwrap(),
+            money_step: Decimal::new(1, ms).unwrap(),
+            minimum_quantity: Decimal::new(1, qs).unwrap(),
+            minimum_notional: Decimal::new(0, ms).unwrap(),
+            prices: PricePolicy::Signed,
+        })
+    };
+    let i = make(12, 8, 8).unwrap();
+    assert_eq!(
+        i.notional(
+            decimal("1000000000000", 12),
+            decimal("1000000", 8),
+            R::Exact
+        )
+        .unwrap(),
+        decimal("1000000000000000000", 8)
+    );
+    for (price, even, away) in [
+        ("1.000000005000", "1.00000000", "1.00000001"),
+        ("1.000000015000", "1.00000002", "1.00000002"),
+        ("-1.000000005000", "-1.00000000", "-1.00000001"),
+    ] {
+        assert_eq!(
+            i.notional(decimal(price, 12), decimal("1", 8), R::HalfEven)
+                .unwrap(),
+            decimal(even, 8)
+        );
+        assert_eq!(
+            i.notional(decimal(price, 12), decimal("1", 8), R::HalfAwayFromZero)
+                .unwrap(),
+            decimal(away, 8)
+        );
+    }
+    assert_eq!(
+        i.notional(
+            decimal("0.000000000001", 12),
+            decimal("0.00000001", 8),
+            R::Exact
+        ),
+        Err(FinancialError::Inexact)
+    );
+    assert_eq!(
+        i.notional(
+            decimal("0.000000000001", 12),
+            decimal("0.00000001", 8),
+            R::Ceiling
+        )
+        .unwrap(),
+        decimal("0.00000001", 8)
+    );
+    assert_eq!(make(12, 9, 8).err(), Some(FinancialError::Scale));
+    assert_eq!(make(12, 8, 9).err(), Some(FinancialError::Scale));
+}

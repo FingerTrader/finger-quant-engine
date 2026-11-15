@@ -2,7 +2,8 @@
 
 use std::{cmp::Ordering, fmt};
 
-pub const MAX_SCALE: u8 = 18;
+// Storage includes exact price(12) x quantity(8) financial intermediates.
+pub const MAX_SCALE: u8 = 20;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum NumericError {
