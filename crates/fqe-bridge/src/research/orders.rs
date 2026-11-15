@@ -245,6 +245,10 @@ impl Broker {
     }
     fn reserve(&mut self, index: usize, amount: Decimal, time: u64) -> Result<()> {
         if amount.coefficient() > 0 {
+            // A partial fill may consume all hub cash for gross-basis clearing.
+            // Back the remaining admitted hold too; clearing debt is excluded
+            // from equity, and the normal free-margin check still limits risk.
+            self.ensure_clearing_cash(amount, time)?;
             let id = self.id("orderhold");
             self.post_hub(
                 time,

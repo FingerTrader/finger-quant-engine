@@ -19,3 +19,7 @@ This profile's explicit experimental maintenance rule is50% of marked initial-ma
 ## Independent acceptance
 
 `crates/fqe-bridge/tests/research_margin.rs`: cash100,10% budget,10x and next open4 produces25 units and margin10 (rather than requiring100 cash); later close2 settles50. Short produces150. Fee100bps sizes22.725 units: gross90.90, margin9.09 + fee0.91 = budget10, final53.19 after exit.100% budget followed by adverse gap queues liquidation at a later open and preserves final−650 debt650. FOK gap resize fills nothing. Invalid leverage/ratios reject. Existing cash fixtures remain separate regression oracles. Required workspace checks and paired Desk pin/native tests are recorded with delivery evidence; no live execution or exchange-conformance claim.
+
+## Partial-fill reservation repair
+
+The owner-requested2026-11-16 [repair and acceptance](LINEAR_RESEARCH_MARGIN_PARTIAL_FILL_REPAIR.md) ensures internal clearing backing when a remaining admitted budget is reserved after partial execution. Clearing credit never increases equity or bypasses available-margin admission.

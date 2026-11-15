@@ -117,3 +117,163 @@ fn fok_never_partially_fills_after_margin_gap_resize() {
     assert_eq!(r["metrics"]["final_equity"], "100.00");
     assert_eq!(r["orders"][0]["status"], "cancelled_time_in_force");
 }
+
+// Flat prices make the accounting oracle independent of indicators and P&L.
+// One 10,000-unit entry must consume five distinct 2,000-unit liquidity bars.
+fn partial_input(short: bool, exhaust_liquidity: bool) -> Value {
+    let mut p = input("100", "10", short);
+    let mut m: Value = serde_json::from_str(p["model"].as_str().unwrap()).unwrap();
+    m["context"]["initialCash"] = json!("100000.00");
+    m["nodes"]
+        .as_array_mut()
+        .unwrap()
+        .retain(|n| ["bars", "entry", "exit"].contains(&n["id"].as_str().unwrap()));
+    for (id, value) in [("yes", "true"), ("no", "false")] {
+        m["nodes"].as_array_mut().unwrap().push(json!({
+            "id": id, "kind": "constant", "label": id,
+            "settings": {"type": "bool", "value": value}, "literals": {}
+        }));
+    }
+    m["wires"] = json!([
+        {"from":"yes","output":"value","to":"entry","input":"condition"},
+        {"from":"no","output":"value","to":"exit","input":"condition"}
+    ]);
+    p["model"] = json!(serde_json::to_string(&m).unwrap());
+    let csv = p["streams"][0]["csv"].as_str().unwrap();
+    let mut lines = csv.lines();
+    let mut rows = vec![lines.next().unwrap().to_owned()];
+    for (index, line) in lines.enumerate() {
+        let mut fields: Vec<_> = line.split(',').collect();
+        fields[4..8].fill("100.00");
+        fields[8] = if exhaust_liquidity && index > 0 {
+            "0.000"
+        } else {
+            "2000.000"
+        };
+        rows.push(fields.join(","));
+    }
+    p["streams"][0]["csv"] = json!(rows.join("\n") + "\n");
+    p
+}
+fn check_partial_margin(short: bool, exhaust_liquidity: bool) {
+    let r = run(&partial_input(short, exhaust_liquidity));
+    let first_partial = r["frames"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|f| f["phase"] == "decision_close" && f["source_sequence"] == "2")
+        .unwrap();
+    // Credit backing a pending hold cannot count as equity or free margin.
+    assert_eq!(first_partial["account"]["equity"], "100000.00");
+    assert_eq!(
+        first_partial["account"]["cash_hub"]["reserved_cash"],
+        "8000.00"
+    );
+    assert_eq!(first_partial["account"]["margin"]["used"], "2000.00");
+    assert_eq!(
+        first_partial["account"]["margin"]["available"],
+        "90000.000000000000"
+    );
+    let fills = r["fills"].as_array().unwrap();
+    assert_eq!(fills.len(), if exhaust_liquidity { 1 } else { 5 });
+    for (index, fill) in fills.iter().enumerate() {
+        assert_eq!(fill["source_sequence"], (index + 2).to_string());
+        assert_eq!(fill["quantity"], "2000.000");
+        assert_eq!(fill["price"], "100.00");
+    }
+    assert_eq!(r["orders"].as_array().unwrap().len(), 1);
+    assert_eq!(
+        r["orders"][0]["status"],
+        if exhaust_liquidity {
+            "cancelled_terminal"
+        } else {
+            "filled"
+        }
+    );
+    assert_eq!(r["metrics"]["final_equity"], "100000.00");
+    assert_eq!(r["account"]["cash_hub"]["reserved_cash"], "0.00");
+    assert_eq!(
+        r["account"]["margin"]["used"],
+        if exhaust_liquidity {
+            "2000.00"
+        } else {
+            "10000.00"
+        }
+    );
+    assert_eq!(
+        r["account"]["margin"]["available"],
+        if exhaust_liquidity {
+            "98000.000000000000"
+        } else {
+            "90000.000000000000"
+        }
+    );
+    if !short {
+        assert_eq!(
+            r["account"]["cash_hub"]["debt"],
+            if exhaust_liquidity {
+                "100000.00"
+            } else {
+                "900000.00"
+            }
+        );
+    }
+}
+#[test]
+fn long_margin_entry_survives_five_partial_fills_without_false_funds_rejection() {
+    check_partial_margin(false, false);
+}
+#[test]
+fn short_margin_entry_survives_five_partial_fills_without_false_funds_rejection() {
+    check_partial_margin(true, false);
+}
+#[test]
+fn long_partial_terminal_cancel_releases_remaining_hold_and_clearing_credit() {
+    check_partial_margin(false, true);
+}
+#[test]
+fn short_partial_terminal_cancel_releases_remaining_hold_and_clearing_credit() {
+    check_partial_margin(true, true);
+}
+
+#[test]
+fn clearing_credit_does_not_admit_orders_beyond_free_margin() {
+    let mut p = partial_input(false, false);
+    let mut m: Value = serde_json::from_str(p["model"].as_str().unwrap()).unwrap();
+    m["context"]["entryPercent"] = json!("60");
+    m["context"]["positionMode"] = json!("hedge");
+    let mut other = m["nodes"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|n| n["id"] == "entry")
+        .unwrap()
+        .clone();
+    other["id"] = json!("other");
+    other["settings"]["side"] = json!("short");
+    m["nodes"].as_array_mut().unwrap().push(other);
+    m["wires"].as_array_mut().unwrap().push(json!({
+        "from":"yes","output":"value","to":"other","input":"condition"
+    }));
+    p["model"] = json!(serde_json::to_string(&m).unwrap());
+    let r = run(&p);
+    let first = r["frames"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|f| f["phase"] == "decision_close" && f["source_sequence"] == "1")
+        .unwrap();
+    assert_eq!(first["account"]["cash_hub"]["reserved_cash"], "60000.00");
+    assert_eq!(
+        first["account"]["margin"]["available"],
+        "40000.000000000000"
+    );
+    let other = r["orders"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|o| o["node"] == "other")
+        .unwrap();
+    assert_eq!(other["status"], "rejected_insufficient_margin");
+    assert_eq!(r["metrics"]["final_equity"], "100000.00");
+}
