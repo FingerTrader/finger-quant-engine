@@ -1105,6 +1105,7 @@ pub fn capabilities() -> V {
         ("profile", s(PROFILE)),
         ("artifact_kind", s("research")),
         ("max_source_bars", s(MAX_BARS)),
+        ("max_orders", s(orders::MAX_RESEARCH_ORDERS)),
         ("max_streams", s(16)),
         (
             "short_accounting",

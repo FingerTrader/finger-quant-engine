@@ -1,5 +1,7 @@
 //! Native shared-capital broker. All cash/position postings use VirtualLedger.
 use super::*;
+// Retain a bounded order history large enough for ordinary multi-day research.
+pub const MAX_RESEARCH_ORDERS: usize = 8192;
 type GraphViews = (
     BTreeMap<String, Slot>,
     BTreeMap<(String, String), BTreeMap<String, Slot>>,
@@ -284,7 +286,7 @@ impl Broker {
             .any(|o| Self::active(o) && o.symbol == symbol && o.side == side && o.entry == entry)
     }
     pub fn submit(&mut self, mut order: Order, time: u64) -> Result<()> {
-        if self.orders.len() >= 1024 {
+        if self.orders.len() >= MAX_RESEARCH_ORDERS {
             return Err(failure("research_order_quota", "$.orders"));
         }
         let instrument = self
@@ -894,4 +896,55 @@ fn journal(v: &JournalEntry) -> V {
         ("money", V::Array(money)),
         ("after", account(&v.after)),
     ])
+}
+
+#[cfg(test)]
+mod quota_tests {
+    use super::*;
+
+    #[test]
+    fn full_order_history_is_bounded_without_discarding_old_orders() {
+        let input =
+            serde_json::from_str(include_str!("../../tests/fixtures/research-input.json")).unwrap();
+        let mut broker = Prepared::new(&input).unwrap().broker;
+        let quantity = parse("1.000", 3).unwrap();
+        let zero = parse("0.00", 2).unwrap();
+        let order = Order {
+            id: String::new(),
+            node: "entry".into(),
+            symbol: "DEMO".into(),
+            side: "long".into(),
+            entry: true,
+            kind: "market".into(),
+            quantity,
+            remaining: quantity,
+            limit: None,
+            stop: None,
+            triggered: true,
+            tif: "GTC".into(),
+            ttl: 1,
+            age: 0,
+            tag: String::new(),
+            status: "accepted".into(),
+            cap: zero,
+            held: zero,
+            hold: None,
+            protection: None,
+            submitted: 0,
+        };
+        for index in 0..MAX_RESEARCH_ORDERS {
+            let mut next = order.clone();
+            next.id = format!("quota.{index}");
+            broker.submit(next, 0).unwrap();
+        }
+        assert_eq!(broker.orders.first().unwrap().id, "quota.0");
+        assert_eq!(broker.orders.len(), 8192);
+        let before = broker.events.len();
+        assert_eq!(
+            broker.submit(order, 0).unwrap_err().code,
+            "research_order_quota"
+        );
+        assert_eq!(broker.orders.len(), 8192);
+        assert_eq!(broker.events.len(), before);
+    }
 }
