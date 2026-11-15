@@ -1,0 +1,277 @@
+{
+  "date": "2026-11-16",
+  "status": "IMPLEMENTED; native and paired checks passed; final GUI pending",
+  "code_commit": "32a3be0ccf7c9e741c1f672b9669272d590a4c08",
+  "native": {
+    "input_sha256": "bf8258a56b424a51f79ae4b74a58c7ca4093950afecd4257094a8c6b5d359f64",
+    "peer_sha256": "74b97f38d183eae218aeed262e2c72f565643aebea56fb7163ebf9942335c1cb",
+    "cases": [
+      {
+        "bars": "60",
+        "seconds": 0.917,
+        "fills": 30,
+        "orders": {
+          "filled": 15
+        },
+        "metrics": {
+          "fees": "0.00000000",
+          "final_equity": "100074.47150000",
+          "initial_equity": "100000.00000000",
+          "max_drawdown": "550.678100000000",
+          "max_drawdown_ratio": "0.005506781000",
+          "net_profit": "74.47150000",
+          "total_return": "0.000744715000"
+        },
+        "first_orders": [
+          {
+            "id": "research.order.1",
+            "quantity": "13.191",
+            "status": "filled",
+            "cash_cap_remaining": "1.39964600"
+          },
+          {
+            "id": "research.order.2",
+            "quantity": "4.990",
+            "status": "filled",
+            "cash_cap_remaining": "0.00000000"
+          },
+          {
+            "id": "research.order.3",
+            "quantity": "8.201",
+            "status": "filled",
+            "cash_cap_remaining": "0.00000000"
+          },
+          {
+            "id": "research.order.4",
+            "quantity": "13.181",
+            "status": "filled",
+            "cash_cap_remaining": "0.71043100"
+          },
+          {
+            "id": "research.order.5",
+            "quantity": "13.181",
+            "status": "filled",
+            "cash_cap_remaining": "0.00000000"
+          }
+        ],
+        "first_fills": [
+          {
+            "order": "research.order.1",
+            "source_sequence": "5",
+            "price": "75804.0",
+            "quantity": "4.990"
+          },
+          {
+            "order": "research.order.1",
+            "source_sequence": "6",
+            "price": "75795.4",
+            "quantity": "8.201"
+          },
+          {
+            "order": "research.order.2",
+            "source_sequence": "6",
+            "price": "75795.4",
+            "quantity": "4.990"
+          },
+          {
+            "order": "research.order.3",
+            "source_sequence": "13",
+            "price": "75788.5",
+            "quantity": "8.201"
+          },
+          {
+            "order": "research.order.4",
+            "source_sequence": "16",
+            "price": "75785.9",
+            "quantity": "11.390"
+          }
+        ],
+        "bridge_id": "sha256:34042455e16e0f77c0b61d7e787f5fefbd6385ea13dbd9788cc2bcac94b308d7",
+        "engine_id": "sha256:87bb3e8ec3c3db84389de803955ecb82ee498032500ef13374f529cff4ac12c7",
+        "report_bytes": 288979
+      },
+      {
+        "bars": "7200",
+        "seconds": 35.935,
+        "fills": 2811,
+        "orders": {
+          "filled": 2386,
+          "cancelled_entry_budget": 39,
+          "cancelled_terminal": 1
+        },
+        "metrics": {
+          "fees": "0.00000000",
+          "final_equity": "103118.08370000",
+          "initial_equity": "100000.00000000",
+          "max_drawdown": "39882.677500000000",
+          "max_drawdown_ratio": "0.286937103009",
+          "net_profit": "3118.08370000",
+          "total_return": "0.031180837000"
+        },
+        "first_orders": [
+          {
+            "id": "research.order.1",
+            "quantity": "13.191",
+            "status": "filled",
+            "cash_cap_remaining": "1.39964600"
+          },
+          {
+            "id": "research.order.2",
+            "quantity": "4.990",
+            "status": "filled",
+            "cash_cap_remaining": "0.00000000"
+          },
+          {
+            "id": "research.order.3",
+            "quantity": "8.201",
+            "status": "filled",
+            "cash_cap_remaining": "0.00000000"
+          },
+          {
+            "id": "research.order.4",
+            "quantity": "13.181",
+            "status": "filled",
+            "cash_cap_remaining": "0.71043100"
+          },
+          {
+            "id": "research.order.5",
+            "quantity": "13.181",
+            "status": "filled",
+            "cash_cap_remaining": "0.00000000"
+          }
+        ],
+        "first_fills": [
+          {
+            "order": "research.order.1",
+            "source_sequence": "5",
+            "price": "75804.0",
+            "quantity": "4.990"
+          },
+          {
+            "order": "research.order.1",
+            "source_sequence": "6",
+            "price": "75795.4",
+            "quantity": "8.201"
+          },
+          {
+            "order": "research.order.2",
+            "source_sequence": "6",
+            "price": "75795.4",
+            "quantity": "4.990"
+          },
+          {
+            "order": "research.order.3",
+            "source_sequence": "13",
+            "price": "75788.5",
+            "quantity": "8.201"
+          },
+          {
+            "order": "research.order.4",
+            "source_sequence": "16",
+            "price": "75785.9",
+            "quantity": "11.390"
+          }
+        ],
+        "bridge_id": "sha256:34042455e16e0f77c0b61d7e787f5fefbd6385ea13dbd9788cc2bcac94b308d7",
+        "engine_id": "sha256:87bb3e8ec3c3db84389de803955ecb82ee498032500ef13374f529cff4ac12c7",
+        "report_bytes": 26686907
+      }
+    ],
+    "hello": {
+      "bridge_id": "sha256:34042455e16e0f77c0b61d7e787f5fefbd6385ea13dbd9788cc2bcac94b308d7",
+      "capabilities": [
+        "desktop.exact-json/1",
+        "catalog.reference/1",
+        "catalog.describe/1",
+        "authoring.event/1",
+        "research.graph/1",
+        "research.grid/1",
+        "model.validate/1",
+        "model.inspect/1",
+        "backtest.validate/1",
+        "backtest.cash-long/1",
+        "backtest.margin-long/1",
+        "cancel.bar-boundary/1",
+        "run.managed/1",
+        "run.incremental/1"
+      ],
+      "engine_package": "0.1.0",
+      "financial_authority": "native-ledger",
+      "major": 1,
+      "maturity": "experimental",
+      "max_bars": "256",
+      "max_request_bytes": "4194304",
+      "max_response_bytes": "67108864",
+      "minor": 0,
+      "session_id": "sha256:fddc45e31089ac9f38558833d688572e818f419ded4861f8cdc33b880e0f7180"
+    }
+  },
+  "offline_store": {
+    "status": "passed",
+    "bars": "7200",
+    "fills": 2811,
+    "report_bytes": 26686907,
+    "record_bytes": 40318601,
+    "result_id": "sha256:9c6ff6baef319ca31193ee88c4a1504a53d08ad73113a668e47e7603ea36b475",
+    "read_without_engine": true
+  },
+  "rust_checks": [
+    {
+      "command": "cargo fmt --check",
+      "exit": 0,
+      "seconds": 0.46
+    },
+    {
+      "command": "cargo check --workspace --locked --offline",
+      "exit": 0,
+      "seconds": 0.39
+    },
+    {
+      "command": "cargo test --workspace --locked --offline",
+      "exit": 0,
+      "seconds": 90.87
+    },
+    {
+      "command": "cargo clippy --workspace --all-targets --locked --offline -- -D warnings",
+      "exit": 0,
+      "seconds": 0.34
+    }
+  ],
+  "rust_full_test_count": 379,
+  "final_margin_tests": 13,
+  "desk_checks": [
+    {
+      "command": "/Users/george/fvm/versions/3.24.1/bin/flutter test --no-pub --reporter expanded test/quant/fqe_composition_native_test.dart test/quant/fqe_incremental_execution_test.dart test/quant/fqe_bundle_verification_test.dart test/quant/fqe_playback_journal_test.dart test/quant/quant_margin_sizing_test.dart test/quant/quant_backtest_funding_test.dart",
+      "exit": 0,
+      "seconds": 20.13
+    },
+    {
+      "command": "/Users/george/fvm/versions/3.24.1/bin/flutter analyze --no-pub --no-fatal-infos lib/app/quant/fqe/client.dart lib/app/quant/fqe/store.dart lib/app/quant/fqe/playback_journal.dart test/quant/fqe_playback_journal_test.dart",
+      "exit": 0,
+      "seconds": 26.91
+    },
+    {
+      "command": "/Users/george/fvm/versions/3.24.1/bin/flutter build macos --debug --no-pub",
+      "exit": 0,
+      "seconds": 195.49
+    }
+  ],
+  "desk_test_count": 23,
+  "bundle_manifest_matches_pin": true,
+  "signed_helper_matches_manifest": true,
+  "source_pin_drift": [],
+  "gui": {
+    "final_acceptance": false,
+    "errors": [
+      "noWindowsAvailable",
+      "cgWindowNotFound"
+    ],
+    "saved_user_config_percent": 30,
+    "frozen_native_acceptance_percent": 10,
+    "notes": "No unseen active run terminated; final app start/partial-fill UI must be re-observed when window available."
+  },
+  "dependencies_changed": false,
+  "lockfiles_changed": false,
+  "external_advisory_upload": false,
+  "pushed": false
+}
