@@ -18,3 +18,7 @@ All order reservations now ensure the required internal clearing cash before pos
 - Existing fee, liquidation, FOK, cash and incremental-execution checks remain required. Full Rust checks, actual frozen Desk input, paired consumer checks and signed bundle verification are pending.
 
 No dependency or lockfile change. No package/advisory data upload. All checks use the existing pinned offline toolchain and reviewed local artifacts. No GitHub publication is authorized for this repair.
+
+## Full-workload capacity follow-up
+
+The first full7200-bar run after fixing partial fills exposed the previous8192-entry ledger bound (`ledger_limit`); successful partial execution necessarily retains additional clearing/hold postings. Raise the finite journal bound to32768, preserving the existing atomic capacity rejection/replay validation. Keep the existing4096-fill/8192-order bounds. The paired complete-response bound is64MiB; Desk allows128MiB payload records (256MiB total store budget unchanged) so nested exact report encoding remains bounded. Request size, source bars and native executable size limits are unchanged. Full-workload and paired checks must validate these values together; no truncation or reduced source data is an acceptable final success.

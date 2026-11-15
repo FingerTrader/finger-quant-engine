@@ -25,8 +25,8 @@ use fqe_runtime::{
 };
 use std::sync::{Arc, atomic::AtomicBool};
 pub const MAX_REQUEST: usize = 4 * 1024 * 1024;
-/// Whole response envelope, including native report, is bounded by 4 MiB.
-pub const MAX_RESPONSE: usize = 32 * 1024 * 1024;
+/// Whole response envelope, including complete native journals, is bounded by 64 MiB.
+pub const MAX_RESPONSE: usize = 64 * 1024 * 1024;
 pub const CAPABILITIES: &[&str] = &[
     "desktop.exact-json/1",
     "catalog.reference/1",

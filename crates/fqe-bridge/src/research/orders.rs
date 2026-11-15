@@ -496,7 +496,11 @@ impl Broker {
                             self.cancel(
                                 index,
                                 if self.margin.is_some() {
-                                    "rejected_insufficient_margin"
+                                    if e.code == "research_minimum" {
+                                        "rejected_minimum_notional"
+                                    } else {
+                                        "rejected_insufficient_margin"
+                                    }
                                 } else {
                                     "rejected_execution_funds"
                                 },

@@ -7,7 +7,7 @@ use std::{
     collections::{BTreeMap, BTreeSet},
     fmt,
 };
-pub const MAX_JOURNAL_ENTRIES: usize = 8192;
+pub const MAX_JOURNAL_ENTRIES: usize = 32768;
 pub const MAX_RESERVATIONS: usize = 1024;
 type Result<T> = std::result::Result<T, LedgerError>;
 #[derive(Clone, Debug, PartialEq, Eq)]

@@ -277,3 +277,18 @@ fn clearing_credit_does_not_admit_orders_beyond_free_margin() {
     assert_eq!(other["status"], "rejected_insufficient_margin");
     assert_eq!(r["metrics"]["final_equity"], "100000.00");
 }
+
+#[test]
+fn below_minimum_partial_notional_is_not_misreported_as_insufficient_margin() {
+    let mut p = partial_input(false, false);
+    let mut spec: Value =
+        serde_json::from_str(p["streams"][0]["history_spec"].as_str().unwrap()).unwrap();
+    // The whole order is1,000,000, but each available2,000-unit slice is200,000.
+    spec["instrument"]["minimum_notional"] = json!("300000.00");
+    p["streams"][0]["history_spec"] = json!(serde_json::to_string(&spec).unwrap());
+    let r = run(&p);
+    assert!(r["fills"].as_array().unwrap().is_empty());
+    assert_eq!(r["orders"][0]["status"], "rejected_minimum_notional");
+    assert_eq!(r["metrics"]["final_equity"], "100000.00");
+    assert_eq!(r["account"]["cash_hub"]["reserved_cash"], "0.00");
+}

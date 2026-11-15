@@ -83,7 +83,7 @@ def measure(count):
         child.stdin.write(struct.pack('>I', len(raw)) + raw)
         child.stdin.flush()
         size = struct.unpack('>I', read(4))[0]
-        assert size <= 32 * 1024 * 1024, size
+        assert size <= 64 * 1024 * 1024, size
         largest_response = max(largest_response, size)
         value = json.loads(read(size))
         assert value['ok'], value
