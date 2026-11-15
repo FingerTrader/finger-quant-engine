@@ -1,5 +1,7 @@
 # Experimental managed engine controls
 
+Additive research-only [incremental Desk execution](INCREMENTAL_DESK_EXECUTION.md) now provides committed bar snapshots and consumer-controlled native advancement. The batch lifecycle contract below remains unchanged; its no-live-stream limitation applies to `run.start`.
+
 P4-02 VERIFIED; all acceptance/full checks passed, evidence commit and closure pending. [Desktop boundary](DESKTOP_BOUNDARY.md)/ADR-034 owns exact outer JSON/framing/error/numeric rules. This contract extends the selected private pipe with optional capability `run.managed/1`; in-process FFI comparison does **not** advertise that capability. `model.inspect/1` is available in both candidates. Core financial semantics/P3 protected sources remain unchanged. Actual Desk repository/service/UI/durable result files are P4-03, native journey P4-05.
 
 ## Process and state ownership

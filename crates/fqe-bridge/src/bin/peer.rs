@@ -45,6 +45,7 @@ fn main() -> std::process::ExitCode {
             if r.method == "hello" {
                 let mut capabilities = fqe_bridge::CAPABILITIES.to_vec();
                 capabilities.push("run.managed/1");
+                capabilities.push("run.incremental/1");
                 let result = fqe_bridge::negotiate(&r.params, &capabilities).map(|mut v| {
                     v.as_object_mut().expect("hello object").insert(
                         "session_id".into(),

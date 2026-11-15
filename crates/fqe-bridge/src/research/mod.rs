@@ -498,7 +498,15 @@ impl Prepared {
             ),
         ])
     }
-    pub fn run(mut self, cancel: &AtomicBool) -> Result<Output> {
+    pub fn run(self, cancel: &AtomicBool) -> Result<Output> {
+        self.run_observed(cancel, |_| Ok(true), |_| Ok(()))
+    }
+    pub fn run_observed(
+        mut self,
+        cancel: &AtomicBool,
+        mut before: impl FnMut(usize) -> Result<bool>,
+        mut committed: impl FnMut(V) -> Result<()>,
+    ) -> Result<Output> {
         let mut timeline: Timeline = BTreeMap::new();
         let main_selection = &self.streams[self.main].selection;
         let start = main_selection
@@ -541,7 +549,14 @@ impl Prepared {
         let mut clock = 0;
         let mut cancelled = false;
         let mut latest = start;
+        let mut emitted_events = 0;
+        let mut emitted_fills = 0;
+        let mut emitted_decisions = 0;
         for (time, (closes, opens)) in timeline {
+            if closes.iter().any(|(stream, _)| *stream == self.main) && !before(processed)? {
+                cancelled = true;
+                break;
+            }
             if cancel.load(Ordering::Acquire) {
                 cancelled = true;
                 break;
@@ -669,6 +684,82 @@ impl Prepared {
                     ("account", self.broker.snapshot()?),
                     ("receipts", V::Array(vec![])),
                 ]));
+            }
+            if closes.iter().any(|(stream, _)| *stream == self.main) {
+                let account = self.broker.snapshot()?;
+                let equity = self.broker.equity()?;
+                let gross = if self.broker.margin.is_some() {
+                    add(
+                        sub(self.broker.settled_balance()?, self.broker.initial)?,
+                        self.broker.fees,
+                    )?
+                } else {
+                    let mut value = self.broker.hub.view().realized_gross;
+                    for leg in self.broker.legs.values() {
+                        value = add(value, leg.ledger.view().realized_gross)?;
+                    }
+                    value
+                };
+                let realized = sub(gross, self.broker.fees)?;
+                committed(o([
+                    ("processed", s(processed)),
+                    ("total", s(self.streams[self.main].selection.bars().len())),
+                    ("timestamp_ns", s(time)),
+                    (
+                        "source_sequence",
+                        frames.last().expect("close frame")["source_sequence"].clone(),
+                    ),
+                    ("initial_equity", ds(self.broker.initial)),
+                    ("profile", s(self.broker.profile())),
+                    ("account", account),
+                    (
+                        "point",
+                        o([
+                            ("timestamp_ns", s(time)),
+                            ("equity", ds(equity)),
+                            (
+                                "cash",
+                                ds(if self.broker.margin.is_some() {
+                                    self.broker.settled_balance()?
+                                } else {
+                                    self.broker.hub.view().cash
+                                }),
+                            ),
+                            ("fees", ds(self.broker.fees)),
+                            ("closed_pnl", ds(gross)),
+                            ("realized_pnl", ds(realized)),
+                            (
+                                "unrealized_pnl",
+                                ds(sub(sub(equity, self.broker.initial)?, realized)?),
+                            ),
+                        ]),
+                    ),
+                    (
+                        "marks",
+                        o(self.broker.marks.iter().map(|(k, v)| (k.clone(), ds(*v)))),
+                    ),
+                    (
+                        "fills",
+                        V::Array(self.broker.fills[emitted_fills..].to_vec()),
+                    ),
+                    (
+                        "execution_events",
+                        V::Array(self.broker.events[emitted_events..].to_vec()),
+                    ),
+                    (
+                        "decisions",
+                        V::Array(decisions[emitted_decisions..].to_vec()),
+                    ),
+                ]))?;
+                emitted_fills = self.broker.fills.len();
+                emitted_events = self.broker.events.len();
+                emitted_decisions = decisions.len();
+                // Incoming opens belong to the NEXT bar. Do not match them
+                // behind a paused consumer after publishing the prior close.
+                if !opens.is_empty() && !before(processed)? {
+                    cancelled = true;
+                    break;
+                }
             }
             let events_before = self.broker.events.len();
             for (s, i) in opens {

@@ -10,6 +10,15 @@ use std::{
     thread::{self, JoinHandle},
     time::{SystemTime, UNIX_EPOCH},
 };
+/// One committed bar retained; the consumer must receive it before granting
+/// the next. No UI clock can expose a prefix the native runner has not committed.
+#[derive(Default)]
+struct LiveState {
+    granted: usize,
+    cursor: usize,
+    snapshot: Option<V>,
+}
+type Live = Arc<Mutex<LiveState>>;
 pub const MAX_JOBS: usize = 4;
 pub const MAX_OPERATIONS: usize = 64;
 #[derive(Clone, Default)]
@@ -61,6 +70,7 @@ struct Stored {
 }
 struct Job {
     operation: String,
+    live: Option<Live>,
     phase: Phase,
     cancel: Arc<AtomicBool>,
     events: Vec<V>,
@@ -173,6 +183,54 @@ impl ManagedRuns {
             return Err(fail("not_initialized"));
         }
         match r.method.as_str() {
+            "run.start_live" => {
+                fields(p, &["session_id", "operation_id", "input"])?;
+                if p["input"]["kind"] != "research" {
+                    return Err(fail("live_research_required"));
+                }
+                self.start_mode(text(p, "operation_id")?, &p["input"], true)
+            }
+            "run.live" | "run.advance" => {
+                fields(p, &["session_id", "handle", "after"])?;
+                let after = usize::try_from(unsigned(p, "after")?).map_err(|_| fail("cursor"))?;
+                let inner = self.inner.lock().map_err(|_| fail("manager_lock"))?;
+                let handle = text(p, "handle")?;
+                let job = inner
+                    .jobs
+                    .get(handle)
+                    .ok_or_else(|| fail("run_unavailable"))?;
+                let mut live = job
+                    .live
+                    .as_ref()
+                    .ok_or_else(|| fail("not_incremental"))?
+                    .lock()
+                    .map_err(|_| fail("manager_lock"))?;
+                if after > live.cursor || live.cursor - after > 1 {
+                    return Err(fail("cursor"));
+                }
+                if r.method == "run.advance" {
+                    if after != live.cursor {
+                        return Err(fail("unconsumed_bar"));
+                    }
+                    if !job.phase.terminal() && !job.cancel.load(Ordering::Acquire) {
+                        live.granted = after + 1;
+                    }
+                }
+                Ok(o([
+                    ("session_id", s(&self.session)),
+                    ("handle", s(handle)),
+                    ("cursor", s(live.cursor)),
+                    ("terminal", V::Bool(job.phase.terminal())),
+                    (
+                        "snapshot",
+                        if live.cursor > after {
+                            live.snapshot.clone().unwrap_or(V::Null)
+                        } else {
+                            V::Null
+                        },
+                    ),
+                ]))
+            }
             "run.start" => {
                 fields(p, &["session_id", "operation_id", "input"])?;
                 self.start(text(p, "operation_id")?, &p["input"])
@@ -359,6 +417,9 @@ impl ManagedRuns {
         Ok((r.bytes.clone(), r.result_id.clone(), r.manifest_id.clone()))
     }
     fn start(&self, operation: &str, input: &V) -> Result<V> {
+        self.start_mode(operation, input, false)
+    }
+    fn start_mode(&self, operation: &str, input: &V, incremental: bool) -> Result<V> {
         if operation.is_empty()
             || operation.len() > 64
             || !operation
@@ -368,7 +429,15 @@ impl ManagedRuns {
             return Err(fail("operation_id"));
         }
         let canonical = json::encode(input, crate::MAX_REQUEST)?;
-        let fingerprint = json::content_id(b"FQE-DESKTOP-OPERATION/1\n", &canonical).to_string();
+        let fingerprint = json::content_id(
+            if incremental {
+                b"FQE-DESKTOP-LIVE-OPERATION/1\n"
+            } else {
+                b"FQE-DESKTOP-OPERATION/1\n"
+            },
+            &canonical,
+        )
+        .to_string();
         let mut inner = self.inner.lock().map_err(|_| fail("manager_lock"))?;
         // Shutdown may win after execute's initial check while this request waits for the lock.
         if self.closed.load(Ordering::Acquire) {
@@ -395,8 +464,11 @@ impl ManagedRuns {
         let handle = format!("managed.{}", inner.operations.len() + 1);
         let cancel = Arc::new(AtomicBool::new(false));
         let flag = cancel.clone();
+        let live = incremental.then(|| Arc::new(Mutex::new(LiveState::default())));
+        let worker_live = live.clone();
         let mut job = Job {
             operation: operation.into(),
+            live,
             phase: Phase::Accepted,
             cancel,
             events: vec![],
@@ -427,7 +499,37 @@ impl ManagedRuns {
                     std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| -> Result<Stored> {
                         if input["kind"] == "research" || input["kind"] == "research_optimization" {
                             let result = if input["kind"] == "research" {
-                                crate::research::prepare(&input)?.run(&flag)?
+                                crate::research::prepare(&input)?.run_observed(
+                                    &flag,
+                                    |processed| {
+                                        let Some(live) = &worker_live else {
+                                            return Ok(true);
+                                        };
+                                        loop {
+                                            if flag.load(Ordering::Acquire) {
+                                                return Ok(false);
+                                            }
+                                            if live
+                                                .lock()
+                                                .map_err(|_| fail("manager_lock"))?
+                                                .granted
+                                                > processed
+                                            {
+                                                return Ok(true);
+                                            }
+                                            thread::sleep(std::time::Duration::from_millis(2));
+                                        }
+                                    },
+                                    |snapshot| {
+                                        if let Some(live) = &worker_live {
+                                            let mut state =
+                                                live.lock().map_err(|_| fail("manager_lock"))?;
+                                            state.cursor += 1;
+                                            state.snapshot = Some(snapshot);
+                                        }
+                                        Ok(())
+                                    },
+                                )?
                             } else {
                                 crate::research::optimization::run(&input, &flag)?
                             };
