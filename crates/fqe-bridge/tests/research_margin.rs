@@ -317,3 +317,120 @@ fn exhausted_partial_entry_budget_cancels_only_the_tail_not_account_margin() {
     assert_eq!(r["metrics"]["final_equity"], "300000.00");
     assert_eq!(r["account"]["margin"]["available"], "288000.000000000000");
 }
+
+// An exit supersedes pending opening intent on the same leg, not merely the
+// quantity that happened to have filled when the exit was submitted.
+fn interrupted_entry(short: bool, protective: bool, unfilled: bool) -> Value {
+    let mut p = partial_input(short, false);
+    let mut m: Value = serde_json::from_str(p["model"].as_str().unwrap()).unwrap();
+    for n in m["nodes"].as_array_mut().unwrap() {
+        if n["id"] == "entry" {
+            if protective {
+                n["settings"][if short {
+                    "stopLossMode"
+                } else {
+                    "takeProfitMode"
+                }] = json!("percent");
+                n["settings"][if short {
+                    "stopLossValue"
+                } else {
+                    "takeProfitValue"
+                }] = json!("1");
+            }
+            if unfilled {
+                n["settings"]["orderType"] = json!("limit");
+                n["settings"]["limitPrice"] = json!(if short { "200.00" } else { "1.00" });
+            }
+        }
+    }
+    if !protective {
+        m["nodes"].as_array_mut().unwrap().push(json!({
+            "id":"close_signal", "kind":"compare", "label":"close signal",
+            "settings":{"type":"price", "operator":"greater"}, "literals":{"b":"100.00"}
+        }));
+        m["wires"]
+            .as_array_mut()
+            .unwrap()
+            .retain(|w| w["to"] != "exit");
+        m["wires"].as_array_mut().unwrap().extend([
+            json!({"from":"bars","output":"close","to":"close_signal","input":"a"}),
+            json!({"from":"close_signal","output":"result","to":"exit","input":"condition"}),
+        ]);
+    }
+    p["model"] = json!(serde_json::to_string(&m).unwrap());
+    let csv = p["streams"][0]["csv"].as_str().unwrap();
+    let mut rows: Vec<String> = csv.lines().map(str::to_owned).collect();
+    let mut fields: Vec<String> = rows[2].split(',').map(str::to_owned).collect();
+    fields[5] = "101.00".into();
+    fields[7] = "101.00".into();
+    rows[2] = fields.join(",");
+    p["streams"][0]["csv"] = json!(rows.join("\n") + "\n");
+    p
+}
+#[test]
+fn exit_cancels_partial_long_and_short_entry_before_sizing_close() {
+    for short in [false, true] {
+        let r = run(&interrupted_entry(short, false, false));
+        assert_eq!(r["orders"][0]["status"], "cancelled_exit_signal");
+        assert_eq!(r["orders"][0]["remaining"], "8000.000");
+        assert_eq!(r["fills"].as_array().unwrap().len(), 2);
+        assert_eq!(r["fills"][0]["quantity"], "2000.000");
+        assert_eq!(r["fills"][1]["quantity"], "2000.000");
+        assert_eq!(r["fills"][1]["source_sequence"], "3");
+        assert_eq!(r["metrics"]["final_equity"], "100000.00");
+        assert_eq!(r["account"]["margin"]["used"], "0.00");
+        assert_eq!(r["account"]["cash_hub"]["reserved_cash"], "0.00");
+    }
+}
+#[test]
+fn protection_cancels_partial_entry_and_never_refills_after_close() {
+    for short in [false, true] {
+        let r = run(&interrupted_entry(short, true, false));
+        assert_eq!(r["orders"][0]["status"], "cancelled_protection");
+        assert_eq!(r["fills"].as_array().unwrap().len(), 2);
+        assert_eq!(r["fills"][1]["node"], "protect.entry");
+        assert_eq!(r["fills"][1]["quantity"], "2000.000");
+        assert_eq!(r["account"]["margin"]["used"], "0.00");
+    }
+}
+#[test]
+fn exit_cancels_wholly_unfilled_entry_even_while_flat() {
+    for short in [false, true] {
+        let r = run(&interrupted_entry(short, false, true));
+        assert_eq!(r["orders"].as_array().unwrap().len(), 1);
+        assert_eq!(r["orders"][0]["status"], "cancelled_exit_signal");
+        assert!(r["fills"].as_array().unwrap().is_empty());
+        assert_eq!(r["account"]["cash_hub"]["reserved_cash"], "0.00");
+    }
+}
+
+#[test]
+fn exit_does_not_cancel_the_opposite_hedged_leg() {
+    let mut p = interrupted_entry(false, false, false);
+    let mut m: Value = serde_json::from_str(p["model"].as_str().unwrap()).unwrap();
+    m["context"]["positionMode"] = json!("hedge");
+    let mut other = m["nodes"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|n| n["id"] == "entry")
+        .unwrap()
+        .clone();
+    other["id"] = json!("other");
+    other["settings"]["side"] = json!("short");
+    m["nodes"].as_array_mut().unwrap().push(other);
+    m["wires"]
+        .as_array_mut()
+        .unwrap()
+        .push(json!({"from":"yes","output":"value","to":"other","input":"condition"}));
+    p["model"] = json!(serde_json::to_string(&m).unwrap());
+    let r = run(&p);
+    let other = r["orders"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|o| o["node"] == "other")
+        .unwrap();
+    assert_eq!(other["status"], "filled");
+    assert_eq!(r["orders"][0]["status"], "cancelled_exit_signal");
+}

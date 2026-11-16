@@ -86,3 +86,39 @@ fn run_identity_and_seed_are_validated_independently() {
     p["run"] = "".into();
     assert!(research::prepare(&p).is_err());
 }
+
+#[test]
+fn chart_trace_is_exact_native_output_with_real_warmup_and_resolved_periods() {
+    let r = research::prepare(&input())
+        .unwrap()
+        .run(&AtomicBool::new(false))
+        .unwrap();
+    let r: Value = serde_json::from_slice(&r.bytes).unwrap();
+    let columns = r["chart_trace"]["columns"].as_array().unwrap();
+    let rows = r["chart_trace"]["rows"].as_array().unwrap();
+    assert_eq!(rows.len(), 8);
+    let fast = columns.iter().position(|c| c["node"] == "fast").unwrap();
+    let slow = columns.iter().position(|c| c["node"] == "slow").unwrap();
+    let up = columns.iter().position(|c| c["node"] == "up").unwrap();
+    let down = columns.iter().position(|c| c["node"] == "down").unwrap();
+    assert_eq!(columns[fast]["kind"], "sma");
+    assert_eq!(columns[fast]["settings"]["period"], "2");
+    assert_eq!(columns[slow]["settings"]["period"], "3");
+    assert!(rows[0]["values"][fast].is_null());
+    assert!(rows[1]["values"][slow].is_null());
+    assert_eq!(rows[1]["values"][fast], "2.500000000000");
+    assert_eq!(rows[2]["values"][slow], "2.000000000000");
+    assert_eq!(rows[4]["values"][up], true);
+    assert_eq!(rows[6]["values"][down], true);
+    for (sample, observation) in rows.iter().zip(r["observations"].as_array().unwrap()) {
+        assert_eq!(sample["timestamp_ns"], observation["timestamp_ns"]);
+        for (i, column) in columns.iter().enumerate() {
+            let key = format!(
+                "{}.{}",
+                column["node"].as_str().unwrap(),
+                column["port"].as_str().unwrap()
+            );
+            assert_eq!(sample["values"][i], observation["outputs"][key]);
+        }
+    }
+}

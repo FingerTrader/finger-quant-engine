@@ -1,5 +1,7 @@
 //! Versioned native graph research path. Legacy financial profiles remain unchanged.
+mod chart_compat;
 mod graph;
+pub mod live;
 pub mod optimization;
 mod orders;
 use crate::{Failure, Result};
@@ -213,6 +215,9 @@ impl Prepared {
             return Err(failure("research_seed", "$.seed"));
         }
         let mut graph = Graph::compile(&json::decode_input(strv(input, "model")?.as_bytes())?)?;
+        if graph.nodes.iter().any(|n| n.kind == "quotes") {
+            return Err(failure("research_quote_history_required", "$.model"));
+        }
         if graph.context.get("trigger").map(String::as_str) != Some("bar_close") {
             return Err(failure("research_trigger", "$.context"));
         }
@@ -232,6 +237,7 @@ impl Prepared {
                 "end",
                 "feeBps",
                 "initialCash",
+                "indicatorProfile",
                 "maxTrials",
                 "objective",
                 "positionMode",
@@ -542,6 +548,54 @@ impl Prepared {
             ("receipts", V::Array(vec![])),
         ])];
         let mut curve = vec![];
+        // Exact committed indicator samples, retained for the entire processed
+        // prefix. The bounded diagnostic observation window is not a chart.
+        let chart_columns: Vec<V> = self
+            .graph
+            .nodes
+            .iter()
+            .filter(|n| {
+                [
+                    "sma",
+                    "ema",
+                    "rsi",
+                    "macd",
+                    "atr",
+                    "boll",
+                    "highest",
+                    "lowest",
+                    "crossUp",
+                    "crossDown",
+                ]
+                .contains(&n.kind.as_str())
+            })
+            .flat_map(|n| {
+                n.outputs.keys().map(|port| {
+                    o([
+                        ("node", s(&n.id)),
+                        ("port", s(port)),
+                        ("kind", s(&n.kind)),
+                        ("unit", s(&n.outputs[port])),
+                        (
+                            "settings",
+                            o(n.settings.iter().map(|(k, v)| (k.clone(), s(v)))),
+                        ),
+                        (
+                            "inputs",
+                            o(self
+                                .graph
+                                .wires
+                                .iter()
+                                .filter(|((id, _), _)| id == &n.id)
+                                .map(|((_, input), (from, output))| {
+                                    (input.clone(), s(format!("{from}.{output}")))
+                                })),
+                        ),
+                    ])
+                })
+            })
+            .collect();
+        let mut chart_rows = vec![];
         let mut observations = vec![];
         let mut decisions = vec![];
         let mut last_condition = BTreeMap::new();
@@ -608,6 +662,27 @@ impl Prepared {
                 if observations.len() == 256 {
                     observations.remove(0);
                 }
+                chart_rows.push(o([
+                    ("source_sequence", s(bar.input().sequence)),
+                    ("timestamp_ns", s(time)),
+                    (
+                        "values",
+                        V::Array(
+                            chart_columns
+                                .iter()
+                                .map(|c| {
+                                    values
+                                        .get(&(
+                                            c["node"].as_str().unwrap().into(),
+                                            c["port"].as_str().unwrap().into(),
+                                        ))
+                                        .and_then(|v| v.value.as_ref())
+                                        .map_or(V::Null, Atom::json)
+                                })
+                                .collect(),
+                        ),
+                    ),
+                ]));
                 observations.push(o([
                     ("source_sequence", s(bar.input().sequence)),
                     ("timestamp_ns", s(time)),
@@ -708,6 +783,11 @@ impl Prepared {
                     (
                         "source_sequence",
                         frames.last().expect("close frame")["source_sequence"].clone(),
+                    ),
+                    ("chart_columns", V::Array(chart_columns.clone())),
+                    (
+                        "chart_sample",
+                        chart_rows.last().cloned().unwrap_or(V::Null),
                     ),
                     ("initial_equity", ds(self.broker.initial)),
                     ("profile", s(self.broker.profile())),
@@ -822,6 +902,14 @@ impl Prepared {
             ("account", self.broker.snapshot()?),
             ("metrics", metrics),
             ("equity_curve", V::Array(curve)),
+            (
+                "chart_trace",
+                o([
+                    ("schema_version", V::from(1)),
+                    ("columns", V::Array(chart_columns)),
+                    ("rows", V::Array(chart_rows)),
+                ]),
+            ),
             ("observation_window", s("last-256-decisions")),
             ("observations", V::Array(observations)),
             ("decisions", V::Array(decisions)),
@@ -891,10 +979,19 @@ impl Prepared {
             return Ok("cancelled_matching_pending".into());
         }
         let side = n.get("side")?;
+        // A close signal supersedes outstanding opening intent on THIS leg,
+        // including a wholly unfilled order. Cancel before flat/pending guards
+        // and quantity selection; never let a stale entry refill behind exit.
+        if n.kind == "exit" {
+            self.cancel_entries(&symbol, side, "cancelled_exit_signal", time)?;
+        }
         let key = (symbol.clone(), side.into());
         let quantity = self.broker.quantity(&symbol, side)?;
         let entry = n.kind == "entry";
         if entry {
+            if self.broker.pending(&symbol, side, false) {
+                return Ok("pending_exit".into());
+            }
             if self.graph.context.get("positionMode").map(String::as_str) == Some("net")
                 && (self
                     .broker
@@ -1062,6 +1159,16 @@ impl Prepared {
         )?;
         Ok(self.broker.orders.last().expect("submitted").status.clone())
     }
+    fn cancel_entries(&mut self, symbol: &str, side: &str, reason: &str, time: u64) -> Result<()> {
+        for i in 0..self.broker.orders.len() {
+            let order = &self.broker.orders[i];
+            if Broker::active(order) && order.entry && order.symbol == symbol && order.side == side
+            {
+                self.broker.cancel(i, reason, time)?;
+            }
+        }
+        Ok(())
+    }
     fn protect(&mut self, values: &BTreeMap<(String, String), Slot>, time: u64) -> Result<()> {
         for key in self.broker.legs.keys().cloned().collect::<Vec<_>>() {
             let leg = &self.broker.legs[&key];
@@ -1144,6 +1251,7 @@ impl Prepared {
             }
             self.broker.legs.get_mut(&key).expect("leg").protection = Some(protection.clone());
             if hit {
+                self.cancel_entries(&key.0, &key.1, "cancelled_protection", time)?;
                 let i = &self.broker.instruments[&key.0];
                 let zero = parse("0", i.declaration().money_step.scale())?;
                 let id = format!("research.order.{}", self.broker.orders.len() + 1);

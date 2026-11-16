@@ -39,7 +39,7 @@ pub struct Slot {
     pub stamp: u64,
 }
 impl Slot {
-    fn num(n: Decimal, stamp: u64) -> Self {
+    pub(super) fn num(n: Decimal, stamp: u64) -> Self {
         Self {
             value: Some(Atom::Number(n)),
             stamp,
@@ -84,6 +84,7 @@ struct State {
     delay: Option<Atom>,
     values: BTreeMap<String, Slot>,
     provider: Option<IncrementalInstance>,
+    chart: super::chart_compat::ChartState,
 }
 pub struct Graph {
     pub nodes: Vec<Node>,
@@ -114,6 +115,12 @@ fn ports(
 ) -> Result<(BTreeMap<String, String>, BTreeMap<String, String>)> {
     let typed = || s.get("type").cloned().unwrap_or_else(|| "ratio".into());
     let (inputs, outputs): (PortList, PortList) = match k {
+        "quotes" => (
+            vec![],
+            ["close", "ask", "bid", "mid"]
+                .map(|p| (p.into(), "price".into()))
+                .to_vec(),
+        ),
         "bars" => (
             vec![],
             vec![
@@ -270,6 +277,60 @@ fn literal(t: &str, v: &str) -> Result<Atom> {
     Ok(Atom::Number(n))
 }
 impl Graph {
+    fn quote_lineage(&self, id: &str, seen: &mut BTreeSet<String>) -> bool {
+        if !seen.insert(id.into()) {
+            return false;
+        }
+        if self.nodes.iter().any(|n| n.id == id && n.kind == "quotes") {
+            return true;
+        }
+        self.wires
+            .iter()
+            .filter(|((to, _), _)| to == id)
+            .any(|(_, (from, _))| self.quote_lineage(from, seen))
+    }
+    pub fn chart_columns(&self) -> Vec<V> {
+        self.nodes
+            .iter()
+            .filter(|n| {
+                [
+                    "sma",
+                    "ema",
+                    "rsi",
+                    "macd",
+                    "boll",
+                    "atr",
+                    "highest",
+                    "lowest",
+                    "crossUp",
+                    "crossDown",
+                ]
+                .contains(&n.kind.as_str())
+            })
+            .flat_map(|n| {
+                n.outputs.keys().map(|port| {
+                    o([
+                        ("node", s(&n.id)),
+                        ("port", s(port)),
+                        ("kind", s(&n.kind)),
+                        ("unit", s(&n.outputs[port])),
+                        (
+                            "settings",
+                            o(n.settings.iter().map(|(k, v)| (k.clone(), s(v)))),
+                        ),
+                        (
+                            "inputs",
+                            o(self.wires.iter().filter(|((id, _), _)| id == &n.id).map(
+                                |((_, input), (from, output))| {
+                                    (input.clone(), s(format!("{from}.{output}")))
+                                },
+                            )),
+                        ),
+                    ])
+                })
+            })
+            .collect()
+    }
     pub fn compile(v: &V) -> Result<Self> {
         exact(
             v,
@@ -288,6 +349,15 @@ impl Graph {
             return Err(failure("research_model_version", "$"));
         }
         let context = map(&v["context"])?;
+        if context
+            .get("indicatorProfile")
+            .is_some_and(|p| p != super::chart_compat::PROFILE)
+        {
+            return Err(failure(
+                "research_indicator_profile",
+                "$.context.indicatorProfile",
+            ));
+        }
         let list = arr(v, "nodes")?;
         if list.is_empty() || list.len() > 200 {
             return Err(failure("research_graph_quota", "$.nodes"));
@@ -583,13 +653,32 @@ impl Graph {
                     .ok_or_else(|| failure("research_not_ready", &path))?
                     .boolean()
             };
+            let quote = self.quote_lineage(&n.id, &mut BTreeSet::new());
+            let chart_profile = self.context.get("indicatorProfile").map(String::as_str)
+                == Some(super::chart_compat::PROFILE);
             let state = &mut self.states[i];
             let mut out = BTreeMap::new();
             let mut put = |p: &str, s: Slot| {
                 out.insert(p.into(), s);
             };
             match n.kind.as_str() {
-                "bars" => {
+                "sma" | "ema" | "rsi" | "macd" | "boll" | "atr" | "highest" | "lowest"
+                    if chart_profile =>
+                {
+                    if !ready {
+                        out = n
+                            .outputs
+                            .keys()
+                            .map(|p| (p.clone(), Slot::default()))
+                            .collect();
+                    } else if state.last == Some(stamp) {
+                        out = state.values.clone();
+                    } else {
+                        out = state.chart.step(n, &ins, stamp, quote)?;
+                        state.last = Some(stamp);
+                    }
+                }
+                "bars" | "quotes" => {
                     let id = n.get("dataset")?;
                     if let Some((closed, fields)) = sources.get(id) {
                         let max = n
@@ -978,7 +1067,7 @@ pub fn inherit(n: &Node, k: &str, context: &BTreeMap<String, String>) -> Result<
         value.into()
     })
 }
-fn uint(n: &Node, k: &str) -> Result<u64> {
+pub(super) fn uint(n: &Node, k: &str) -> Result<u64> {
     let v = n.get(k)?;
     let x = v
         .parse::<u64>()
@@ -990,6 +1079,7 @@ fn uint(n: &Node, k: &str) -> Result<u64> {
 }
 fn validate_settings(n: &Node) -> Result<()> {
     let keys: &[&str] = match n.kind.as_str() {
+        "quotes" => &["symbol", "timeframe", "dataset", "maxAgeSeconds"],
         "bars" => &[
             "symbol",
             "timeframe",
@@ -1101,8 +1191,11 @@ fn validate_settings(n: &Node) -> Result<()> {
     {
         return Err(failure("research_compare_operator", &n.id));
     }
-    if n.kind == "bars" {
-        uint(n, "maxAgeSeconds")?;
+    if n.kind == "quotes" && n.get("timeframe")? != "rt" {
+        return Err(failure("live_quote_timeframe", &n.id));
+    }
+    if (n.kind == "bars" || n.kind == "quotes") && uint(n, "maxAgeSeconds")? == 0 {
+        return Err(failure("research_age", &n.id));
     }
     if n.kind == "exit" {
         let percent = num(n.get("closePercent")?)?;

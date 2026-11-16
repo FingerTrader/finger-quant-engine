@@ -1,0 +1,29 @@
+# Strategy chart and execution alignment repair
+
+Owner-authorized 2026-11-16 scoped repair inside P4-03.03. Status: IMPLEMENTED; native and paired tests verified, current desktop replacement acceptance pending. Preserve all unrelated Marketplace drafts and prior native-journey work. No new dependency, lockfile change, phase closure or publication is implied.
+
+## Contract
+
+The research engine publishes exact decimal/null indicator outputs from the SAME graph evaluation that makes the primary closed-bar decision. Each committed frame adds `chart_columns` and `chart_sample`; completed/cancelled reports add `chart_trace` (`schema_version:1`, `columns`, `rows`). Columns identify node, actual kind, output port/unit, resolved settings and input references. Rows identify source sequence, close timestamp and column-ordered values. Include SMA/EMA/MACD/RSI/ATR/BOLL/highest/lowest and crossing predicates. Samples retain native provider readiness and rounding, including MACD histogram=line-signal without a client-side factor of two. The diagnostic last256 observations remain unchanged and must not be treated as a complete plot.
+
+Retain exactly one chart row per processed primary bar, including warmup, never future bars. Chart metadata adds no financial authority; existing finite request/report/source/graph limits still apply, and a quota failure must reject rather than truncate. Desk joins the frozen bar close identity, keeps the approved price-line/chart windows, plots supplied values without recalculation and cycles existing indicator groups using the existing secondary-panel tap. Legacy reports without a trace display its absence rather than inventing a fixed MACD. Candle arrival animation must preserve committed native indicator samples and null readiness.
+
+A triggered exit supersedes pending entry intent only for the same instrument and position side. Cancel accepted/partially-filled entry tails as `cancelled_exit_signal` BEFORE the flat/pending-exit guard and close sizing; even a wholly unfilled opening order must be cancelled while flat. Then size reduce-only exit from actual filled position. Protection similarly cancels entry tails as `cancelled_protection` before submitting its actual-position close. Pending exits suppress new opening/add intents. Opposite hedged legs and other instruments remain untouched. Next-open/prior-volume matching, partial fills, costs, leverage and close-triggered protection semantics remain unchanged.
+
+B/S marks remain actual fills, never crossing observations. A partial order can produce several marks. Logs expose the separate close-confirmed cross, native operands, node/order provenance, skip reason and entry-tail cancellation. Protective closes remain distinguished by their native `protect.*` node/tag.
+
+## Verification
+
+- Required locked/offline fmt/check/test/strict Clippy PASS;385 Rust tests. Native release helper rebuilt.
+- Scoped native acceptance25 tests PASS: exact SMA2/3 warmup, resolved periods, every chart value equals diagnostic output, streaming samples equal batch report, long/short partial-entry exit/protection, unfilled entry cancellation, unrelated hedge preservation.
+- Final paired Desk48 native/widget/control/result/integer/protection/chart/animation tests PASS; no test dependencies or lockfiles changed. Scoped analyzer has no errors/warnings and one prefer-final style info.
+- Actual frozen7200-bar input copied read-only to isolated helpers; original user storage never used for these probes. SMA2/3 complete:3369 fills/2175 orders, first entry39 fills4, downcross cancels35, closes4 next open. MACD12/26/9 complete:862 fills/539 orders, first upcross44/downcross78. All entry/exit orders join true native crossover rows by submitted timestamp.
+- Independent Python Decimal work18/output12 HalfEven oracle checks21600 MACD port values and14400 crossing conditions over all7200 bars exactly. No Rust indicator formula/golden or source CSV changes.
+- Live80-bar probe PASS: each committed chart sample and account equals the corresponding batch prefix; no-credit pause remains stable; Stop terminates cancelled. First committed frame129.59ms after admission,205.23ms including hello/preflight. These are isolated helper measurements, not current desktop end-to-end startup timings. Evidence: `/tmp/fqe-alignment-live-summary.json`.
+- Logs/artifacts: `/tmp/fqe-alignment-rust-full.log`, `/tmp/fqe-alignment-native-tests.log`, `/tmp/fqe-alignment-desk-tests.log`, `/tmp/fqe-alignment-7200-summary.json`, isolated source/report copies under `/tmp/fqe-alignment-*`. Do not commit private price data or full reports.
+
+Desktop acceptance and user MACD draft conversion require a stable current app. Auto-review rejected quitting after user intervention/new simulation; do not terminate or overwrite that active instance without the requested confirmation. Building a separate temporary candidate is allowed. Record final source/bundle identities and actual observed outcome before claiming GUI success. Current user sizing100x/30 percent and stop/take-profit10/10 remain unchanged by conversion; this is a configuration record, not a performance recommendation.
+
+## Local candidate
+
+macOS Debug candidate BUILD SUCCEEDED at `/private/tmp/fqe-alignment-derived/Build/Products/Debug/finger_desk.app`; deep strict codesign verification PASS. Embedded bridge `sha256:2fb64dcb1eb4e18dd109f87e7a824d74ef122c22c680483f68da7815e8ae299c`, signed helper SHA256 `f74fe0759a88100a5102dacf41d39046d6fdec15518895a397e2999423d40036`; all manifest source pins equal current FQE files. Financial engine identity unchanged. Candidate was not launched against the active user store. Latest native observation shows the old run paused at83/7200; user restart confirmation remains pending. macOS build initially rejected the `/tmp` symlink alias as designed; use canonical `/private/tmp` BUILD_DIR/OBJROOT, without weakening staging checks.

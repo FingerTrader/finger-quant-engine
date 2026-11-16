@@ -115,6 +115,14 @@ fn acknowledged_bar_gate_is_real_and_financial_result_matches_batch() {
             })
             .unwrap();
         assert_eq!(frame["account"], at["account"]);
+        assert_eq!(frame["chart_columns"], actual["chart_trace"]["columns"]);
+        let sample = actual["chart_trace"]["rows"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|row| row["source_sequence"] == frame["source_sequence"])
+            .unwrap();
+        assert_eq!(&frame["chart_sample"], sample);
     }
 }
 #[test]
