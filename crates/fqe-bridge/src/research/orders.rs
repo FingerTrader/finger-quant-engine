@@ -329,7 +329,14 @@ impl Broker {
         {
             return Err(failure("research_order_price", &order.node));
         }
-        let held = if order.entry {
+        let held = if order.entry && self.margin.is_none() {
+            let mark = self
+                .marks
+                .get(&order.symbol)
+                .copied()
+                .ok_or_else(|| failure("research_mark", &order.symbol))?;
+            self.cash_order_requirement(&order, mark)?
+        } else if order.entry {
             order.cap
         } else {
             parse("0", self.ms)?
@@ -344,6 +351,8 @@ impl Broker {
             } else if order.entry {
                 self.ensure_clearing_cash(held, time)?;
             }
+        } else if order.entry && held.coefficient() > order.cap.coefficient() {
+            order.status = "rejected_execution_funds".into();
         } else if held.coefficient() > self.hub.view().available_cash.coefficient() {
             order.status = "rejected_insufficient_cash".into();
         }
@@ -359,6 +368,21 @@ impl Broker {
             ("timestamp_ns", s(time)),
         ]));
         Ok(())
+    }
+    // Cash cap is a ceiling, not a request to freeze the entire ceiling.
+    // Market/stop estimates use the latest known price plus adverse slippage;
+    // limit orders reserve their limit price. Actual fills still recheck both
+    // the remaining cap and available cash atomically (gaps are not guaranteed).
+    fn cash_order_requirement(&self, order: &Order, mark: Decimal) -> Result<Decimal> {
+        let instrument = &self.instruments[&order.symbol];
+        let reference = order.stop.map_or(mark, |stop| maxd(mark, stop));
+        let price = match order.limit {
+            Some(limit) => limit,
+            None => self.quote(&order.symbol, reference, order.side == "long")?,
+        };
+        let gross =
+            instrument.notional(price, order.remaining, FinancialRounding::HalfAwayFromZero)?;
+        add(gross, self.fee(gross)?)
     }
     pub fn quote(&self, symbol: &str, price: Decimal, buy: bool) -> Result<Decimal> {
         let i = &self.instruments[symbol];
@@ -687,7 +711,14 @@ impl Broker {
             order.cap
         };
         if Self::active(&self.orders[index]) && order.entry {
-            let remaining = self.orders[index].cap;
+            let remaining = if self.margin.is_some() {
+                self.orders[index].cap
+            } else {
+                mind(
+                    self.orders[index].cap,
+                    self.cash_order_requirement(&self.orders[index], open)?,
+                )
+            };
             self.reserve(index, remaining, time)?;
         }
         self.repay_clearing(time)?;
@@ -1022,6 +1053,9 @@ mod quota_tests {
         let input =
             serde_json::from_str(include_str!("../../tests/fixtures/research-input.json")).unwrap();
         let mut broker = Prepared::new(&input).unwrap().broker;
+        broker
+            .marks
+            .insert("DEMO".into(), parse("1.00", 2).unwrap());
         let quantity = parse("1.000", 3).unwrap();
         let zero = parse("0.00", 2).unwrap();
         let order = Order {
@@ -1061,5 +1095,170 @@ mod quota_tests {
         );
         assert_eq!(broker.orders.len(), 8192);
         assert_eq!(broker.events.len(), before);
+    }
+}
+
+#[cfg(test)]
+mod cash_requirement_tests {
+    use super::*;
+    fn broker(cash: &str) -> Broker {
+        let mut input: V =
+            serde_json::from_str(include_str!("../../tests/fixtures/research-input.json")).unwrap();
+        let mut model: V = serde_json::from_str(input["model"].as_str().unwrap()).unwrap();
+        model["context"]["initialCash"] = s(cash);
+        model["context"]["feeBps"] = s("100");
+        model["context"]["slippageBps"] = s("100");
+        input["model"] = s(serde_json::to_string(&model).unwrap());
+        let mut broker = Prepared::new(&input).unwrap().broker;
+        broker
+            .marks
+            .insert("DEMO".into(), parse("60.00", 2).unwrap());
+        broker
+    }
+    fn order(b: &Broker, quantity: &str, cap: &str) -> Order {
+        let q = parse(quantity, 3).unwrap();
+        Order {
+            id: format!("test.{}", b.orders.len()),
+            node: "entry".into(),
+            symbol: "DEMO".into(),
+            side: "long".into(),
+            entry: true,
+            kind: "market".into(),
+            quantity: q,
+            remaining: q,
+            limit: None,
+            stop: None,
+            triggered: true,
+            tif: "GTC".into(),
+            ttl: 10,
+            age: 0,
+            tag: String::new(),
+            status: "accepted".into(),
+            cap: parse(cap, 2).unwrap(),
+            held: parse("0", 2).unwrap(),
+            hold: None,
+            protection: None,
+            submitted: 0,
+        }
+    }
+    #[test]
+    fn holds_notional_plus_rounded_fee_and_releases_on_cancel() {
+        let mut b = broker("100.00");
+        b.submit(order(&b, "1.000", "100.00"), 0).unwrap();
+        // 60 * 1.01 = 60.60; fee = round(60.60 * .01) = .61.
+        assert_eq!(decimal_text(b.orders[0].held), "61.21");
+        assert_eq!(decimal_text(b.hub.view().available_cash), "38.79");
+        b.cancel(0, "cancelled", 0).unwrap();
+        assert_eq!(decimal_text(b.hub.view().available_cash), "100.00");
+    }
+    #[test]
+    fn loss_does_not_turn_ceiling_into_required_balance() {
+        let mut b = broker("100.00");
+        b.submit(order(&b, "1.000", "100.00"), 0).unwrap();
+        b.fill(
+            0,
+            parse("1.000", 3).unwrap(),
+            parse("60.00", 2).unwrap(),
+            0,
+            1,
+        )
+        .unwrap();
+        let mut exit = order(&b, "1.000", "0.00");
+        exit.entry = false;
+        b.submit(exit, 1).unwrap();
+        b.fill(
+            1,
+            parse("1.000", 3).unwrap(),
+            parse("59.00", 2).unwrap(),
+            1,
+            2,
+        )
+        .unwrap();
+        // Sell at58.41, fee.58: 100 -61.21 +57.83 =96.62.
+        assert_eq!(decimal_text(b.hub.view().available_cash), "96.62");
+        b.submit(order(&b, "1.000", "100.00"), 2).unwrap();
+        assert_eq!(b.orders[2].status, "accepted");
+        assert_eq!(decimal_text(b.orders[2].held), "61.21");
+    }
+    #[test]
+    fn cap_balance_and_other_pending_orders_are_enforced() {
+        let mut b = broker("100.00");
+        b.submit(order(&b, "1.000", "60.00"), 0).unwrap();
+        assert_eq!(b.orders[0].status, "rejected_execution_funds");
+        b.submit(order(&b, "2.000", "200.00"), 0).unwrap();
+        assert_eq!(b.orders[1].status, "rejected_insufficient_cash");
+        b.submit(order(&b, "1.000", "100.00"), 0).unwrap();
+        b.submit(order(&b, "1.000", "100.00"), 0).unwrap();
+        assert_eq!(b.orders[2].status, "accepted");
+        assert_eq!(b.orders[3].status, "rejected_insufficient_cash");
+        assert_eq!(decimal_text(b.hub.view().available_cash), "38.79");
+    }
+    #[test]
+    fn partial_fill_holds_only_remaining_requirement() {
+        let mut b = broker("200.00");
+        b.submit(order(&b, "2.000", "200.00"), 0).unwrap();
+        b.fill(
+            0,
+            parse("1.000", 3).unwrap(),
+            parse("60.00", 2).unwrap(),
+            0,
+            1,
+        )
+        .unwrap();
+        assert_eq!(b.orders[0].status, "partially_filled");
+        assert_eq!(decimal_text(b.orders[0].held), "61.21");
+        assert_eq!(decimal_text(b.hub.view().available_cash), "77.58");
+        b.fill(
+            0,
+            parse("1.000", 3).unwrap(),
+            parse("60.00", 2).unwrap(),
+            1,
+            2,
+        )
+        .unwrap();
+        assert_eq!(b.orders[0].status, "filled");
+        assert_eq!(decimal_text(b.hub.view().available_cash), "77.58");
+        assert!(b.orders[0].hold.is_none());
+    }
+    #[test]
+    fn limit_stop_and_short_use_actual_order_terms() {
+        let mut b = broker("200.00");
+        let mut limit = order(&b, "1.000", "200.00");
+        limit.limit = Some(parse("50.00", 2).unwrap());
+        b.submit(limit, 0).unwrap();
+        assert_eq!(decimal_text(b.orders[0].held), "50.50");
+        b.cancel(0, "cancelled", 0).unwrap();
+        let mut stop = order(&b, "1.000", "200.00");
+        stop.stop = Some(parse("70.00", 2).unwrap());
+        b.submit(stop, 0).unwrap();
+        assert_eq!(decimal_text(b.orders[1].held), "71.41");
+        b.cancel(1, "cancelled", 0).unwrap();
+        let mut short = order(&b, "1.000", "200.00");
+        short.side = "short".into();
+        b.submit(short, 0).unwrap();
+        assert_eq!(decimal_text(b.orders[2].held), "59.99");
+    }
+    #[test]
+    fn next_open_gap_still_rechecks_cash_and_cap_atomically() {
+        for (cash, cap, expected) in [
+            ("100.00", "100.00", "research_cash_cap"),
+            ("100.00", "200.00", "research_insufficient_cash"),
+        ] {
+            let mut b = broker(cash);
+            b.submit(order(&b, "1.000", cap), 0).unwrap();
+            let mut trial = b.clone();
+            let e = trial
+                .fill(
+                    0,
+                    parse("1.000", 3).unwrap(),
+                    parse("150.00", 2).unwrap(),
+                    1,
+                    1,
+                )
+                .unwrap_err();
+            assert_eq!(e.code, expected);
+            assert_eq!(decimal_text(b.hub.view().available_cash), "38.79");
+            assert!(b.fills.is_empty());
+        }
     }
 }

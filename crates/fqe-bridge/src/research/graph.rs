@@ -139,11 +139,39 @@ fn ports(
                 "boll" => ["upper", "middle", "lower"]
                     .map(|p| (p.into(), "price".into()))
                     .to_vec(),
-                "macd" => ["line", "signal", "histogram"]
-                    .map(|p| (p.into(), "price".into()))
-                    .to_vec(),
+                "macd" => (if s.contains_key("histogram_multiplier") {
+                    vec!["macd_line", "signal_line", "histogram", "line", "signal"]
+                } else {
+                    vec!["line", "signal", "histogram"]
+                })
+                .into_iter()
+                .map(|p| (p.into(), "price".into()))
+                .collect(),
                 _ => vec![("value".into(), "price".into())],
             },
+        ),
+        "kdj" | "WILLR" | "cci" => (
+            vec![("price".into(), "price".into())],
+            super::oscillators::ports(k)
+                .into_iter()
+                .map(|p| (p.into(), "ratio".into()))
+                .collect(),
+        ),
+        "MA" | "BOLL" | "ATR" | "ADX" | "VWAP" => (
+            vec![("price".into(), "price".into())],
+            super::professional::ports(k)
+                .into_iter()
+                .map(|p| {
+                    (
+                        p.into(),
+                        if k == "ADX" {
+                            "ratio".into()
+                        } else {
+                            "price".into()
+                        },
+                    )
+                })
+                .collect(),
         ),
         "atr" => (
             ["high", "low", "close"]
@@ -302,6 +330,14 @@ impl Graph {
                     "atr",
                     "highest",
                     "lowest",
+                    "kdj",
+                    "WILLR",
+                    "cci",
+                    "MA",
+                    "BOLL",
+                    "ATR",
+                    "ADX",
+                    "VWAP",
                     "crossUp",
                     "crossDown",
                 ]
@@ -349,10 +385,12 @@ impl Graph {
             return Err(failure("research_model_version", "$"));
         }
         let context = map(&v["context"])?;
-        if context
-            .get("indicatorProfile")
-            .is_some_and(|p| p != super::chart_compat::PROFILE)
-        {
+        if context.get("indicatorProfile").is_some_and(|p| {
+            p != super::chart_compat::PROFILE
+                && p != super::macd::PROFILE
+                && p != super::oscillators::PROFILE
+                && p != super::professional::PROFILE
+        }) {
             return Err(failure(
                 "research_indicator_profile",
                 "$.context.indicatorProfile",
@@ -444,6 +482,29 @@ impl Graph {
             let mut settings = map(&n["settings"])?;
             let mut literals = map(&n["literals"])?;
             let kind = strv(n, "kind")?.to_owned();
+            if kind == "macd"
+                && context.get("indicatorProfile").is_some_and(|p| {
+                    p == super::macd::PROFILE
+                        || p == super::oscillators::PROFILE
+                        || p == super::professional::PROFILE
+                })
+            {
+                for (key, value) in super::macd::DEFAULTS {
+                    settings
+                        .entry((*key).into())
+                        .or_insert_with(|| (*value).into());
+                }
+            }
+            if super::oscillators::kinds(&kind) {
+                for (key, value) in super::oscillators::defaults(&kind) {
+                    settings.entry(key.into()).or_insert_with(|| value.into());
+                }
+            }
+            if super::professional::kinds(&kind) {
+                for (key, value) in super::professional::defaults(&kind) {
+                    settings.entry(key.into()).or_insert_with(|| value.into());
+                }
+            }
             let raw_settings = settings.clone();
             for (key, value) in &mut settings {
                 if let Some(id) = value.strip_prefix('$') {
@@ -451,12 +512,27 @@ impl Graph {
                         .get(id)
                         .ok_or_else(|| failure("research_parameter_missing", id))?;
                     let expected = match key.as_str() {
-                        "period" | "fast" | "slow" | "signal" | "bars" | "offset" | "maxAdds"
-                        | "validBars" | "maxAgeSeconds" | "inputCount" => Some("integer"),
+                        "di_length"
+                        | "adx_smoothing"
+                        | "bar_interval_seconds"
+                        | "length"
+                        | "k_smoothing"
+                        | "d_smoothing"
+                        | "period"
+                        | "fast"
+                        | "slow"
+                        | "signal"
+                        | "bars"
+                        | "offset"
+                        | "maxAdds"
+                        | "validBars"
+                        | "maxAgeSeconds"
+                        | "inputCount" => Some("integer"),
                         "quantity" | "lotStep" | "minQuantity" | "maxQuantity" => Some("quantity"),
                         "cashCap" => Some("money"),
                         "limitPrice" | "stopPrice" => Some("price"),
-                        "riskPercent" | "deviation" | "closePercent" => Some("ratio"),
+                        "stddev_multiplier" | "riskPercent" | "deviation" | "closePercent"
+                        | "initial_k" | "initial_d" | "constant" => Some("ratio"),
                         "initial" | "value" => raw_settings.get("type").map(String::as_str),
                         k if k.ends_with("Value") => Some(
                             if raw_settings
@@ -546,6 +622,78 @@ impl Graph {
         }
         for n in &nodes {
             validate_settings(n)?;
+            if super::professional::kinds(&n.kind) {
+                if context.get("indicatorProfile").map(String::as_str)
+                    != Some(super::professional::PROFILE)
+                {
+                    return Err(failure("indicator_profile_4_required", &n.id));
+                }
+                let from = wires.get(&(n.id.clone(), "price".into())).map(|(id, _)| id);
+                if !nodes
+                    .iter()
+                    .any(|n| Some(&n.id) == from && n.kind == "bars")
+                {
+                    return Err(failure("indicator_ohlcv_requires_bars", &n.id));
+                }
+                if n.kind == "VWAP" {
+                    let source = nodes
+                        .iter()
+                        .find(|candidate| Some(&candidate.id) == from)
+                        .expect("validated bars");
+                    let timeframe = inherit(source, "timeframe", &context)?;
+                    let (digits, unit) = timeframe.split_at(timeframe.len().saturating_sub(1));
+                    let scale = match unit {
+                        "s" => 1,
+                        "m" => 60,
+                        "h" => 3600,
+                        _ => 0,
+                    };
+                    let seconds = digits
+                        .parse::<u64>()
+                        .ok()
+                        .and_then(|v| v.checked_mul(scale));
+                    if scale == 0
+                        || seconds != n.settings["bar_interval_seconds"].parse::<u64>().ok()
+                    {
+                        return Err(failure("vwap_bar_interval_mismatch", &n.id));
+                    }
+                }
+            }
+            if super::oscillators::kinds(&n.kind) {
+                if context.get("indicatorProfile").map(String::as_str)
+                    != Some(super::oscillators::PROFILE)
+                    && context.get("indicatorProfile").map(String::as_str)
+                        != Some(super::professional::PROFILE)
+                {
+                    return Err(failure("indicator_profile_3_required", &n.id));
+                }
+                let from = wires.get(&(n.id.clone(), "price".into())).map(|(id, _)| id);
+                if !nodes
+                    .iter()
+                    .any(|source| Some(&source.id) == from && source.kind == "bars")
+                {
+                    return Err(failure("indicator_ohlc_requires_bars", &n.id));
+                }
+            }
+            if n.kind == "macd" && n.settings.contains_key("histogram_multiplier") {
+                if context.get("indicatorProfile").map(String::as_str) != Some(super::macd::PROFILE)
+                    && context.get("indicatorProfile").map(String::as_str)
+                        != Some(super::oscillators::PROFILE)
+                    && context.get("indicatorProfile").map(String::as_str)
+                        != Some(super::professional::PROFILE)
+                {
+                    return Err(failure("macd_profile_required", &n.id));
+                }
+                if n.settings["source"] != "close" {
+                    let from = wires.get(&(n.id.clone(), "price".into())).map(|(id, _)| id);
+                    if !nodes
+                        .iter()
+                        .any(|source| Some(&source.id) == from && source.kind == "bars")
+                    {
+                        return Err(failure("macd_ohlc_source_requires_bars", &n.id));
+                    }
+                }
+            }
             for (p, t) in &n.inputs {
                 let optional = (n.kind == "wait" && p == "cancel")
                     || ((n.kind == "entry" || n.kind == "exit") && p != "condition");
@@ -634,6 +782,55 @@ impl Graph {
             for p in n.inputs.keys() {
                 ins.insert(p.clone(), self.input(n, p, &values)?);
             }
+            if n.kind == "macd" && n.settings.contains_key("histogram_multiplier") {
+                if let Some((from, _)) = self.wires.get(&(n.id.clone(), "price".into())) {
+                    if self
+                        .nodes
+                        .iter()
+                        .any(|source| source.id == *from && source.kind == "bars")
+                    {
+                        for field in ["open", "high", "low", "close"] {
+                            ins.insert(
+                                field.into(),
+                                values
+                                    .get(&(from.clone(), field.into()))
+                                    .cloned()
+                                    .unwrap_or_default(),
+                            );
+                        }
+                    } else if n.settings["source"] != "close" {
+                        return Err(failure("macd_ohlc_source_requires_bars", &n.id));
+                    }
+                } else if n.settings["source"] != "close" {
+                    return Err(failure("macd_ohlc_source_requires_bars", &n.id));
+                }
+            }
+            if super::professional::kinds(&n.kind)
+                && let Some((from, _)) = self.wires.get(&(n.id.clone(), "price".into()))
+            {
+                for field in ["open", "high", "low", "close", "volume"] {
+                    ins.insert(
+                        field.into(),
+                        values
+                            .get(&(from.clone(), field.into()))
+                            .cloned()
+                            .unwrap_or_default(),
+                    );
+                }
+            }
+            if super::oscillators::kinds(&n.kind)
+                && let Some((from, _)) = self.wires.get(&(n.id.clone(), "price".into()))
+            {
+                for field in ["open", "high", "low", "close"] {
+                    ins.insert(
+                        field.into(),
+                        values
+                            .get(&(from.clone(), field.into()))
+                            .cloned()
+                            .unwrap_or_default(),
+                    );
+                }
+            }
             // Literal-only indicators are sampled on the primary decision clock.
             let stamp = ins.values().map(|v| v.stamp).max().unwrap_or(0);
             let stamp = if stamp == 0 { clock } else { stamp };
@@ -655,15 +852,24 @@ impl Graph {
             };
             let quote = self.quote_lineage(&n.id, &mut BTreeSet::new());
             let chart_profile = self.context.get("indicatorProfile").map(String::as_str)
-                == Some(super::chart_compat::PROFILE);
+                == Some(super::chart_compat::PROFILE)
+                || self.context.get("indicatorProfile").map(String::as_str)
+                    == Some(super::macd::PROFILE)
+                || self.context.get("indicatorProfile").map(String::as_str)
+                    == Some(super::oscillators::PROFILE)
+                || self.context.get("indicatorProfile").map(String::as_str)
+                    == Some(super::professional::PROFILE);
             let state = &mut self.states[i];
             let mut out = BTreeMap::new();
             let mut put = |p: &str, s: Slot| {
                 out.insert(p.into(), s);
             };
             match n.kind.as_str() {
-                "sma" | "ema" | "rsi" | "macd" | "boll" | "atr" | "highest" | "lowest"
-                    if chart_profile =>
+                "sma" | "ema" | "rsi" | "macd" | "boll" | "atr" | "highest" | "lowest" | "kdj"
+                | "WILLR" | "cci" | "MA" | "BOLL" | "ATR" | "ADX" | "VWAP"
+                    if chart_profile
+                        || (n.kind == "macd"
+                            && n.settings.contains_key("histogram_multiplier")) =>
                 {
                     if !ready {
                         out = n
@@ -1091,8 +1297,38 @@ fn validate_settings(n: &Node) -> Result<()> {
         ],
         "constant" => &["type", "value"],
         "parameter" => &["parameter", "type", "value"],
+        "MA" => &["type", "length", "source"],
+        "BOLL" => &["length", "source", "ma_type", "stddev_multiplier"],
+        "ATR" => &["length", "smoothing"],
+        "ADX" => &["di_length", "adx_smoothing"],
+        "VWAP" => &[
+            "source",
+            "anchor",
+            "calendar",
+            "timezone",
+            "volume_type",
+            "bar_interval_seconds",
+        ],
+        "kdj" => &[
+            "length",
+            "k_smoothing",
+            "d_smoothing",
+            "smoothing_method",
+            "initial_k",
+            "initial_d",
+        ],
+        "WILLR" => &["length"],
+        "cci" => &["length", "source", "constant"],
         "sma" | "ema" | "rsi" | "atr" => &["period"],
-        "macd" => &["fast", "slow", "signal"],
+        "macd" => &[
+            "fast",
+            "slow",
+            "signal",
+            "source",
+            "oscillator_ma_type",
+            "signal_ma_type",
+            "histogram_multiplier",
+        ],
         "boll" => &["period", "deviation"],
         "highest" | "lowest" => &["period", "offset"],
         "add" | "subtract" | "scale" => &["type"],
@@ -1155,6 +1391,15 @@ fn validate_settings(n: &Node) -> Result<()> {
         if n.settings.contains_key(key) && !(1..=10000).contains(&uint(n, key)?) {
             return Err(failure("research_period", &n.id));
         }
+    }
+    if n.kind == "macd" && n.settings.contains_key("histogram_multiplier") {
+        super::macd::validate(&n.settings)?;
+    }
+    if super::professional::kinds(&n.kind) {
+        super::professional::validate(&n.kind, &n.settings)?;
+    }
+    if super::oscillators::kinds(&n.kind) {
+        super::oscillators::validate(&n.kind, &n.settings)?;
     }
     if n.kind == "macd" && uint(n, "fast")? >= uint(n, "slow")? {
         return Err(failure("research_period", &n.id));

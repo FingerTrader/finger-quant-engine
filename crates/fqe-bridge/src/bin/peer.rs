@@ -20,6 +20,7 @@ fn main() -> std::process::ExitCode {
     let output = Arc::new(Mutex::new(io::stdout()));
     let admission = Admission::default();
     let managed = ManagedRuns::new(admission.clone());
+    let mut hosted = fqe_bridge::research::hosted::Hosted::default();
     let mut signals = fqe_bridge::research::live::Signals::default();
     let mut worker: Option<(String, Arc<AtomicBool>, thread::JoinHandle<()>)> = None;
     let input = io::stdin();
@@ -45,9 +46,11 @@ fn main() -> std::process::ExitCode {
             };
             if r.method == "hello" {
                 let mut capabilities = fqe_bridge::CAPABILITIES.to_vec();
+                capabilities.push(fqe_bridge::research::hosted::CAPABILITY);
                 capabilities.push("run.managed/1");
                 capabilities.push("run.incremental/1");
                 capabilities.push("signals.external-account/1");
+                capabilities.push("signals.indicators/1");
                 capabilities.push("signals.multisource/1");
                 let result = fqe_bridge::negotiate(&r.params, &capabilities).map(|mut v| {
                     v.as_object_mut().expect("hello object").insert(
@@ -57,6 +60,8 @@ fn main() -> std::process::ExitCode {
                     v
                 });
                 send(&response(Some(&r.id), result))?;
+            } else if r.method.starts_with("hosted.") {
+                send(&response(Some(&r.id), hosted.execute(&r.method, &r.params)))?;
             } else if r.method.starts_with("signals.") {
                 send(&response(
                     Some(&r.id),

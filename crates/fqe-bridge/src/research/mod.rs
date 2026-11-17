@@ -1,9 +1,14 @@
 //! Versioned native graph research path. Legacy financial profiles remain unchanged.
 mod chart_compat;
 mod graph;
+pub mod hosted;
 pub mod live;
+mod macd;
 pub mod optimization;
 mod orders;
+mod oscillators;
+mod professional;
+pub mod studies;
 use crate::{Failure, Result};
 use fqe_core::{
     bars::ClosedBar,
@@ -564,6 +569,14 @@ impl Prepared {
                     "boll",
                     "highest",
                     "lowest",
+                    "kdj",
+                    "WILLR",
+                    "cci",
+                    "MA",
+                    "BOLL",
+                    "ATR",
+                    "ADX",
+                    "VWAP",
                     "crossUp",
                     "crossDown",
                 ]
@@ -959,6 +972,17 @@ impl Prepared {
         values: &BTreeMap<(String, String), Slot>,
         time: u64,
     ) -> Result<String> {
+        self.act_sized(n, values, time, None)
+    }
+    // External callbacks specify an explicit quantity. It remains bounded by
+    // the same allocation/margin admission as graph actions, never enlarged.
+    fn act_sized(
+        &mut self,
+        n: &Node,
+        values: &BTreeMap<(String, String), Slot>,
+        time: u64,
+        maximum_quantity: Option<Decimal>,
+    ) -> Result<String> {
         let symbol = inherit(n, "symbol", &self.graph.context)?;
         if n.kind == "cancelOrders" {
             let scope = n.get("scope")?;
@@ -1064,6 +1088,9 @@ impl Prepared {
                 whole(100)?,
             )?
         };
+        if let Some(maximum) = maximum_quantity {
+            q = mind(q, maximum);
+        }
         if !entry {
             q = mind(q, wide(quantity)?);
         }

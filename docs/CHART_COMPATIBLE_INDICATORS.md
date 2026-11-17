@@ -27,7 +27,7 @@ in the client. The client never owns rule evaluation or creates intents.
 | CCI | Existing chart typical-price mean/deviation over up to14 points; undefined NaN becomes0. No native model node. | Causality and flat/nonfinite cases |
 | Volume MA5/10 | Quantity-based 5/10 means; early drawing zeros. No quantity-SMA model node. | Causality and window readiness |
 
-KDJ/WR/CCI/volume remain chart-only; this change does not invent authoring controls
+KDJ/WR/CCI/volume have native chart-only calculation through [native chart studies](NATIVE_CHART_STUDIES.md); this does not invent authoring controls
 or conflate them with another executable indicator. EMA/ATR/extrema remain native
 trace outputs when no corresponding built-in chart overlay exists. All existing
 native trace nodes/ports/settings remain separate; no SMA is relabeled as EMA.
@@ -53,13 +53,16 @@ retain their existing schema and resolved settings. Profile-bearing model bytes
 participate in input/execution identity. Desk consumes its accepted source prefix
 for the matching product/period, projects native observations including nulls,
 uses resolved study labels, and preserves frozen/animated study metadata. Normal
-market viewing continues through the same chart formulas without an account.
+market viewing now calls the same FQE kernel without an account; client formulas
+were removed by the owner-approved [native chart extension](NATIVE_CHART_STUDIES.md).
 
 ## Verification and delivery
 
 The synthetic chart fixtures in `crates/fqe-bridge/tests/fixtures/chart-profile-*.json`
 are exported from Desk's `indicator_chart_alignment_test.dart` using its actual
-DataUtil plus independent EMA/ATR/extrema checks. They contain no user market data.
+DataUtil plus independent EMA/ATR/extrema checks. They contain no user market data. These are immutable pre-migration golden fixtures;
+the current Desk DataUtil now delegates to FQE and must not regenerate them as an
+independent oracle.
 The engine's standalone tests verify every native study over140 closed bars and700
 quote updates (including replacement and pruning). Paired tests also cover custom
 parameters, all chart-only studies' causal/empty/flat/reused-buffer behavior,

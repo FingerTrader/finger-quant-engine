@@ -146,6 +146,10 @@ Authority: [Charter](PROJECT_CHARTER.md) → this ADR register → scoped contra
 
 **Status:** ACCEPTED direction 2026-11-15 by explicit owner approval of the cross-repository review; implementation/verification remain separate. **Decision:** graph and structured main-flow text edit one versioned semantic document, with separate presentation, comment-bearing buffers and immutable executable revisions. A first-party native frontend owns bounded parsing/printing/lowering/source maps; Desk owns editor transactions and UI. Existing Event/Workflow/graph/type rules and explicit ordered trading policies remain authoritative. Discover reference descriptors from an explicit trigger/domain without requiring a valid model. Add versioned optional capabilities; preserve old methods and exact financial semantics. Invalid text is saved but cannot silently run the last valid model; graph edits conflict until resolved. External language functions remain separately declared P5/P6 providers/runners. **Reason:** the owner selected unified graph/text authoring, not independent graph and arbitrary Python sources. **Consequences:** [Unified authoring](DESK_UNIFIED_AUTHORING.md) and P4-03.01–P4-03.07 govern incremental scope, native/Desk gates, migration, optimization and scalable history. No production-language, arbitrary-order/risk, large-data, marketplace or installed-release capability follows from accepting this ADR. No dependency/parser installer is required for the initial bounded frontend.
 
+## ADR-037 — Offline Model Distribution and Project Exchange Ownership
+
+**Status:** ACCEPTED direction 2026-11-15, following the owner's “开始吧” approval of the proposed design-closeout and P4 continuation sequence. **Decision:** retain `.fmodel` as a tentative outer distribution container, reuse existing typed native artifact identities and execution, and keep editable-project exchange/migration under P4-03.06. Model identity, package identity, immutable release coordinates, package-content and container-byte digests remain distinct. Offline local import/export and execution cannot require Marketplace availability or login. Import/download never executes code, installs dependencies or grants trading permissions. A first Marketplace P0 is limited to offline inspection/admission of a single supported Event entry; research execution distribution and foreign workers/providers require their own existing gates. **Reason:** avoid duplicate IRs, project migration and dependency/permission semantics while preserving local ownership. **Alternatives:** see the [original proposal](adr-drafts/MARKETPLACE_DISTRIBUTION.md). **Consequences:** implementation stays within P6-01/P6-03/P6-05 and their prerequisites; no new task number or stage bypass. Current first eligible work remains P4-03.03. The [architecture audit](MARKETPLACE_ARCHITECTURE.md), [package](MODEL_PACKAGE.md), [lifecycle](MODEL_LIFECYCLE.md) and [integration proposal](MARKETPLACE_INTEGRATION.md) remain detailed review drafts. Container encoding, production schema, canonical/signature profile, keys/revocation, numeric package budgets and service APIs are explicitly **not accepted or frozen** by this direction. No production model package or Marketplace implementation is authorized at this stage. Existing accepted ADRs are not superseded.
+
 ## ADR-038 — Eight-Digit Financial Precision and Exact Product Storage
 
 **Status:** ACCEPTED 2026-11-15 under the owner request to resolve Desk/FQE precision mismatch. **Scope refinement:** extends the Decimal storage bound in ADR-013 from18 to20, without expanding the public scalar/type descriptor bound18. **Decision:** quantity and money scales0..8, price0..12; retain the full product and cash rounding audit at max(18, price_scale + quantity_scale), with checked i128 arithmetic and unchanged value/step bounds. Divide aligned basis units before multiplying partial-close ratios. **Reason:** Desk imports valid8-digit product specifications; rejecting these at6 digits is an implementation limitation. **Alternatives:** silently rounding saved datasets, only relaxing UI validation, or adding arbitrary-precision dependencies. **Consequences:** [financial precision acceptance](FINANCIAL_PRECISION_8.md) covers native and consumer delivery; old6-digit inputs preserve results, engine identity changes and same-engine checkpoints remain strict. This does not close P4-03.03 or authorize unrelated phases.
@@ -167,3 +171,77 @@ Authority: [Charter](PROJECT_CHARTER.md) → this ADR register → scoped contra
 | Provider wire mapping, batching/state exchange and adapter artifact packaging | P1-04 semantic interface; P5-01 protocol; P6-02/P6-03.01 execution | Preserve role separation/exact values/event transaction, real cross-language invocation/restore and measured call overhead; generic onboarding must leave the frozen engine unchanged. No binding generator or runtime download is implicitly approved. |
 
 Record experiment results in the owning technical contract and add/supersede an ADR when a durable choice is made. No open entry is marked delivered by this document.
+
+## Design proposals and accepted direction
+
+- 2026-11-15: [original Marketplace distribution proposal](adr-drafts/MARKETPLACE_DISTRIBUTION.md). Architectural ownership/offline/identity and narrow-P0 direction accepted in ADR-037 above; detailed package/format/security/budget/service choices remain drafts. No production format, new implementation task, phase advancement or publishing authorization is created.
+
+## ADR-040 — FQE Is the Only Active Chart Indicator Calculator
+
+**Status:** ACCEPTED direction2026-11-17 by owner; implementation and verification tracked separately in PROJECT_STATUS. **Decision:** normal charts use account/store-free native catalog/calculation, sharing the strategy chart-profile kernel; Desk owns rendering/interaction only. Native descriptor defaults, ports and rendering hints are discoverable, with generic client request/column projection for extension. No Dart formula fallback. Keep versioned old exact providers/reports, existing UI options and graph admission semantics. **Reason:** duplicated chart/engine formulas and independently changing defaults can misrepresent executable signals. **Consequences:** [Native chart contract](NATIVE_CHART_STUDIES.md) governs scopes/quotas; new indicator UI bindings may be needed but must not introduce another formula. No new strategy nodes, financial model, broker SDK, dependency, page-shell change or phase closure is implied.
+
+## ADR-041 — Versioned Standard MACD Calculation
+
+Accepted2026-11-17, owner-requested MACD scope. [MACD v2](MACD_STANDARD_V2.md)
+specializes ADR-040: a single native kernel with explicit seven-field parameters,
+mean-seeded warmup, canonical outputs and calculation-level histogram multiplier
+serves chart batches/research/live sessions. `finger.indicators/2` changes only MACD.
+Legacy `finger.k-chart/1` and reference.macd@1 remain immutable. A multiplier-only
+rendering shortcut or independent Dart formula is rejected because strategy
+conditions must see identical values. Presentation stays outside calculation
+identity; multiple instances own isolated state. Native graph alias ports preserve
+existing connections. Saved traces are not rewritten. No unrelated RSI or desktop
+workbench redesign, dependency change or external SDK publication is authorized.
+
+
+## ADR-042 — Versioned KDJ / Williams %R / CCI standard
+
+**Status:** ACCEPTED (2026-11-17, owner-requested scope). **Decision:** native
+`finger.indicators/3` changes only these three studies using one causal kernel
+shared by chart batches and graph backtest/live. [Contract](OSCILLATORS_STANDARD_V3.md).
+RSI and MACD definitions, financial math and explicit legacy profiles remain
+unchanged. KDJ uses full-window readiness and recursive SMMA from50; WILLR
+uses14 bars, negative output and flat−50; CCI uses20 bars, configurable source
+and constant with current-window MAD and zero-deviation0. Reference levels/styles
+are presentation configuration, excluded from native math and cache requests.
+**Consequences:** new graph kinds require v3 and OHLC bars; old reports remain
+frozen; no Flutter/native duplication or financial execution changes.
+
+
+## ADR-043 — Additive professional indicator profile4
+
+**Status:** ACCEPTED (2026-11-17, owner-requested scope). **Decision:** canonical
+MA/BOLL/ATR/ADX/VWAP use one causal native kernel for charts and graph execution
+under `finger.indicators/4`; explicit lowercase legacy kinds/profiles retain their
+previous mathematics. [Contract](PROFESSIONAL_INDICATORS_P0.md). Existing RSI,
+MACD and version3 oscillators, financial core and order execution remain unchanged.
+VWAP fails unavailable without declared real volume and complete supported anchor
+history; initial calendar support is explicitly24x7 UTC/fixed offset, not exchange
+calendar/DST support. **Consequences:** clients negotiate the new profile and carry
+all math parameters and source timing; styles stay outside math caches. Desktop
+reuses existing two pane slots/shared settings. The optional SDK local-process
+adapter adds no mandatory FQE dependency, broker access or Python formula copy.
+
+
+## ADR-044 — Explicit Tick VWAP and actual cash-order reservations
+
+**Status:** ACCEPTED 2026-11-17, explicitly authorized by the owner after desktop reproduction.
+**Decision:** supersede ADR-043's real-only VWAP admission to accept explicitly declared
+Tick Volume as weights, retaining unknown/unavailable, complete-anchor, calendar and
+interval rules. Real volume results and other indicators do not change. Source-derived
+bridge identity and explicit volume_type distinguish calculations; no profile-wide
+formula change. For native research cash orders, cashCap is the maximum permitted
+cumulative entry cost, not the amount to freeze. Reserve the remaining quantity's
+estimated notional plus rounded fee using order price/known mark and slippage. At
+partial fills, re-estimate the remaining hold bounded by the remaining cap; at actual
+fills, atomically recheck cash and cap because future opening prices are unknown.
+Margin budgeting, financial ledger rules and broker/live execution remain unchanged.
+**Reason:** owner-selected Tick VWAP previously emitted no output; EMA7 cash re-entry
+was rejected after a loss solely because balance fell below the full configured cap.
+**Consequences:** pending cash reservations and research result identities can change;
+existing archived reports are not rewritten. No Desktop redesign or new dependencies.
+
+
+## ADR-045 — Python hosted callbacks share the native research broker
+
+Accepted scoped direction, 2026-11-18, owner request. Add versioned external callback sessions that reuse research Broker and native indicator state; Desk owns worker authorization and durable request/callback barriers. Do not copy financial or indicator formulas into Python or Dart. Full-project snapshots and per-run environment identities are mandatory. Other languages and production release acceptance remain separate. This supersedes ADR-036 only for explicitly authored Python projects; graph/text identity and old profiles remain unchanged. Implementation/evidence: [Python hosted execution](PYTHON_HOSTED_EXECUTION.md).

@@ -426,3 +426,73 @@ fn mixed_period_conditions_combine_asof_states_with_and_or() {
         assert_eq!(observed, expected, "{operation}");
     }
 }
+
+#[test]
+fn hosted_live_studies_are_native_isolated_and_declared_before_warmup() {
+    let mut signals = Signals::default();
+    let mut source = model();
+    source["context"]["indicatorProfile"] = json!("finger.indicators/4");
+    source["nodes"] = json!(
+        source["nodes"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .filter(|n| n["kind"] == "bars")
+            .cloned()
+            .collect::<Vec<_>>()
+    );
+    source["wires"] = json!([]);
+    let h = signals
+        .execute("signals.open", &json!({"model":source}))
+        .unwrap()["handle"]
+        .clone();
+    let query = json!({"handle":h,"study":{"id":"a","kind":"sma","parameters":{"period":"2"}}});
+    assert_eq!(
+        signals.execute("signals.indicator", &query).unwrap(),
+        json!({"value":null})
+    );
+    let other = json!({"handle":h,"study":{"id":"b","kind":"sma","parameters":{"period":"3"}}});
+    signals.execute("signals.indicator", &other).unwrap();
+    let mut invalid = query.clone();
+    invalid["study"]["parameters"]["period"] = json!("0");
+    assert!(signals.execute("signals.indicator", &invalid).is_err());
+    for (i, price) in ["1", "3", "5"].iter().enumerate() {
+        let r = signals
+            .execute(
+                "signals.advance",
+                &advance(&h, vec![bar(i as u64 + 1, price)], false),
+            )
+            .unwrap();
+        assert!(r["intents"].as_array().unwrap().is_empty());
+    }
+    assert_eq!(
+        signals.execute("signals.indicator", &query).unwrap(),
+        json!({"value":"4.000000000000"})
+    );
+    assert_eq!(
+        signals.execute("signals.indicator", &other).unwrap(),
+        json!({"value":"3.000000000000"})
+    );
+    let mut late = query.clone();
+    late["study"]["id"] = json!("late");
+    assert_eq!(
+        signals
+            .execute("signals.indicator", &late)
+            .unwrap_err()
+            .code,
+        "live_declare_indicators_on_start"
+    );
+    signals
+        .execute("signals.close", &json!({"handle":h}))
+        .unwrap();
+    let h = signals
+        .execute("signals.open", &json!({"model":model()}))
+        .unwrap()["handle"]
+        .clone();
+    let mut q = query;
+    q["handle"] = h;
+    assert_eq!(
+        signals.execute("signals.indicator", &q).unwrap_err().code,
+        "live_indicator_graph_immutable"
+    );
+}

@@ -14,6 +14,8 @@ struct Source {
 }
 struct Session {
     graph: Graph,
+    model: V,
+    studies: BTreeMap<String, V>,
     last: u64,
     clock: u64,
     conditions: BTreeMap<String, bool>,
@@ -76,6 +78,8 @@ impl Signals {
                     handle.clone(),
                     Session {
                         graph,
+                        model: p["model"].clone(),
+                        studies: BTreeMap::new(),
                         last: 0,
                         clock: 0,
                         conditions: BTreeMap::new(),
@@ -94,6 +98,13 @@ impl Signals {
                             .unwrap_or("reference/1")),
                     ),
                 ]))
+            }
+            "signals.indicator" => {
+                exact(p, &["handle", "study"])?;
+                self.sessions
+                    .get_mut(strv(p, "handle")?)
+                    .ok_or_else(|| failure("live_handle", "$"))?
+                    .indicator(&p["study"])
             }
             "signals.close" => {
                 exact(p, &["handle"])?;
@@ -177,6 +188,93 @@ fn fields(v: &V, quote: bool) -> Result<BTreeMap<String, Decimal>> {
     Ok(values)
 }
 impl Session {
+    fn indicator(&mut self, study: &V) -> Result<V> {
+        exact(study, &["id", "kind", "parameters"])?;
+        let id = strv(study, "id")?;
+        fqe_ir::model::identifier(id, "$.study.id")?;
+        if let Some(previous) = self.studies.get(id) {
+            if previous != study {
+                return Err(failure("live_indicator_conflict", id));
+            }
+        } else {
+            if self.clock != 0 || self.studies.len() >= 32 {
+                return Err(failure("live_declare_indicators_on_start", id));
+            }
+            // Only an account-free source graph may be extended by a hosted
+            // callback. Authored graph models are immutable and never replaced.
+            if self
+                .graph
+                .nodes
+                .iter()
+                .any(|n| n.kind != "bars" && !self.studies.contains_key(&n.id))
+            {
+                return Err(failure("live_indicator_graph_immutable", id));
+            }
+            if self.graph.nodes.iter().any(|n| n.id == id) {
+                return Err(failure("live_indicator_id", id));
+            }
+            let catalog = studies::describe(&o([] as [(&str, V); 0]))?;
+            let definition = catalog["definitions"]
+                .as_array()
+                .expect("catalog")
+                .iter()
+                .find(|d| d["kind"] == study["kind"])
+                .ok_or_else(|| failure("live_indicator_kind", id))?;
+            let mut settings = definition["parameters"]
+                .as_object()
+                .expect("parameters")
+                .clone();
+            for (key, value) in study["parameters"]
+                .as_object()
+                .ok_or_else(|| failure("live_indicator_parameters", id))?
+            {
+                if !settings.contains_key(key) || !value.is_string() {
+                    return Err(failure("live_indicator_parameter", key));
+                }
+                settings.insert(key.clone(), value.clone());
+            }
+            let mut model = self.model.clone();
+            let source = self
+                .graph
+                .nodes
+                .iter()
+                .find(|n| n.kind == "bars")
+                .ok_or_else(|| failure("live_indicator_source", id))?;
+            model["nodes"].as_array_mut().expect("nodes").push(o([
+                ("id", s(id)),
+                ("kind", study["kind"].clone()),
+                ("label", s(id)),
+                ("settings", V::Object(settings)),
+                ("literals", o([] as [(&str, V); 0])),
+            ]));
+            model["wires"].as_array_mut().expect("wires").push(o([
+                ("from", s(&source.id)),
+                ("output", s("close")),
+                ("to", s(id)),
+                ("input", s("price")),
+            ]));
+            let graph = Graph::compile(&model)?;
+            self.graph = graph;
+            self.model = model;
+            self.studies.insert(id.into(), study.clone());
+        }
+        let columns = self.graph.chart_columns();
+        let values = self.chart_sample["values"].as_array();
+        Ok(o(columns
+            .iter()
+            .enumerate()
+            .filter(|(_, c)| c["node"] == id)
+            .map(|(i, c)| {
+                (
+                    c["port"].as_str().expect("port"),
+                    values
+                        .and_then(|row| row.get(i))
+                        .cloned()
+                        .unwrap_or(V::Null),
+                )
+            })))
+    }
+
     fn advance(&mut self, p: &V) -> Result<V> {
         exact(p, &["handle", "bars", "account", "positions", "decision"])?;
         let decision = p["decision"]

@@ -6,6 +6,7 @@ use std::fmt;
 struct Seed<'a> {
     depth: usize,
     remaining: &'a mut usize,
+    array_limit: usize,
 }
 impl<'de> DeserializeSeed<'de> for Seed<'_> {
     type Value = Value;
@@ -56,8 +57,9 @@ impl<'de> Visitor<'de> for Seed<'_> {
         while let Some(v) = a.next_element_seed(Seed {
             depth: self.depth + 1,
             remaining: self.remaining,
+            array_limit: self.array_limit,
         })? {
-            if values.len() >= 4096 {
+            if values.len() >= self.array_limit {
                 return Err(de::Error::custom("quota"));
             }
             values.push(v);
@@ -73,6 +75,7 @@ impl<'de> Visitor<'de> for Seed<'_> {
             let value = a.next_value_seed(Seed {
                 depth: self.depth + 1,
                 remaining: self.remaining,
+                array_limit: self.array_limit,
             })?;
             values.insert(key, value);
         }
@@ -80,14 +83,25 @@ impl<'de> Visitor<'de> for Seed<'_> {
     }
 }
 pub fn decode(bytes: &[u8]) -> Result<Value, Failure> {
+    decode_bounded(bytes, 32768, 4096)
+}
+/// Chart payload only. Keep the legacy outer envelope quotas unchanged.
+pub(crate) fn decode_chart_bars(bytes: &[u8]) -> Result<Value, Failure> {
+    decode_bounded(bytes, 160001, 20000)
+}
+fn decode_bounded(
+    bytes: &[u8],
+    mut remaining: usize,
+    array_limit: usize,
+) -> Result<Value, Failure> {
     if bytes.is_empty() || bytes.len() > MAX_REQUEST {
         return Err(crate::fail("request_quota"));
     }
     let mut decoder = serde_json::Deserializer::from_slice(bytes);
-    let mut remaining = 32768;
     let value = Seed {
         depth: 0,
         remaining: &mut remaining,
+        array_limit,
     }
     .deserialize(&mut decoder)
     .map_err(|_| crate::fail("request_json"))?;

@@ -1,0 +1,71 @@
+{
+  "scope": "Owner-approved FQE-only chart indicators; P4-03.03 remains IN_PROGRESS",
+  "created_utc": "2026-11-16T15:59:13.358311+00:00",
+  "fqe_baseline": "f59f4f8fad033e3b8e689eaea1524466e570990f",
+  "bridge_id": "sha256:4e27805b9cba7ecb23ca29eb86b6eff2f0d62918968dd75b82d9782b1296dc39",
+  "prepared_sha256": "75d20c16ea89e76530834ca25b9e7a6477309eba9a25806c25a8277bcefe7dea",
+  "rust_workspace_tests": 403,
+  "native_chart_study_tests": 6,
+  "paired_dart_flutter_tests": 49,
+  "dart_errors": 0,
+  "dart_warnings": 0,
+  "dart_style_infos": 15,
+  "fixed_toolchain_offline": true,
+  "new_dependencies": false,
+  "lockfiles_changed_for_this_scope": false,
+  "macos_debug_build": "PASS",
+  "deep_strict_codesign": "PASS",
+  "actual_packaged_helper_sandbox_probe": {
+    "status": "PASS",
+    "source_pins": true,
+    "signed_bundle_hash": "c55d034125692c98230c5649b9ad1da43c5cdcdae697615348784f196377448f",
+    "prepared_hash": "75d20c16ea89e76530834ca25b9e7a6477309eba9a25806c25a8277bcefe7dea",
+    "bridge_id": "sha256:4e27805b9cba7ecb23ca29eb86b6eff2f0d62918968dd75b82d9782b1296dc39",
+    "native_catalog_count": 12,
+    "rows": 7200,
+    "columns": 18,
+    "elapsed_ms_including_probe_signing": 188,
+    "sandbox_entitled": true,
+    "outside_source_read_blocked": true,
+    "actual_packaged_helper": true,
+    "helper_resigned": false,
+    "isolated_first_party_parent": true,
+    "actual_desk_gui": false,
+    "account_or_run_storage": false,
+    "artifacts": "/private/tmp/fqe-chart-sandbox-1794844703549226000"
+  },
+  "current_user_app_restarted": false,
+  "actual_latest_gui_acceptance": false,
+  "publication_claimed": false,
+  "logs": {
+    "/private/tmp/fqe-study-rust-final.log": {
+      "sha256": "90d81b75d37ad778b2b37c1715a0201adc8a7e79fff0d9cc1316da36c958dbb5",
+      "bytes": 43421
+    },
+    "/private/tmp/fqe-study-tests.log": {
+      "sha256": "21a034629d609e7c19768b5a8435f2615dc33bef2e40e7cde339295315a2bc8c",
+      "bytes": 771
+    },
+    "/private/tmp/fqe-study-check.log": {
+      "sha256": "f7d75e70c8c78b44787715ef796c1c32e2b8cf0264e1769ec51e0e22ca1aa08b",
+      "bytes": 165
+    },
+    "/private/tmp/fqe-study-clippy.log": {
+      "sha256": "6fff8d2453ad093ad5eaa9c3812f8321bdabf8f681f6979094dce9add8c59bd3",
+      "bytes": 165
+    },
+    "/private/tmp/fqe-study-final-tests.log": {
+      "sha256": "0d5f48ada51343f9c463ef20b9b5474cefdbf15398ec746b83ca233f12124fdc",
+      "bytes": 8707
+    },
+    "/private/tmp/fqe-study-analyze-complete.log": {
+      "sha256": "61989ca560821fcde21fa0c55be6ae685439d6efaf06a9e462cb359e6f72f31c",
+      "bytes": 3349
+    },
+    "/private/tmp/fqe-studies-macos-build-final.log": {
+      "sha256": "791be87b2a10b199d13e9f3e9c0ee348e7e5a5bb1ffa460fc61cb5070b54fea0",
+      "bytes": 475106
+    }
+  },
+  "resource_note": "Ordinary chart requests create no account, run record or storage lease; 7200 synthetic bars; no user market data."
+}
